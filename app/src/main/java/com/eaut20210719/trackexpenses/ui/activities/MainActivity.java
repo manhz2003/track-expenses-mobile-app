@@ -1,4 +1,4 @@
-package com.eaut20210719.trackexpenses;
+package com.eaut20210719.trackexpenses.activities;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.eaut20210719.trackexpenses.R;
 
 public class MainActivity extends AppCompatActivity {
 
