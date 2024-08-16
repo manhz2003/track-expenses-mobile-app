@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TrackExpenses</string>
+    <string name="home_title">Trang chủ</string>
+    <string name="track_expenses">Track Expenses</string>
+    <string name="add_title">Thêm mới</string>
+    <string name="balance_total_title">Tổng số dư</string>
 </resources>

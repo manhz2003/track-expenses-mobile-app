@@ -7,13 +7,157 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <FrameLayout
+        android:id="@+id/frTrackExpenses"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="#F7FD3665"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTrackExpenses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp16"
+        android:layout_marginTop="@dimen/dp16"
+        android:text="@string/track_expenses"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_4dp"
+        android:text="@string/add_title"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/tvTrackExpenses"
+        app:layout_constraintEnd_toStartOf="@id/imSearch"
+        app:layout_constraintTop_toTopOf="@id/tvTrackExpenses" />
+
+    <ImageView
+        android:id="@+id/imSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp16"
+        android:contentDescription="@string/add_title"
+        android:scaleType="fitXY"
+        android:src="@drawable/search_icon"
+        app:layout_constraintBottom_toBottomOf="@id/tvAdd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvAdd" />
+
+    <ImageView
+        android:id="@+id/imAnimal"
+        android:layout_width="145dp"
+        android:layout_height="136dp"
+        android:contentDescription="@string/add_title"
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_animal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTrackExpenses" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp16"
+        android:background="@drawable/shape_account"
+        android:padding="@dimen/_12dp"
+        app:layout_constraintBottom_toBottomOf="@id/imAnimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/imAnimal">
+
+        <TextView
+            android:id="@+id/tvBalanceTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/_4dp"
+            android:gravity="center_vertical"
+            android:text="@string/balance_total_title"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16sp"
+            app:drawableRightCompat="@drawable/arrow_forward_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12dp"
+            android:text="*** *** *** VND"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvBalanceTotal" />
+
+        <ImageView
+            android:id="@+id/imEye"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_48dp"
+            android:contentDescription="@string/add_title"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_eye_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tvBalanceTotal"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="-50dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@+id/icMenuBottom"
+        app:layout_constraintTop_toBottomOf="@id/frTrackExpenses">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_group_expenses"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/dp16">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ctExpensesInfo"
+                android:layout_width="match_parent"
+                android:layout_height="242dp"
+                android:layout_marginHorizontal="@dimen/dp16"
+                android:background="@drawable/shape_account_not_stroke">
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ctExpensesEstablish"
+                android:layout_width="match_parent"
+                android:layout_height="242dp"
+                android:layout_marginHorizontal="@dimen/dp16"
+                android:layout_marginTop="@dimen/dp32"
+                android:background="@drawable/shape_account_not_stroke">
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+    <include
+        android:id="@+id/icMenuBottom"
+        layout="@layout/layout_button_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
