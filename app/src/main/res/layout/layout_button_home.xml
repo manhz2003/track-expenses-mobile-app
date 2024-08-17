@@ -12,20 +12,19 @@
         android:id="@+id/tvHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:drawableTopCompat="@drawable/icon_home"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="13sp"
         android:gravity="center"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:text="@string/home_title"
-        />
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        app:drawableTopCompat="@drawable/home"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
         android:id="@+id/tvHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:drawableTopCompat="@drawable/icon_home"
+        app:drawableTopCompat="@drawable/history"
         app:layout_constraintStart_toEndOf="@id/tvHome"
         app:layout_constraintEnd_toStartOf="@id/tvUpdate"
         app:layout_constraintTop_toTopOf="parent"
@@ -33,7 +32,7 @@
         android:gravity="center"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/home_title"
+        android:text="@string/history"
         />
 
     <ImageView
@@ -54,7 +53,7 @@
         android:id="@+id/tvReport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:drawableTopCompat="@drawable/icon_home"
+        app:drawableTopCompat="@drawable/report"
         app:layout_constraintStart_toEndOf="@id/tvUpdate"
         app:layout_constraintEnd_toStartOf="@id/tvSetting"
         app:layout_constraintTop_toTopOf="parent"
@@ -62,21 +61,21 @@
         android:gravity="center"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/home_title"
+        android:text="@string/report"
         />
 
     <TextView
         android:id="@+id/tvSetting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:drawableTopCompat="@drawable/icon_home"
+        app:drawableTopCompat="@drawable/setting"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:textSize="13sp"
         android:gravity="center"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/home_title"
+        android:text="@string/setting"
         />
 
 
