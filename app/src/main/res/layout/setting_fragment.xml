@@ -12,6 +12,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+
+
         />
 
     <TextView
@@ -125,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:paddingVertical="@dimen/_16dp"
                         android:background="@drawable/shape_thong_tin"
-                        android:paddingStart="@dimen/_8dp"/>
+                        android:paddingStart="@dimen/_20dp"/>
                 </LinearLayout>
 
                 <Button
