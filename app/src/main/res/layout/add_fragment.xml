@@ -70,17 +70,17 @@
                     android:text="@string/so_tien"
                     android:textColor="@color/xam"
                     android:textSize="@dimen/_16sp"
-                    app:layout_constraintBottom_toBottomOf="@id/lnnhap_so_tien"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/lnnhap_so_tien" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
                     android:id="@+id/lnnhap_so_tien"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp16"
                     android:background="@drawable/shape_thong_tin"
-                    app:layout_constraintStart_toEndOf="@+id/amount1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/amount1">
 
                     <EditText
@@ -101,7 +101,7 @@
                     android:textColor="@color/xam"
                     android:textSize="@dimen/_16sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/lnnhap_so_tien" />
+                    app:layout_constraintTop_toBottomOf="@id/lnnhap_so_tien" />
 
                 <LinearLayout
                     android:id="@+id/lnnhap_danh_muc"
@@ -111,7 +111,7 @@
                     android:background="@drawable/shape_thong_tin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/danhmuc">
+                    app:layout_constraintTop_toBottomOf="@id/danhmuc">
 
                     <EditText
                         android:layout_width="match_parent"
