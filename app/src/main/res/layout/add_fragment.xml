@@ -134,17 +134,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/lnnhap_danh_muc" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvCatalog"
+
+                <Spinner
+                    android:id="@+id/spinnerCatalog"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/spinner_values_catalog"
                     android:layout_marginTop="@dimen/dp16"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toTopOf="@id/type"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/btnSave2"
-                    tools:listitem="@layout/item_catalog" />
+                    app:layout_constraintTop_toBottomOf="@id/btnSave2" />
 
                 <TextView
                     android:id="@+id/type"
@@ -155,7 +155,7 @@
                     android:textColor="@color/xam"
                     android:textSize="@dimen/_16sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rvCatalog" />
+                    app:layout_constraintTop_toBottomOf="@id/spinnerCatalog" />
 
                 <Spinner
                     android:id="@+id/spinner"
@@ -192,7 +192,8 @@
                         android:background="@drawable/shape_thong_tin"
                         android:hint="Nhập ghi chú"
                         android:paddingVertical="@dimen/_16dp"
-                        android:paddingStart="@dimen/_20dp"/>
+                        android:paddingStart="@dimen/_20dp"
+                        android:paddingEnd="@dimen/_20dp"/>
                 </LinearLayout>
 
                 <TextView

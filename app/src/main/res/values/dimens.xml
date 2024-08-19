@@ -30,4 +30,5 @@
     <dimen name="_25dp">25dp</dimen>
     <dimen name="_2dp">2dp</dimen>
     <dimen name="_6dp">6dp</dimen>
+    <dimen name="_24dp">24dp</dimen>
 </resources>
