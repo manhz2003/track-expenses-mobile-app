@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:id="@+id/frStatistical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_84dp"
+        android:background="#F7FD3665"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/tvHistory1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp16"
+        android:layout_marginTop="@dimen/dp16"
+        android:text="@string/thong_ke"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_8dp"
+        android:text="@string/add_title"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/tvHistory1"
+        app:layout_constraintEnd_toStartOf="@id/imSearch"
+        app:layout_constraintTop_toTopOf="@id/tvHistory1" />
+
+    <ImageView
+        android:id="@+id/imSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp16"
+        android:contentDescription="@string/add_title"
+        android:scaleType="fitXY"
+        android:src="@drawable/search_icon"
+        app:layout_constraintBottom_toBottomOf="@id/tvAdd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvAdd" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="-30dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/frStatistical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_group_expenses"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/dp16">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cttodayreport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp16"
+                android:background="@drawable/shape_account_not_stroke"
+                android:padding="@dimen/_16dp">
+
+                <TextView
+                    android:id="@+id/todayreport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bao_cao_hom_nay"
+                    android:textStyle="bold"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+                <TextView
+                    android:id="@+id/totalrevenue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tong_thu"
+                    android:textSize="@dimen/_16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/todayreport"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+                <TextView
+                    android:id="@+id/amountcollected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_100_000"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    app:layout_constraintStart_toEndOf="@+id/totalrevenue"
+                    app:layout_constraintTop_toBottomOf="@+id/todayreport"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+                <TextView
+                    android:id="@+id/totalcost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tong_chi"
+                    android:textSize="@dimen/_16sp"
+                    android:textColor="@color/xam"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/totalrevenue"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+                <TextView
+                    android:id="@+id/amountspent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_100_000"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    app:layout_constraintStart_toEndOf="@+id/totalcost"
+                    app:layout_constraintTop_toBottomOf="@+id/amountcollected"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+                <TextView
+                    android:id="@+id/coloramountspent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_amount_spent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/totalcost"
+                    android:layout_marginTop="@dimen/_200dp"
+                    />
+
+                <TextView
+                    android:id="@+id/amountspent1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/so_tien_da_chi"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    app:layout_constraintStart_toEndOf="@+id/coloramountspent"
+                    app:layout_constraintTop_toTopOf="@id/coloramountspent"
+                    />
+
+                <TextView
+                    android:id="@+id/amountspent2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_10_000"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    app:layout_constraintStart_toEndOf="@+id/amountspent1"
+                    app:layout_constraintTop_toTopOf="@+id/coloramountspent"
+                    />
+
+                <TextView
+                    android:id="@+id/colorremainingamount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_remaining_amount"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/coloramountspent"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/remainingamount1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/so_tien_con_lai"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    app:layout_constraintStart_toEndOf="@+id/colorremainingamount"
+                    app:layout_constraintTop_toBottomOf="@+id/amountspent1"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+                <TextView
+                    android:id="@+id/remainingamount2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_10_000"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    app:layout_constraintStart_toEndOf="@+id/remainingamount1"
+                    app:layout_constraintTop_toBottomOf="@+id/amountspent2"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ctthismonthreport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp16"
+                android:layout_marginTop="@dimen/dp32"
+                android:background="@drawable/shape_account_not_stroke"
+                android:padding="@dimen/_16dp">
+
+
+                <TextView
+                    android:id="@+id/thismonthreport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Báo cáo tháng này (15/08/2024)"
+                    android:textStyle="bold"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+                <TextView
+                    android:id="@+id/totalrevenuethismonth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tong_thu"
+                    android:textSize="@dimen/_16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/thismonthreport"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+                <TextView
+                    android:id="@+id/totalrevenuethismonth1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_100_000"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    app:layout_constraintStart_toEndOf="@+id/totalrevenuethismonth"
+                    app:layout_constraintTop_toBottomOf="@+id/thismonthreport"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+                <TextView
+                    android:id="@+id/totalexpensesthismonth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tong_chi"
+                    android:textSize="@dimen/_16sp"
+                    android:textColor="@color/xam"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/totalrevenuethismonth"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+                <TextView
+                    android:id="@+id/totalexpensesthismonth1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_100_000"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    app:layout_constraintStart_toEndOf="@+id/totalexpensesthismonth"
+                    app:layout_constraintTop_toBottomOf="@+id/totalrevenuethismonth1"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/colormonthlyamountspent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_amount_spent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/totalexpensesthismonth"
+                    android:layout_marginTop="@dimen/_200dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/monthlyamountspent1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/so_tien_da_chi"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    app:layout_constraintStart_toEndOf="@+id/colormonthlyamountspent"
+                    app:layout_constraintTop_toBottomOf="@+id/totalexpensesthismonth1"
+                    android:layout_marginTop="@dimen/_200dp"
+                    />
+
+                <TextView
+                    android:id="@+id/monthlyamountspent2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_10_000"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    app:layout_constraintStart_toEndOf="@+id/monthlyamountspent1"
+                    app:layout_constraintTop_toBottomOf="@+id/totalexpensesthismonth1"
+                    android:layout_marginTop="@dimen/_200dp"
+                    />
+
+                <TextView
+                    android:id="@+id/colorremainingmonthamount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_remaining_amount"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/colormonthlyamountspent"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/remainingmonthamount1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/so_tien_da_chi"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    app:layout_constraintStart_toEndOf="@+id/colorremainingmonthamount"
+                    app:layout_constraintTop_toBottomOf="@+id/monthlyamountspent1"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+                <TextView
+                    android:id="@+id/remainingmonthamount2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_10_000"
+                    android:textColor="@color/xam"
+                    android:textSize="@dimen/_16sp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    app:layout_constraintStart_toEndOf="@+id/remainingmonthamount1"
+                    app:layout_constraintTop_toBottomOf="@+id/monthlyamountspent2"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

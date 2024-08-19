@@ -3,145 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.activities.MainActivity">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/frame_1"
-        android:layout_width="410dp"
-        android:layout_height="200dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:background="#FD3665"
-        android:clipToOutline="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/track_expen"
-            android:layout_width="155dp"
-            android:layout_height="24dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:gravity="top"
-            android:text="@string/track_expen"
-            android:textAppearance="@style/track_expen" />
-
-        <TextView
-            android:id="@+id/th_m_m_i"
-            android:layout_width="78dp"
-            android:layout_height="19dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="287dp"
-            android:layout_marginTop="21dp"
-            android:gravity="top"
-            android:text="@string/them_moi"
-            android:textAppearance="@style/them_moi" />
-
-        <ImageButton
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="365dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/hong"
-            android:src="@drawable/baseline_search_24" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="105dp"
-            android:layout_marginEnd="106dp"
-            app:srcCompat="@mipmap/logo" />
-    </RelativeLayout>
-
-    <View
-        android:id="@+id/rectangle_1"
-        android:layout_width="410dp"
-        android:layout_height="500dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="168dp"
-        android:background="@drawable/rectangle_1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+    <FrameLayout
+        android:id="@+id/flHomeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/icMenuBottom"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/rectangle_3"
-        android:layout_width="343dp"
-        android:layout_height="242dp"
-        android:background="@drawable/rectangle_3"
-        android:elevation="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/rectangle_4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rectangle_1"
-        app:layout_constraintVertical_bias="0.428" />
-
-    <View
-        android:id="@+id/rectangle_5"
-        android:layout_width="158dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/rectangle_5"
-        android:elevation="4dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rectangle_3" />
-
-    <TextView
-        android:id="@+id/thong_tin"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/icMenuBottom"
+        layout="@layout/layout_button_home"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="5dp"
-        android:gravity="center"
-        android:text="@string/thong_tin"
-        android:textAppearance="@style/thong_tin"
-        app:layout_constraintBottom_toBottomOf="@id/rectangle_5"
-        app:layout_constraintEnd_toEndOf="@id/rectangle_5"
-        app:layout_constraintStart_toStartOf="@id/rectangle_5"
-        app:layout_constraintTop_toTopOf="@id/rectangle_5" />
-
-    <View
-        android:id="@+id/rectangle_4"
-        android:layout_width="344dp"
-        android:layout_height="172dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="56dp"
-        android:background="@drawable/rectangle_4"
-        android:elevation="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/rectangle_2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <View
-        android:id="@+id/rectangle_2"
-        android:layout_width="410dp"
-        android:layout_height="60dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/rectangle_2"
-        android:elevation="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
-        app:layout_constraintStart_toStartOf="parent" />
-
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
