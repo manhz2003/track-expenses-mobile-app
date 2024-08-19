@@ -1,4 +1,4 @@
-package com.eaut20210719.trackexpenses.activities;
+package com.eaut20210719.trackexpenses.ui.activities;
 
 public class HistoryActivity {
 }

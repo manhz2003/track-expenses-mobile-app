@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">TrackExpenses</string>
+    <string name="app_name">test</string>
+    <string name="track_expen">Track Expenses</string>
+    <string name="them_moi">Thêm mới</string>
+    <string name="thong_tin">
+      Thông tin chi tiêu
+    </string>
 </resources>
