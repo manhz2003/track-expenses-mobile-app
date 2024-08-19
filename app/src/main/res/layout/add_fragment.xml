@@ -134,7 +134,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/lnnhap_danh_muc" />
 
-
                 <Spinner
                     android:id="@+id/spinnerCatalog"
                     android:layout_width="match_parent"
