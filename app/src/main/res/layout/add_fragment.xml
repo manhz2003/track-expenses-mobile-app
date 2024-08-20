@@ -132,7 +132,7 @@
                     android:textSize="@dimen/_14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/lnnhap_danh_muc" />
+                    app:layout_constraintTop_toBottomOf="@id/lnnhap_danh_muc" />
 
                 <Spinner
                     android:id="@+id/spinnerCatalog"
