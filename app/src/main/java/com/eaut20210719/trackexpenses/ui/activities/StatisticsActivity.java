@@ -1,4 +1,6 @@
 package com.eaut20210719.trackexpenses.ui.activities;
 
-public class StatisticsActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class StatisticsActivity extends AppCompatActivity {
 }
