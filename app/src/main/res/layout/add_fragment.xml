@@ -171,7 +171,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="@dimen/_16dp"
-                    android:text="@string/ghi_chu"
+                    android:text="@string/content_noi_dung"
                     android:textColor="@color/xam"
                     android:textSize="@dimen/_16sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -191,7 +191,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/shape_thong_tin"
-                        android:hint="Nhập ghi chú"
+                        android:hint="Nhập nội dung"
                         android:paddingVertical="@dimen/_16dp"
                         android:paddingStart="@dimen/_20dp"/>
                 </LinearLayout>
@@ -201,7 +201,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_16dp"
-                    android:text="Thời gian"
+                    android:text="@string/time"
                     android:textColor="@color/xam"
                     android:textSize="@dimen/_16sp"
                     app:layout_constraintStart_toStartOf="parent"
