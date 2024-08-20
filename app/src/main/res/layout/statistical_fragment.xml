@@ -333,7 +333,7 @@
                     android:id="@+id/remainingmonthamount1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/so_tien_da_chi"
+                    android:text="@string/so_tien_con_lai"
                     android:textColor="@color/xam"
                     android:textSize="@dimen/_16sp"
                     android:layout_marginStart="@dimen/_16dp"

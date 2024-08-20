@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Danh mục"
+            android:text="@string/danh_muc_1"
             android:textColor="@color/black"
             android:textSize="@dimen/_16sp"
             android:textStyle="bold"
@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Chọn tác vụ thực hiện"
+            android:text="@string/chon_tac_vu_thuc_hien"
             android:textColor="@color/black"
             android:textSize="@dimen/_16sp" />
 
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:backgroundTint="@color/white"
-            android:text="Sửa thu chi"
+            android:text="@string/sua_thu_chi"
             android:textColor="@color/color_009CDF"
             android:textSize="@dimen/_16sp" />
 
@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Xóa bản ghi"
+            android:text="@string/xoa_ban_ghi"
             android:backgroundTint="@color/white"
             android:textColor="@color/color_009CDF"
             android:textSize="@dimen/_16sp" />
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
             android:gravity="center"
-            android:text="Đóng lại"
+            android:text="@string/dong_lai"
             android:textColor="@color/color_009CDF"
             android:textSize="@dimen/_16sp" />
 
