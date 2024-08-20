@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.eaut20210719.trackexpenses.R;
 import com.eaut20210719.trackexpenses.databinding.HistoryFragmentBinding;
 import com.eaut20210719.trackexpenses.ui.adapters.HistoryAdapter;
 
@@ -17,6 +18,7 @@ import com.eaut20210719.trackexpenses.ui.adapters.HistoryAdapter;
 public class HistoryFragment extends Fragment {
 
     private HistoryFragmentBinding binding;
+    private View.OnClickListener addClickListener;
 
     @Nullable
     @Override
@@ -32,6 +34,15 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Gán sự kiện nhấn cho tvAdd
+        binding.tvAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (addClickListener != null) {
+                    addClickListener.onClick(v);
+                }
+            }
+        });
         initView();
     }
 
@@ -44,4 +55,19 @@ public class HistoryFragment extends Fragment {
         binding.rvHistory.setAdapter(new HistoryAdapter(list));
 
     }
+
+    // Phương thức để MainActivity thiết lập sự kiện click cho tvAdd
+    public void setAddClickListener(View.OnClickListener listener) {
+        this.addClickListener = listener;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null; // tránh memory leak
+    }
+
+
+
+
 }
