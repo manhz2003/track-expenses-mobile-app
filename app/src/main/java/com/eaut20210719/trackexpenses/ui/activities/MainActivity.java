@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import com.eaut20210719.trackexpenses.R;
 import com.eaut20210719.trackexpenses.databinding.ActivityMainBinding;
 import com.eaut20210719.trackexpenses.ui.fragments.AddFragment;
@@ -24,53 +26,100 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+
         setContentView(binding.getRoot());
 
-        getSupportFragmentManager().beginTransaction().add(R.id.flHomeContainer, new HomeFragment()).commit();
+        // Hiển thị HomeFragment mặc định
+        HomeFragment homeFragment = new HomeFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, homeFragment).commit();
+        setUpFragmentListener(homeFragment);
 
-        setupMenuItemClickListeners();
-    }
-
-    private void setupMenuItemClickListeners() {
         binding.icMenuBottom.tvHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                HomeFragment homeFragment = new HomeFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, homeFragment).commit();
+                setUpFragmentListener(homeFragment);
                 updateSelectedItem(binding.icMenuBottom.tvHome);
-                getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, new HomeFragment()).commit();
             }
         });
 
         binding.icMenuBottom.tvHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                HistoryFragment historyFragment = new HistoryFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, historyFragment).commit();
+                setUpFragmentListener(historyFragment);
                 updateSelectedItem(binding.icMenuBottom.tvHistory);
-                getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, new HistoryFragment()).commit();
             }
         });
 
         binding.icMenuBottom.tvUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSelectedItem(binding.icMenuBottom.tvUpdate);
                 getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, new AddFragment()).commit();
+                updateSelectedItem(binding.icMenuBottom.tvUpdate);
             }
+
         });
 
         binding.icMenuBottom.tvReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ReportFragment reportFragment = new ReportFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, reportFragment).commit();
+                setUpFragmentListener(reportFragment);
                 updateSelectedItem(binding.icMenuBottom.tvReport);
-                getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, new ReportFragment()).commit();
             }
         });
 
         binding.icMenuBottom.tvSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SettingFragment settingFragment = new SettingFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, settingFragment).commit();
+                setUpFragmentListener(settingFragment);
                 updateSelectedItem(binding.icMenuBottom.tvSetting);
-                getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, new SettingFragment()).commit();
             }
         });
+    }
+
+    // Phương thức để xử lý sự kiện nhấn vào TextView "Thêm mới"
+    public void onAddNewClicked() {
+        // Mở AddFragment khi nhấn vào "Thêm mới"
+        getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, new AddFragment()).commit();
+    }
+
+    private void setUpFragmentListener(Fragment fragment) {
+        if (fragment instanceof HomeFragment) {
+            ((HomeFragment) fragment).setAddClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onAddNewClicked();
+                }
+            });
+        } else if (fragment instanceof HistoryFragment) {
+            ((HistoryFragment) fragment).setAddClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onAddNewClicked();
+                }
+            });
+        } else if (fragment instanceof SettingFragment) {
+            ((SettingFragment) fragment).setAddClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onAddNewClicked();
+                }
+            });
+        } else if (fragment instanceof ReportFragment) {
+            ((ReportFragment) fragment).setAddClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onAddNewClicked();
+                }
+            });
+        }
     }
 
     private void updateSelectedItem(View selectedView) {
@@ -98,5 +147,6 @@ public class MainActivity extends AppCompatActivity {
             selectedView.setBackgroundColor(setWhile);
         }
     }
+
 
 }

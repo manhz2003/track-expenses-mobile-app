@@ -46,4 +46,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         public void bind(String item) {
         }
     }
+
+
 }

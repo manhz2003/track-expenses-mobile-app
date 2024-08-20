@@ -14,6 +14,7 @@ import com.eaut20210719.trackexpenses.databinding.StatisticalFragmentBinding;
 public class ReportFragment extends Fragment {
 
     private StatisticalFragmentBinding binding;
+    private View.OnClickListener addClickListener;
 
     @Nullable
     @Override
@@ -29,6 +30,25 @@ public class ReportFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Thiết lập sự kiện cho tvAdd
+        binding.tvAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (addClickListener != null) {
+                    addClickListener.onClick(v);
+                }
+            }
+        });
     }
 
+    // Phương thức để MainActivity thiết lập sự kiện click cho tvAdd
+    public void setAddClickListener(View.OnClickListener listener) {
+        this.addClickListener = listener;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null; // tránh memory leak
+    }
 }
