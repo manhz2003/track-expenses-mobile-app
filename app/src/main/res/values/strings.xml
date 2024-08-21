@@ -48,7 +48,7 @@
     <string name="thiet_lap_co_chu">Thiết lập cỡ chữ</string>
     <string name="quan_ly_du_lieu">Quản lý dữ liệu</string>
     <string name="xoa_du_lieu">Xóa dữ liệu</string>
-    <string name="noi_dung">Xóa toàn bộ dữ liệu để thu chép thu chilại từ đầu(không thể phục hồi sau khi xóa)</string>
+    <string name="noi_dung">Xóa toàn bộ dữ liệu để thu chép thu chi lại từ đầu(không thể phục hồi sau khi xóa)</string>
     <string name="ho_tro">Hỗ trợ</string>
     <string name="noi_dung_ho_tro">Các bạn hãy gửi hỗ trợ tới địa chỉ email dưới đây khi thông báo lỗi hay góp ý tới ứng dụng nhé:</string>
     <string name="email">hotro.quanlychitieu@gmail.com</string>
@@ -59,5 +59,5 @@
     <string name="sua_thu_chi">Sửa thu chi</string>
     <string name="xoa_ban_ghi">Xóa bản ghi</string>
     <string name="dong_lai">Đóng lại</string>
-    <string name="nhap_tim_kiem">Nhập tìm kiếm</string>
+    <string name="nhap_tim_kiem">Nhập tìm kiếm theo ngày</string>
 </resources>

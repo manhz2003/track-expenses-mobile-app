@@ -1,5 +1,6 @@
 package com.eaut20210719.trackexpenses.ui.activities;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -58,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, new AddFragment()).commit();
-                updateSelectedItem(binding.icMenuBottom.tvUpdate);
+                updateSelectedItem(binding.icMenuBottom.tvUpdate); // Cập nhật mục đã chọn
             }
-
         });
+
 
         binding.icMenuBottom.tvReport.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,12 +91,18 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, new AddFragment()).commit();
     }
 
+
+
     private void setUpFragmentListener(Fragment fragment) {
+        int defaultColor = getResources().getColor(R.color.black);
         if (fragment instanceof HomeFragment) {
             ((HomeFragment) fragment).setAddClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onAddNewClicked();
+                    binding.icMenuBottom.tvHome.setTextColor(defaultColor);
+                    binding.icMenuBottom.tvHome.setTypeface(null, Typeface.NORMAL); // Reset bold
+
                 }
             });
         } else if (fragment instanceof HistoryFragment) {
@@ -103,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     onAddNewClicked();
+                    binding.icMenuBottom.tvHistory.setTextColor(defaultColor);
+                    binding.icMenuBottom.tvHistory.setTypeface(null, Typeface.NORMAL); // Reset bold
                 }
             });
         } else if (fragment instanceof SettingFragment) {
@@ -110,6 +119,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     onAddNewClicked();
+                     // Reset bold
+                    binding.icMenuBottom.tvSetting.setTextColor(defaultColor);
+                    binding.icMenuBottom.tvSetting.setTypeface(null, Typeface.NORMAL);
                 }
             });
         } else if (fragment instanceof ReportFragment) {
@@ -117,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     onAddNewClicked();
+                    binding.icMenuBottom.tvReport.setTextColor(defaultColor);
+                    binding.icMenuBottom.tvReport.setTypeface(null, Typeface.NORMAL);
                 }
             });
         }
@@ -126,25 +140,33 @@ public class MainActivity extends AppCompatActivity {
         // Define colors
         int defaultColor = getResources().getColor(R.color.black); // Màu chữ mặc định
         int selectedColor = getResources().getColor(R.color.color_fd3665); // Màu chữ khi chọn
-        int setWhile = getResources().getColor(R.color.white); // Màu nền khi chọn
+        int selectedBackgroundColor = getResources().getColor(R.color.white); // Màu nền khi chọn
 
-        // Reset all items to default color
+        // Reset all items to default color and font weight
         binding.icMenuBottom.tvHome.setTextColor(defaultColor);
         binding.icMenuBottom.tvHome.setTypeface(null, Typeface.NORMAL); // Reset bold
         binding.icMenuBottom.tvHistory.setTextColor(defaultColor);
         binding.icMenuBottom.tvHistory.setTypeface(null, Typeface.NORMAL); // Reset bold
-        binding.icMenuBottom.tvUpdate.setBackgroundColor(setWhile);
+        binding.icMenuBottom.tvUpdate.setBackgroundColor(defaultColor);
         binding.icMenuBottom.tvReport.setTextColor(defaultColor);
         binding.icMenuBottom.tvReport.setTypeface(null, Typeface.NORMAL); // Reset bold
         binding.icMenuBottom.tvSetting.setTextColor(defaultColor);
         binding.icMenuBottom.tvSetting.setTypeface(null, Typeface.NORMAL); // Reset bold
+
+        // Reset background color of all items
+        binding.icMenuBottom.tvHome.setBackgroundColor(Color.TRANSPARENT);
+        binding.icMenuBottom.tvHistory.setBackgroundColor(Color.TRANSPARENT);
+        binding.icMenuBottom.tvUpdate.setBackgroundColor(Color.TRANSPARENT);
+        binding.icMenuBottom.tvReport.setBackgroundColor(Color.TRANSPARENT);
+        binding.icMenuBottom.tvSetting.setBackgroundColor(Color.TRANSPARENT);
 
         if (selectedView instanceof TextView) {
             TextView selectedTextView = (TextView) selectedView;
             selectedTextView.setTextColor(selectedColor);
             selectedTextView.setTypeface(null, Typeface.BOLD); // Set bold
         } else if (selectedView instanceof ImageView) {
-            selectedView.setBackgroundColor(setWhile);
+            selectedView.setBackgroundColor(selectedBackgroundColor);
         }
     }
+
 }

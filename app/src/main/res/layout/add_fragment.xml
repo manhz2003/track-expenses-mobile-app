@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -47,7 +48,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="@dimen/dp16"
                 android:background="@drawable/shape_account_not_stroke"
-                android:padding="@dimen/_16dp">
+                android:padding="@dimen/_16dp"
+                tools:ignore="ExtraText">
 
                 <TextView
                     android:id="@+id/amount1"
@@ -120,8 +122,7 @@
                     android:textSize="@dimen/_14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/lnnhap_danh_muc" />
-                    app:layout_constraintTop_toBottomOf="@id/lnnhap_danh_muc"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/lnnhap_danh_muc"/>
 
                 <Button
                     android:id="@+id/btnDeleteCategory"
@@ -142,13 +143,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:entries="@array/spinner_values_catalog"
-                    android:layout_marginTop="@dimen/dp16"
                     android:popupBackground="@drawable/spinner_dropdown_background"
                     app:layout_constraintBottom_toTopOf="@id/type"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/btnSave2"
-                    android:layout_marginTop="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_24dp"
                     />
 
 
@@ -158,7 +158,7 @@
                     android:layout_width="39dp"
                     android:layout_height="25dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="@dimen/_16dp"
+                    android:layout_marginTop="@dimen/_18dp"
                     android:text="@string/loai"
                     android:textColor="@color/xam"
                     android:textSize="@dimen/_16sp"

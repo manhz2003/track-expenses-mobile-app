@@ -1,5 +1,7 @@
 package com.eaut20210719.trackexpenses.ui.fragments;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import com.eaut20210719.trackexpenses.databinding.AddFragmentBinding;
 import com.eaut20210719.trackexpenses.viewmodels.CategoryViewModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class AddFragment extends Fragment {
@@ -41,6 +44,7 @@ public class AddFragment extends Fragment {
         // Initialize ViewModel
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
 
+        // Set up Spinner Adapter
         spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categoriesList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerCatalog.setAdapter(spinnerAdapter);
@@ -54,27 +58,51 @@ public class AddFragment extends Fragment {
             spinnerAdapter.notifyDataSetChanged(); // Notify adapter about the changes
         });
 
+        // Set up DateTime Picker
+        setupDateTimePicker();
+
+        // Set up Save Button
         binding.btnSave2.setOnClickListener(v -> {
-            // Log the value before checking
             String categoryName = binding.editTextCategoryName.getText().toString().trim();
             Log.d("AddFragment", "Category Name before check: [" + categoryName + "]");
 
             if (!categoryName.isEmpty()) {
-                // Log the value when it's not empty
                 Log.d("AddFragment", "Category Name: [" + categoryName + "]");
                 Category category = new Category(categoryName);
                 categoryViewModel.insert(category);
 
-                // Clear the input field
                 binding.editTextCategoryName.setText("");
                 Toast.makeText(getContext(), "Danh mục đã được thêm", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), "Vui lòng nhập tên danh mục", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
+    private void setupDateTimePicker() {
+        if (binding.tvTime1 != null) {
+            binding.tvTime1.setOnClickListener(v -> showDateTimePicker());
+        } else {
+            Log.e("AddFragment", "tvTime1 is null. Check if it is correctly included in the layout.");
+        }
+    }
 
+    private void showDateTimePicker() {
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
 
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year1, month1, dayOfMonth) -> {
+            TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), (view1, hourOfDay, minute1) -> {
+                String selectedTime = String.format("%02d:%02d", hourOfDay, minute1);
+                String selectedDate = String.format("%02d/%02d/%d", dayOfMonth, month1 + 1, year1);
+                binding.tvTime1.setText(selectedTime + " " + selectedDate);
+            }, hour, minute, true);
+            timePickerDialog.show();
+        }, year, month, day);
+        datePickerDialog.show();
+    }
 }
