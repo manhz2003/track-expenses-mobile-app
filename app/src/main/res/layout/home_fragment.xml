@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
     <FrameLayout
         android:id="@+id/frTrackExpenses"
         android:layout_width="match_parent"
@@ -31,26 +30,14 @@
         android:id="@+id/tvAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/_8dp"
+        android:layout_marginEnd="@dimen/_16dp"
         android:text="@string/add_title"
         android:textColor="@color/white"
         android:textSize="@dimen/_16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/tvTrackExpenses"
-        app:layout_constraintEnd_toStartOf="@id/imSearch"
-        app:layout_constraintTop_toTopOf="@id/tvTrackExpenses" />
-
-    <ImageView
-        android:id="@+id/imSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dp16"
-        android:contentDescription="@string/add_title"
-        android:scaleType="fitXY"
-        android:src="@drawable/search_icon"
-        app:layout_constraintBottom_toBottomOf="@id/tvAdd"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvAdd" />
+        app:layout_constraintTop_toTopOf="@id/tvTrackExpenses" />
 
     <ImageView
         android:id="@+id/imAnimal"
@@ -120,11 +107,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/shape_group_expenses"
             android:orientation="vertical"
             android:paddingVertical="@dimen/dp16">
 
+            <!-- Nội dung có thể cuộn -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/ctExpensesInfo"
                 android:layout_width="match_parent"
@@ -179,7 +167,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tvExpenses"
                     app:layout_constraintTop_toTopOf="@id/tvIncome" />
-
 
                 <TextView
                     android:id="@+id/tvExpenses"
@@ -236,6 +223,57 @@
                     app:layout_constraintStart_toStartOf="@id/tieu_trong_ngay"
                     app:layout_constraintTop_toBottomOf="@id/tieu_trong_ngay" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/tien"
+                    android:layout_marginTop="@dimen/_16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:clipToPadding="false"
+                    android:elevation="@dimen/_2dp">
+
+                    <View
+                        android:id="@+id/green"
+                        android:layout_width="0dp"
+                        android:layout_height="16dp"
+                        android:layout_weight="2"
+                        android:background="@drawable/green_rounded" />
+
+                    <!-- Màu hồng -->
+                    <View
+                        android:id="@+id/pink"
+                        android:layout_width="0dp"
+                        android:layout_height="16dp"
+                        android:layout_weight="0.1"
+                        android:background="@color/pink" />
+
+                    <!-- Màu xanh dương nhạt -->
+                    <View
+                        android:id="@+id/light_blue"
+                        android:layout_width="0dp"
+                        android:layout_height="16dp"
+                        android:layout_weight="2"
+                        android:background="@color/light_blue" />
+
+                    <!-- Màu cam -->
+                    <View
+                        android:id="@+id/orange"
+                        android:layout_width="0dp"
+                        android:layout_height="16dp"
+                        android:layout_weight="2"
+                        android:background="@color/orange" />
+
+                    <!-- Màu đỏ -->
+                    <View
+                        android:id="@+id/red"
+                        android:layout_width="0dp"
+                        android:layout_height="16dp"
+                        android:layout_weight="2"
+                        android:background="@drawable/red_rounded"/>
+
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -263,7 +301,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/icsetting" />
 
-
                 <TextView
                     android:id="@+id/icsetting"
                     android:layout_width="wrap_content"
@@ -271,8 +308,7 @@
                     app:drawableTopCompat="@drawable/setting"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="@dimen/_16dp"
-                    />
+                    android:layout_marginTop="@dimen/_16dp" />
 
                 <androidx.appcompat.widget.AppCompatSeekBar
                     android:id="@+id/sbExpenses"

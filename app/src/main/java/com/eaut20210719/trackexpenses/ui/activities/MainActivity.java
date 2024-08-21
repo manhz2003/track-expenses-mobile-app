@@ -147,6 +147,4 @@ public class MainActivity extends AppCompatActivity {
             selectedView.setBackgroundColor(setWhile);
         }
     }
-
-
 }

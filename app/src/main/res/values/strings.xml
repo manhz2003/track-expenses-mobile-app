@@ -5,12 +5,12 @@
     <string name="add_title">Thêm mới</string>
     <string name="balance_total_title">Tổng số dư</string>
     <string name="thong_tin">Thông tin chi tiêu</string>
-    <string name="thu_nhap">Thu nhập</string>
+    <string name="thu_nhap">Thu nhập tháng</string>
     <string name="history">Lịch sử</string>
     <string name="report">Thống kê</string>
     <string name="setting">Setting</string>
     <string name="_0">0đ</string>
-    <string name="chi_tieu">Chi tiêu</string>
+    <string name="chi_tieu">Chi tiêu tháng</string>
     <string name="so_tien_da_tieu">Số tiền đã tiêu trong ngày:</string>
     <string name="_50_000">50.000đ</string>
     <string name="save">Lưu</string>
@@ -59,4 +59,5 @@
     <string name="sua_thu_chi">Sửa thu chi</string>
     <string name="xoa_ban_ghi">Xóa bản ghi</string>
     <string name="dong_lai">Đóng lại</string>
+    <string name="nhap_tim_kiem">Nhập tìm kiếm</string>
 </resources>
