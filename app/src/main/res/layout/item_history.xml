@@ -30,9 +30,10 @@
         android:src="@drawable/there_dots"
         android:textColor="@color/color_fd3665"
         android:textStyle="bold"
+        android:clickable="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/tvHistoryBuy1"
@@ -80,7 +81,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTime"
         android:layout_marginTop="@dimen/_24dp"/>
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

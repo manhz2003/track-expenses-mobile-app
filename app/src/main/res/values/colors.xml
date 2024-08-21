@@ -9,4 +9,10 @@
     <color name="xanhtroi">#5D51E3</color>
     <color name="red">#F80B0B</color>
     <color name="color_009CDF">#009CDF</color>
+    <color name="green">#00FF00</color>
+    <color name="pink">#FF007F</color>
+    <color name="light_blue">#00FFFF</color>
+    <color name="orange">#FFA500</color>
+    <color name="camdam">#FE862F</color>
+    <color name="hongthongke">#FA3D6A</color>
 </resources>

@@ -32,4 +32,8 @@
     <dimen name="_6dp">6dp</dimen>
     <dimen name="_24dp">24dp</dimen>
     <dimen name="_28dp">28dp</dimen>
+    <dimen name="_160dp">160dp</dimen>
+    <dimen name="popup_search_layout_height">-40dp</dimen>
+    <dimen name="_180dp">180dp</dimen>
+    <dimen name="_300dp">300dp</dimen>
 </resources>

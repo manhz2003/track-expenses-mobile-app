@@ -27,19 +27,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dp16"
-        android:contentDescription="@string/add_title"
-        android:scaleType="fitXY"
-        android:src="@drawable/search_icon"
-        app:layout_constraintBottom_toBottomOf="@id/tvAdd_Repair"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvAdd_Repair" />
-
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -132,7 +119,7 @@
                     android:textSize="@dimen/_14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lnnhap_danh_muc" />
+                    app:layout_constraintTop_toBottomOf="@+id/lnnhap_danh_muc" />
 
                 <Spinner
                     android:id="@+id/spinnerCatalog"
@@ -140,10 +127,12 @@
                     android:layout_height="wrap_content"
                     android:entries="@array/spinner_values_catalog"
                     android:layout_marginTop="@dimen/dp16"
+                    android:popupBackground="@drawable/spinner_dropdown_background"
                     app:layout_constraintBottom_toTopOf="@id/type"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/btnSave2" />
+
 
                 <TextView
                     android:id="@+id/type"
@@ -163,6 +152,7 @@
                     android:layout_height="wrap_content"
                     android:entries="@array/spinner_values"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:popupBackground="@drawable/spinner_dropdown_background"
                     app:layout_constraintTop_toTopOf="@id/type" />
 
                 <TextView

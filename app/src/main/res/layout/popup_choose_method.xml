@@ -2,15 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="vertical">
-
+    android:id="@+id/popup_choose_method"
+    android:orientation="vertical"
+    android:background="@drawable/popup_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_12dp"
-        android:background="@drawable/shape_thong_tin"
         android:orientation="vertical">
 
         <TextView
@@ -34,9 +32,9 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
             android:layout_marginTop="@dimen/dp16"
-            android:background="@color/black" />
+            android:background="@color/xam" />
 
         <Button
             android:id="@+id/btnEdit"
@@ -50,8 +48,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/black" />
+            android:layout_height="1dp"
+            android:background="@color/xam" />
 
         <Button
             android:id="@+id/btnDeleteRecord"
@@ -63,16 +61,10 @@
             android:textColor="@color/color_009CDF"
             android:textSize="@dimen/_16sp" />
 
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/shape_thong_tin"
-        android:layout_marginTop="@dimen/_16dp"
-        android:layout_marginHorizontal="@dimen/_12dp"
-        android:orientation="vertical">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/xam" />
 
         <Button
             android:id="@+id/btnClose"
@@ -85,4 +77,5 @@
             android:textSize="@dimen/_16sp" />
 
     </LinearLayout>
+
 </LinearLayout>
