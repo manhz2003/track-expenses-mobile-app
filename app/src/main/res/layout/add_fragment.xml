@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -114,6 +113,7 @@
                     app:layout_constraintTop_toBottomOf="@id/danhmuc">
 
                     <EditText
+                        android:id="@+id/editTextCategoryName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/shape_thong_tin"
@@ -121,6 +121,7 @@
                         android:paddingVertical="@dimen/_16dp"
                         android:paddingStart="@dimen/_20dp"/>
                 </LinearLayout>
+
 
                 <Button
                     android:id="@+id/btnSave2"
@@ -130,20 +131,35 @@
                     android:backgroundTint="@color/color_fd3665"
                     android:text="@string/them"
                     android:textSize="@dimen/_14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lnnhap_danh_muc" />
+                    app:layout_constraintTop_toBottomOf="@id/lnnhap_danh_muc"
+                    />
+
+                <Button
+                    android:id="@+id/btnDeleteCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_16dp"
+                    android:backgroundTint="@color/mauxam"
+                    android:textColor="@color/black"
+                    android:text="@string/xoa_danh_muc"
+                    android:textSize="@dimen/_14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/btnSave2"
+                    app:layout_constraintStart_toEndOf="@id/btnSave2"
+                    app:layout_constraintTop_toTopOf="@id/btnSave2"
+
+                     />
 
                 <Spinner
                     android:id="@+id/spinnerCatalog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:entries="@array/spinner_values_catalog"
-                    android:layout_marginTop="@dimen/dp16"
-                    app:layout_constraintBottom_toTopOf="@id/type"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/btnSave2" />
+                    app:layout_constraintTop_toBottomOf="@id/btnSave2"
+                    android:layout_marginTop="@dimen/_16dp"
+                    />
+
 
                 <TextView
                     android:id="@+id/type"
