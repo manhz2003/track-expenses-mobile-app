@@ -25,6 +25,7 @@
     <string name="nhap_so_tien">Nhập số tiền</string>
     <string name="danh_muc">Danh mục:</string>
     <string name="them">Thêm</string>
+    <string name="xoa_danh_muc">Xóa</string>
     <string name="muc_khac">Mục khác</string>
     <string name="mua_sam">Mua sắm</string>
     <string name="do_uong">Đồ uống</string>
