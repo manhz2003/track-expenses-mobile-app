@@ -2,9 +2,12 @@ package com.eaut20210719.trackexpenses.database;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.eaut20210719.trackexpenses.database.dao.CategoryDao;
 import com.eaut20210719.trackexpenses.database.dao.ColorDao;

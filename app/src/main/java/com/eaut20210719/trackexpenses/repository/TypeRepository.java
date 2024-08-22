@@ -1,40 +1,32 @@
 package com.eaut20210719.trackexpenses.repository;
 
-import android.content.Context;
-
-import androidx.room.Room;
-
+import android.app.Application;
+import androidx.lifecycle.LiveData;
 import com.eaut20210719.trackexpenses.database.AppDatabase;
 import com.eaut20210719.trackexpenses.database.dao.TypeDao;
 import com.eaut20210719.trackexpenses.database.entities.Type;
-
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class TypeRepository {
     private final TypeDao typeDao;
+    private final ExecutorService executorService;
 
-    public TypeRepository(Context context, TypeDao typeDao) {
-        this.typeDao = typeDao;
-        AppDatabase database = Room.databaseBuilder(context, AppDatabase.class, "trackexpenses").build();
+    public TypeRepository(Application application) {
+        AppDatabase db = AppDatabase.getInstance(application);
+        typeDao = db.typeDao();
+        executorService = AppDatabase.getDatabaseWriteExecutor();
     }
 
-    public void insert(Type type) {
-        typeDao.insert(type);
-    }
-
-    public void update(Type type) {
-        typeDao.update(type);
-    }
-
-    public void delete(Type type) {
-        typeDao.delete(type);
-    }
-
-    public List<Type> getAllTypes() {
+    public LiveData<List<Type>> getAllTypes() {
         return typeDao.getAllTypes();
     }
 
-    public Type getTypeById(int id) {
-        return typeDao.getTypeById(id);
+    public boolean isTypeExists(String typeName) {
+        return typeDao.isTypeExists(typeName);
+    }
+
+    public void insert(Type type) {
+        executorService.execute(() -> typeDao.insertType(type));
     }
 }

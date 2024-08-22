@@ -166,13 +166,13 @@
                     app:layout_constraintTop_toBottomOf="@id/spinnerCatalog" />
 
                 <Spinner
-                    android:id="@+id/spinner"
+                    android:id="@+id/spinnerType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:entries="@array/spinner_values"
-                    app:layout_constraintEnd_toEndOf="parent"
                     android:popupBackground="@drawable/spinner_dropdown_background"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/type" />
+
 
                 <TextView
                     android:id="@+id/note"

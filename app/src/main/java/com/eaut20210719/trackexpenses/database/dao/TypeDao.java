@@ -1,29 +1,20 @@
 package com.eaut20210719.trackexpenses.database.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Update;
-
 import com.eaut20210719.trackexpenses.database.entities.Type;
-
 import java.util.List;
 
 @Dao
 public interface TypeDao {
     @Insert
-    void insert(Type type);
-
-    @Update
-    void update(Type type);
-
-    @Delete
-    void delete(Type type);
+    void insertType(Type type);
 
     @Query("SELECT * FROM types")
-    List<Type> getAllTypes();
+    LiveData<List<Type>> getAllTypes();
 
-    @Query("SELECT * FROM types WHERE id = :id LIMIT 1")
-    Type getTypeById(int id);
+    @Query("SELECT COUNT(*) > 0 FROM types WHERE type_name = :typeName")
+    boolean isTypeExists(String typeName);
 }

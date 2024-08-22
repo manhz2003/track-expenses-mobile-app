@@ -16,8 +16,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.eaut20210719.trackexpenses.database.entities.Category;
+import com.eaut20210719.trackexpenses.database.entities.Type;
 import com.eaut20210719.trackexpenses.databinding.AddFragmentBinding;
 import com.eaut20210719.trackexpenses.viewmodels.CategoryViewModel;
+import com.eaut20210719.trackexpenses.viewmodels.TypeViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,8 +29,11 @@ public class AddFragment extends Fragment {
 
     private AddFragmentBinding binding;
     private CategoryViewModel categoryViewModel;
-    private ArrayAdapter<String> spinnerAdapter;
+    private TypeViewModel typeViewModel;
+    private ArrayAdapter<String> spinnerCategoryAdapter;
+    private ArrayAdapter<Type> spinnerTypeAdapter;
     private List<String> categoriesList = new ArrayList<>();
+    private List<Type> typesList = new ArrayList<>(); // Danh sách loại
 
     @Nullable
     @Override
@@ -41,21 +46,27 @@ public class AddFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize ViewModel
+        // Initialize ViewModels
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        typeViewModel = new ViewModelProvider(this).get(TypeViewModel.class);
 
-        // Set up Spinner Adapter
-        spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categoriesList);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinnerCatalog.setAdapter(spinnerAdapter);
+        // Set up Spinners
+        setupSpinners();
 
-        // Observe the LiveData
+        // Observe the LiveData for categories
         categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), categories -> {
             categoriesList.clear(); // Clear the old list
             for (Category category : categories) {
                 categoriesList.add(category.getName());
             }
-            spinnerAdapter.notifyDataSetChanged(); // Notify adapter about the changes
+            spinnerCategoryAdapter.notifyDataSetChanged(); // Notify adapter about the changes
+        });
+
+        // Observe the LiveData for types
+        typeViewModel.getAllTypes().observe(getViewLifecycleOwner(), types -> {
+            typesList.clear(); // Clear the old list
+            typesList.addAll(types); // Add new data
+            spinnerTypeAdapter.notifyDataSetChanged(); // Notify adapter about the changes
         });
 
         // Set up DateTime Picker
@@ -78,7 +89,7 @@ public class AddFragment extends Fragment {
             }
         });
 
-        //    set up delete button
+        // Set up Delete Button
         binding.btnDeleteCategory.setOnClickListener(v -> {
             String categoryNameToDelete = binding.spinnerCatalog.getSelectedItem().toString();
             categoryViewModel.deleteCategoryByName(categoryNameToDelete);
@@ -86,7 +97,17 @@ public class AddFragment extends Fragment {
         });
     }
 
+    private void setupSpinners() {
+        // Setup Spinner for categories
+        spinnerCategoryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categoriesList);
+        spinnerCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerCatalog.setAdapter(spinnerCategoryAdapter);
 
+        // Setup Spinner for types
+        spinnerTypeAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, typesList);
+        spinnerTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerType.setAdapter(spinnerTypeAdapter);
+    }
 
     private void setupDateTimePicker() {
         if (binding.tvTime1 != null) {
