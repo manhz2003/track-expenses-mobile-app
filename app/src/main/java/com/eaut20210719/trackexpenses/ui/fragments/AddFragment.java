@@ -79,6 +79,9 @@ public class AddFragment extends Fragment {
         });
     }
 
+        //    set up delete button
+
+
     private void setupDateTimePicker() {
         if (binding.tvTime1 != null) {
             binding.tvTime1.setOnClickListener(v -> showDateTimePicker());

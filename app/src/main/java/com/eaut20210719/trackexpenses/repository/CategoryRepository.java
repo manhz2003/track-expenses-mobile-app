@@ -1,11 +1,7 @@
 package com.eaut20210719.trackexpenses.repository;
 
 import android.app.Application;
-import android.content.Context;
-
 import androidx.lifecycle.LiveData;
-
-import com.eaut20210719.trackexpenses.TrackExpensesApplication;
 import com.eaut20210719.trackexpenses.database.AppDatabase;
 import com.eaut20210719.trackexpenses.database.dao.CategoryDao;
 import com.eaut20210719.trackexpenses.database.entities.Category;
@@ -29,4 +25,7 @@ public class CategoryRepository {
     public void insert(Category category) {
         AppDatabase.getDatabaseWriteExecutor().execute(() -> categoryDao.insertCategory(category));
     }
+
+
+
 }

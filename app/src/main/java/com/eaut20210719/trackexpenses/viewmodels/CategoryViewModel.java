@@ -27,5 +27,7 @@ public class CategoryViewModel extends AndroidViewModel {
     public void insert(Category category) {
         repository.insert(category);
     }
+
+
 }
 
