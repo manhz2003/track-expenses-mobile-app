@@ -28,6 +28,10 @@ public class CategoryViewModel extends AndroidViewModel {
         repository.insert(category);
     }
 
+    public void deleteCategoryByName(String categoryName) {
+        repository.deleteCategoryByName(categoryName);
+    }
+
 
 }
 

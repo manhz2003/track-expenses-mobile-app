@@ -77,9 +77,15 @@ public class AddFragment extends Fragment {
                 Toast.makeText(getContext(), "Vui lòng nhập tên danh mục", Toast.LENGTH_SHORT).show();
             }
         });
-    }
 
         //    set up delete button
+        binding.btnDeleteCategory.setOnClickListener(v -> {
+            String categoryNameToDelete = binding.spinnerCatalog.getSelectedItem().toString();
+            categoryViewModel.deleteCategoryByName(categoryNameToDelete);
+            Toast.makeText(getContext(), "Danh mục đã được xóa", Toast.LENGTH_SHORT).show();
+        });
+    }
+
 
 
     private void setupDateTimePicker() {
