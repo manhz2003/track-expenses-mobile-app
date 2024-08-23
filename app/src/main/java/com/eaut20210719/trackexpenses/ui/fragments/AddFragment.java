@@ -3,6 +3,7 @@ package com.eaut20210719.trackexpenses.ui.fragments;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,27 +14,35 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.eaut20210719.trackexpenses.database.entities.Category;
+import com.eaut20210719.trackexpenses.database.entities.Transaction;
 import com.eaut20210719.trackexpenses.database.entities.Type;
 import com.eaut20210719.trackexpenses.databinding.AddFragmentBinding;
 import com.eaut20210719.trackexpenses.viewmodels.CategoryViewModel;
+import com.eaut20210719.trackexpenses.viewmodels.TransactionViewModel;
 import com.eaut20210719.trackexpenses.viewmodels.TypeViewModel;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class AddFragment extends Fragment {
 
     private AddFragmentBinding binding;
     private CategoryViewModel categoryViewModel;
     private TypeViewModel typeViewModel;
+    private TransactionViewModel transactionViewModel;
     private ArrayAdapter<String> spinnerCategoryAdapter;
     private ArrayAdapter<Type> spinnerTypeAdapter;
     private List<String> categoriesList = new ArrayList<>();
-    private List<Type> typesList = new ArrayList<>(); // Danh sách loại
+    private List<Type> typesList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -46,42 +55,34 @@ public class AddFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize ViewModels
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         typeViewModel = new ViewModelProvider(this).get(TypeViewModel.class);
+        transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
 
-        // Set up Spinners
         setupSpinners();
 
-        // Observe the LiveData for categories
         categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), categories -> {
-            categoriesList.clear(); // Clear the old list
+            categoriesList.clear();
             for (Category category : categories) {
                 categoriesList.add(category.getName());
             }
-            spinnerCategoryAdapter.notifyDataSetChanged(); // Notify adapter about the changes
+            spinnerCategoryAdapter.notifyDataSetChanged();
         });
 
-        // Observe the LiveData for types
         typeViewModel.getAllTypes().observe(getViewLifecycleOwner(), types -> {
-            typesList.clear(); // Clear the old list
-            typesList.addAll(types); // Add new data
-            spinnerTypeAdapter.notifyDataSetChanged(); // Notify adapter about the changes
+            typesList.clear();
+            typesList.addAll(types);
+            spinnerTypeAdapter.notifyDataSetChanged();
         });
-
-        // Set up DateTime Picker
         setupDateTimePicker();
 
-        // Set up Save Button
+//        xử lý lưu danh mục
         binding.btnSave2.setOnClickListener(v -> {
             String categoryName = binding.editTextCategoryName.getText().toString().trim();
-            Log.d("AddFragment", "Category Name before check: [" + categoryName + "]");
 
             if (!categoryName.isEmpty()) {
-                Log.d("AddFragment", "Category Name: [" + categoryName + "]");
                 Category category = new Category(categoryName);
                 categoryViewModel.insert(category);
-
                 binding.editTextCategoryName.setText("");
                 Toast.makeText(getContext(), "Danh mục đã được thêm", Toast.LENGTH_SHORT).show();
             } else {
@@ -89,21 +90,149 @@ public class AddFragment extends Fragment {
             }
         });
 
-        // Set up Delete Button
+//        xử lý xóa danh mục
         binding.btnDeleteCategory.setOnClickListener(v -> {
             String categoryNameToDelete = binding.spinnerCatalog.getSelectedItem().toString();
-            categoryViewModel.deleteCategoryByName(categoryNameToDelete);
-            Toast.makeText(getContext(), "Danh mục đã được xóa", Toast.LENGTH_SHORT).show();
+            if (!categoryNameToDelete.isEmpty()) {
+                categoryViewModel.deleteCategoryByName(categoryNameToDelete);
+                Toast.makeText(getContext(), "Danh mục đã được xóa", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Vui lòng chọn danh mục để xóa", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+//        xử lý lưu dữ liệu cho màn hình add transaction
+        binding.btnSave3.setOnClickListener(v -> {
+            // test log dữ liệu của bảng transaction
+            transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
+            transactionViewModel.logAllTransactionsOnce();
+
+            String amountText = binding.editTextAmount.getText().toString().trim();
+            String cleanedAmountText = amountText.replaceAll("[^0-9]", "");
+
+            if (TextUtils.isEmpty(cleanedAmountText) || !isValidDecimal(cleanedAmountText)) {
+                Toast.makeText(getContext(), "Vui lòng nhập số tiền hợp lệ (ví dụ: 10.300)", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            double amount = Double.parseDouble(cleanedAmountText);
+            String formattedAmount = formatCurrency(amount);
+            binding.editTextAmount.setText(formattedAmount);
+
+            String selectedCategory = binding.spinnerCatalog.getSelectedItem() != null ? binding.spinnerCatalog.getSelectedItem().toString() : "";
+            Type selectedType = (Type) binding.spinnerType.getSelectedItem();
+            String selectedTime = binding.tvTime1.getText().toString().trim();
+            String content = binding.content.getText().toString().trim();
+
+            if (!selectedCategory.isEmpty() && selectedType != null && !selectedTime.isEmpty() && !content.isEmpty()) {
+                observeOnce(categoryViewModel.getCategoryIdByName(selectedCategory), getViewLifecycleOwner(), categoryId -> {
+                    if (categoryId != null) {
+                        observeOnce(typeViewModel.getTypeIdByName(selectedType.getType_name()), getViewLifecycleOwner(), typeId -> {
+                            if (typeId != null) {
+                                updateTotalBalanceAndSaveTransaction(amount, typeId, content, selectedTime, categoryId, 0, 0);
+                            } else {
+                                Toast.makeText(getContext(), "Loại giao dịch không tồn tại.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getContext(), "Danh mục không tồn tại.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+//    hàm observeOnce để quan sát LiveData một lần
+    public static <T> void observeOnce(LiveData<T> liveData, LifecycleOwner owner, Observer<T> observer) {
+        liveData.observe(owner, new Observer<T>() {
+            @Override
+            public void onChanged(T t) {
+                observer.onChanged(t);
+                liveData.removeObserver(this);
+            }
         });
     }
 
+//    hàm updateTotalBalanceAndSaveTransaction để cập nhật số dư và lưu giao dịch
+    private void updateTotalBalanceAndSaveTransaction(double amount, int typeId, String content, String date, int categoryId, int idDailyLimit, int idMonthlyLimit) {
+        observeOnce(transactionViewModel.getLastTransaction(), getViewLifecycleOwner(), lastTransaction -> {
+            double totalBalance = lastTransaction != null ? lastTransaction.getTotalBalance() : 0;
+
+            Log.d("UpdateTotalBalance", "tổng tiền hiện tại: " + totalBalance);
+
+            Type selectedType = (Type) binding.spinnerType.getSelectedItem();
+            if (selectedType != null) {
+                if (selectedType.getType_name().equals("Tiền chi") || selectedType.getType_name().equals("Cho vay")) {
+                    totalBalance -= amount;
+                } else if (selectedType.getType_name().equals("Thu nhập")) {
+                    totalBalance += amount;
+                }
+
+                Log.d("UpdateTotalBalance", "Cập nhật tổng tiền: " + totalBalance);
+            } else {
+                Log.e("UpdateTotalBalance", "type bị null");
+            }
+
+            saveTransaction(amount, typeId, content, date, categoryId, totalBalance, idDailyLimit, idMonthlyLimit);
+        });
+    }
+
+//    hàm saveTransaction để lưu giao dịch
+    private void saveTransaction(double amount, int typeId, String content, String date, int categoryId, double totalBalance, int idDailyLimit, int idMonthlyLimit) {
+        if (typeId <= 0 || categoryId <= 0) {
+            Toast.makeText(getContext(), "Danh mục hoặc loại giao dịch không hợp lệ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            Log.d("SaveTransaction", "Lưu giao dịch với số tiền: " + amount +
+                    ", typeId: " + typeId +
+                    ", content: " + content +
+                    ", date: " + date +
+                    ", categoryId: " + categoryId +
+                    ", totalBalance: " + totalBalance +
+                    ", idDailyLimit: " + idDailyLimit +
+                    ", idMonthlyLimit: " + idMonthlyLimit
+            );
+
+            Transaction transaction = new Transaction(amount, typeId, content, date, categoryId, totalBalance, null, null);
+            transactionViewModel.insert(transaction);
+
+            // Logging dữ liệu sau khi lưu
+            Log.d("SaveTransaction", "Đã lưu giao dịch thành công");
+
+            Toast.makeText(getContext(), "Dữ liệu đã được lưu", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("SaveTransaction", "Error saving transaction", e);
+            Toast.makeText(getContext(), "Lỗi khi lưu dữ liệu. Vui lòng thử lại.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+//    hàm isValidDecimal để kiểm tra số tiền nhập vào có hợp lệ không
+    private boolean isValidDecimal(String amountText) {
+        try {
+            Double.parseDouble(amountText);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+//    hàm formatCurrency để định dạng số tiền
+    private String formatCurrency(double amount) {
+        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.getDefault());
+        formatter.setGroupingUsed(true);
+        return formatter.format(amount);
+    }
+
     private void setupSpinners() {
-        // Setup Spinner for categories
         spinnerCategoryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categoriesList);
         spinnerCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerCatalog.setAdapter(spinnerCategoryAdapter);
 
-        // Setup Spinner for types
         spinnerTypeAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, typesList);
         spinnerTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerType.setAdapter(spinnerTypeAdapter);
@@ -133,6 +262,7 @@ public class AddFragment extends Fragment {
             }, hour, minute, true);
             timePickerDialog.show();
         }, year, month, day);
+
         datePickerDialog.show();
     }
 }

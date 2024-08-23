@@ -17,4 +17,8 @@ public interface TypeDao {
 
     @Query("SELECT COUNT(*) > 0 FROM types WHERE type_name = :typeName")
     boolean isTypeExists(String typeName);
+
+    @Query("SELECT id FROM types WHERE type_name = :typeName")
+    LiveData<Integer> getTypeIdByName(String typeName);
+
 }

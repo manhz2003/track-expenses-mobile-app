@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "db4278c8a0e518be9d675cae90f2078c",
+    "identityHash": "7366bfd515cefaf385ad24790bbaa554",
     "entities": [
       {
         "tableName": "categories",
@@ -136,7 +136,7 @@
       },
       {
         "tableName": "transactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `amount` REAL NOT NULL, `id_type` INTEGER NOT NULL, `content` TEXT, `date` TEXT, `id_category` INTEGER NOT NULL, `total_balance` REAL NOT NULL, `id_daily_limit` INTEGER NOT NULL, `id_monthly_limit` INTEGER NOT NULL, FOREIGN KEY(`id_type`) REFERENCES `types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_category`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_daily_limit`) REFERENCES `daily_limits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_monthly_limit`) REFERENCES `monthly_limits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `amount` REAL NOT NULL, `typeId` INTEGER NOT NULL, `content` TEXT, `date` TEXT, `categoryId` INTEGER NOT NULL, `totalBalance` REAL NOT NULL, `id_daily_limit` INTEGER, `id_monthly_limit` INTEGER, FOREIGN KEY(`id_daily_limit`) REFERENCES `daily_limits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_monthly_limit`) REFERENCES `monthly_limits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -151,8 +151,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "id_type",
-            "columnName": "id_type",
+            "fieldPath": "typeId",
+            "columnName": "typeId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -169,28 +169,28 @@
             "notNull": false
           },
           {
-            "fieldPath": "id_category",
-            "columnName": "id_category",
+            "fieldPath": "categoryId",
+            "columnName": "categoryId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "total_balance",
-            "columnName": "total_balance",
+            "fieldPath": "totalBalance",
+            "columnName": "totalBalance",
             "affinity": "REAL",
             "notNull": true
           },
           {
-            "fieldPath": "id_daily_limit",
+            "fieldPath": "idDailyLimit",
             "columnName": "id_daily_limit",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
-            "fieldPath": "id_monthly_limit",
+            "fieldPath": "idMonthlyLimit",
             "columnName": "id_monthly_limit",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -201,28 +201,6 @@
         },
         "indices": [],
         "foreignKeys": [
-          {
-            "table": "types",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "id_type"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "categories",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "id_category"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
           {
             "table": "daily_limits",
             "onDelete": "CASCADE",
@@ -295,7 +273,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'db4278c8a0e518be9d675cae90f2078c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7366bfd515cefaf385ad24790bbaa554')"
     ]
   }
 }

@@ -1,62 +1,53 @@
 package com.eaut20210719.trackexpenses.database.entities;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-@Entity(
-        tableName = "transactions",
+@Entity(tableName = "transactions",
         foreignKeys = {
-                @ForeignKey(
-                        entity = Type.class,
-                        parentColumns = "id",
-                        childColumns = "id_type",
-                        onDelete = ForeignKey.CASCADE
-                ),
-                @ForeignKey(
-                        entity = Category.class,
-                        parentColumns = "id",
-                        childColumns = "id_category",
-                        onDelete = ForeignKey.CASCADE
-                ),
-                @ForeignKey(
-                        entity = DailyLimit.class,
+                @ForeignKey(entity = DailyLimit.class,
                         parentColumns = "id",
                         childColumns = "id_daily_limit",
-                        onDelete = ForeignKey.CASCADE
-                ),
-                @ForeignKey(
-                        entity = MonthlyLimit.class,
+                        onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = MonthlyLimit.class,
                         parentColumns = "id",
                         childColumns = "id_monthly_limit",
-                        onDelete = ForeignKey.CASCADE
-                )
+                        onDelete = ForeignKey.CASCADE)
         }
 )
 public class Transaction {
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    private int id;
 
-    public double amount;
-    public int id_type;           // Tham chiếu đến bảng Type
-    public String content;
-    public String date;
-    public int id_category;       // Tham chiếu đến bảng Category
-    public double total_balance;
-    public int id_daily_limit;    // Tham chiếu đến bảng DailyLimit
-    public int id_monthly_limit;  // Tham chiếu đến bảng MonthlyLimit
+    private double amount;
+    private int typeId;
+    private String content;
+    private String date;
+    private int categoryId;
+    private double totalBalance;
 
-    public Transaction(double amount, int id_type, String content, String date, int id_category, double total_balance, int id_daily_limit, int id_monthly_limit) {
+    @ColumnInfo(name = "id_daily_limit")
+    private Integer idDailyLimit;  // Sử dụng Integer thay vì int để hỗ trợ giá trị null
+
+    @ColumnInfo(name = "id_monthly_limit")
+    private Integer idMonthlyLimit;  // Sử dụng Integer thay vì int để hỗ trợ giá trị null
+
+    // Constructor
+    public Transaction(double amount, int typeId, String content, String date, int categoryId, double totalBalance, Integer idDailyLimit, Integer idMonthlyLimit) {
         this.amount = amount;
-        this.id_type = id_type;
+        this.typeId = typeId;
         this.content = content;
         this.date = date;
-        this.id_category = id_category;
-        this.total_balance = total_balance;
-        this.id_daily_limit = id_daily_limit;
-        this.id_monthly_limit = id_monthly_limit;
+        this.categoryId = categoryId;
+        this.totalBalance = totalBalance;
+        this.idDailyLimit = idDailyLimit;
+        this.idMonthlyLimit = idMonthlyLimit;
     }
 
+    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -73,12 +64,12 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public int getIdType() {
-        return id_type;
+    public int getTypeId() {
+        return typeId;
     }
 
-    public void setIdType(int id_type) {
-        this.id_type = id_type;
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 
     public String getContent() {
@@ -97,50 +88,52 @@ public class Transaction {
         this.date = date;
     }
 
-    public int getIdCategory() {
-        return id_category;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setIdCategory(int id_category) {
-        this.id_category = id_category;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public double getTotalBalance() {
-        return total_balance;
+        return totalBalance;
     }
 
-    public void setTotalBalance(double total_balance) {
-        this.total_balance = total_balance;
+    public void setTotalBalance(double totalBalance) {
+        this.totalBalance = totalBalance;
     }
 
-    public int getIdDailyLimit() {
-        return id_daily_limit;
+    public Integer getIdDailyLimit() {
+        return idDailyLimit;
     }
 
-    public void setIdDailyLimit(int id_daily_limit) {
-        this.id_daily_limit = id_daily_limit;
+    public void setIdDailyLimit(Integer idDailyLimit) {
+        this.idDailyLimit = idDailyLimit;
     }
 
-    public int getIdMonthlyLimit() {
-        return id_monthly_limit;
+    public Integer getIdMonthlyLimit() {
+        return idMonthlyLimit;
     }
 
-    public void setIdMonthlyLimit(int id_monthly_limit) {
-        this.id_monthly_limit = id_monthly_limit;
+    public void setIdMonthlyLimit(Integer idMonthlyLimit) {
+        this.idMonthlyLimit = idMonthlyLimit;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Transaction{" +
                 "id=" + id +
                 ", amount=" + amount +
-                ", id_type=" + id_type +
+                ", typeId=" + typeId +
                 ", content='" + content + '\'' +
                 ", date='" + date + '\'' +
-                ", id_category=" + id_category +
-                ", total_balance=" + total_balance +
-                ", id_daily_limit=" + id_daily_limit +
-                ", id_monthly_limit=" + id_monthly_limit +
+                ", categoryId=" + categoryId +
+                ", totalBalance=" + totalBalance +
+                ", idDailyLimit=" + idDailyLimit +
+                ", idMonthlyLimit=" + idMonthlyLimit +
                 '}';
     }
+
 }

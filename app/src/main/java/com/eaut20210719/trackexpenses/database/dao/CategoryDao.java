@@ -19,5 +19,8 @@ public interface CategoryDao {
     @Query("DELETE FROM categories WHERE name = :categoryName")
     void deleteCategoryByName(String categoryName);
 
+    @Query("SELECT id FROM categories WHERE name = :categoryName")
+    LiveData<Integer> getCategoryIdByName(String categoryName);
+
 
 }

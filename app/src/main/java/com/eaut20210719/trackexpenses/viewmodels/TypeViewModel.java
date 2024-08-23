@@ -4,6 +4,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import com.eaut20210719.trackexpenses.database.entities.Type;
 import com.eaut20210719.trackexpenses.repository.TypeRepository;
 import java.util.List;
@@ -37,5 +38,19 @@ public class TypeViewModel extends AndroidViewModel {
 
     public LiveData<List<Type>> getAllTypes() {
         return allTypes;
+    }
+
+    public LiveData<Integer> getTypeIdByName(String typeName) {
+        MediatorLiveData<Integer> typeIdLiveData = new MediatorLiveData<>();
+        typeIdLiveData.addSource(allTypes, types -> {
+            for (Type type : types) {
+                if (type.getType_name().equals(typeName)) {
+                    typeIdLiveData.setValue(type.getId());
+                    return;
+                }
+            }
+            typeIdLiveData.setValue(null); // No match found
+        });
+        return typeIdLiveData;
     }
 }

@@ -2,12 +2,9 @@ package com.eaut20210719.trackexpenses.database;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.migration.Migration;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.eaut20210719.trackexpenses.database.dao.CategoryDao;
 import com.eaut20210719.trackexpenses.database.dao.ColorDao;
@@ -27,7 +24,7 @@ import com.eaut20210719.trackexpenses.database.entities.Type;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Category.class, Type.class, DailyLimit.class, MonthlyLimit.class, Color.class, Transaction.class, Setting.class} , version = 8)
+@Database(entities = {Category.class, Type.class, DailyLimit.class, MonthlyLimit.class, Color.class, Transaction.class, Setting.class}, version = 7)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
     private static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(4);

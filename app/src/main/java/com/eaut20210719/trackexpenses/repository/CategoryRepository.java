@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData;
 import com.eaut20210719.trackexpenses.database.AppDatabase;
 import com.eaut20210719.trackexpenses.database.dao.CategoryDao;
 import com.eaut20210719.trackexpenses.database.entities.Category;
-
 import java.util.List;
 
 public class CategoryRepository {
@@ -30,7 +29,10 @@ public class CategoryRepository {
         AppDatabase.getDatabaseWriteExecutor().execute(() -> categoryDao.deleteCategoryByName(categoryName));
     }
 
-
+    // Phương thức để tìm ID của danh mục theo tên
+    public LiveData<Integer> getCategoryIdByName(String categoryName) {
+        return categoryDao.getCategoryIdByName(categoryName);
+    }
 
 
 }

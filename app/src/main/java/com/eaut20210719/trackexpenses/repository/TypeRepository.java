@@ -29,4 +29,10 @@ public class TypeRepository {
     public void insert(Type type) {
         executorService.execute(() -> typeDao.insertType(type));
     }
+
+    // Phương thức để tìm ID của loại theo tên
+    public LiveData<Integer> getTypeIdByName(String typeName) {
+        return typeDao.getTypeIdByName(typeName);
+    }
+
 }
