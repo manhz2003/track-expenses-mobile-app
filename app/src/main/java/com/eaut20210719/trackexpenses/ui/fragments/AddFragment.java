@@ -103,10 +103,6 @@ public class AddFragment extends Fragment {
 
 //        xử lý lưu dữ liệu cho màn hình add transaction
         binding.btnSave3.setOnClickListener(v -> {
-            // test log dữ liệu của bảng transaction
-            transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
-            transactionViewModel.logAllTransactionsOnce();
-
             String amountText = binding.editTextAmount.getText().toString().trim();
             String cleanedAmountText = amountText.replaceAll("[^0-9]", "");
 

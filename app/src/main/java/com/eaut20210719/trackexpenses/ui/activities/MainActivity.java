@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.eaut20210719.trackexpenses.R;
 import com.eaut20210719.trackexpenses.databinding.ActivityMainBinding;
@@ -18,17 +19,34 @@ import com.eaut20210719.trackexpenses.ui.fragments.HistoryFragment;
 import com.eaut20210719.trackexpenses.ui.fragments.HomeFragment;
 import com.eaut20210719.trackexpenses.ui.fragments.ReportFragment;
 import com.eaut20210719.trackexpenses.ui.fragments.SettingFragment;
+import com.eaut20210719.trackexpenses.viewmodels.CategoryViewModel;
+import com.eaut20210719.trackexpenses.viewmodels.TransactionViewModel;
+import com.eaut20210719.trackexpenses.viewmodels.TypeViewModel;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+    private TransactionViewModel mTransactionViewModel;
+    private TypeViewModel mTypeViewModel;
+    private CategoryViewModel mCategoryViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-
         setContentView(binding.getRoot());
+
+//        logcat data bảng transactions
+        mTransactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
+        mTransactionViewModel.logAllTransactionsOnce();
+
+//        logcat data bảng types
+        mTypeViewModel = new ViewModelProvider(this).get(TypeViewModel.class);
+        mTypeViewModel.logAllTypes();
+
+//        logcat data bảng categories
+        mCategoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        mCategoryViewModel.logAllCategories();
 
         // Hiển thị HomeFragment mặc định
         HomeFragment homeFragment = new HomeFragment();
@@ -90,8 +108,6 @@ public class MainActivity extends AppCompatActivity {
         // Mở AddFragment khi nhấn vào "Thêm mới"
         getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, new AddFragment()).commit();
     }
-
-
 
     private void setUpFragmentListener(Fragment fragment) {
         int defaultColor = getResources().getColor(R.color.black);

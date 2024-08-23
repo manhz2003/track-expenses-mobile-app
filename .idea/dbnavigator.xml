@@ -6,7 +6,7 @@
   </component>
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DatabaseBrowserManager">
@@ -17,7 +17,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="bb0dc33d-fe3a-4bfb-a0c5-73d83fa223d2">
-      <console name="Connection" type="STANDARD" schema="" session="Main" />
+      <console name="Connection" type="STANDARD" schema="main" session="Main"><![CDATA[select *from types]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -28,6 +28,13 @@
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="bb0dc33d-fe3a-4bfb-a0c5-73d83fa223d2" />
+  </component>
+  <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="bb0dc33d-fe3a-4bfb-a0c5-73d83fa223d2" dataset="main.categories" active-filter-id="" />
+    <filter-actions connection-id="bb0dc33d-fe3a-4bfb-a0c5-73d83fa223d2" dataset="main.android_metadata" active-filter-id="" />
+  </component>
+  <component name="DBNavigator.Project.ExecutionManager">
+    <retain-sticky-names value="false" />
   </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
@@ -41,7 +48,7 @@
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
-          <database-version value="9999.0" />
+          <database-version value="3.45" />
           <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
@@ -52,7 +59,7 @@
           <tns-folder value="" />
           <tns-profile value="" />
           <files>
-            <file path="" schema="main" />
+            <file path="$USER_HOME$/Downloads/app_database" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />

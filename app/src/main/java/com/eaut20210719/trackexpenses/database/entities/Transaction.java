@@ -30,10 +30,10 @@ public class Transaction {
     private double totalBalance;
 
     @ColumnInfo(name = "id_daily_limit")
-    private Integer idDailyLimit;  // Sử dụng Integer thay vì int để hỗ trợ giá trị null
+    private Integer idDailyLimit;
 
     @ColumnInfo(name = "id_monthly_limit")
-    private Integer idMonthlyLimit;  // Sử dụng Integer thay vì int để hỗ trợ giá trị null
+    private Integer idMonthlyLimit;
 
     // Constructor
     public Transaction(double amount, int typeId, String content, String date, int categoryId, double totalBalance, Integer idDailyLimit, Integer idMonthlyLimit) {
