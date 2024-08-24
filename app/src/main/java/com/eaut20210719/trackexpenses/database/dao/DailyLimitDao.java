@@ -1,5 +1,6 @@
 package com.eaut20210719.trackexpenses.database.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -12,23 +13,17 @@ import java.util.List;
 @Dao
 public interface DailyLimitDao {
 
-    // Thêm một mục giới hạn hàng ngày
     @Insert
-    void insert(DailyLimit dailyLimit);
+    void insertDailyLimit(DailyLimit dailyLimit);
 
-    // Cập nhật một mục giới hạn hàng ngày
     @Update
-    void update(DailyLimit dailyLimit);
+    void updateDailyLimit(DailyLimit dailyLimit);
 
-    // Xóa một mục giới hạn hàng ngày
-    @Query("DELETE FROM daily_limits WHERE id = :id")
-    void deleteById(int id);
+    @Query("DELETE FROM daily_limits")
+    void deleteAllDailyLimits();
 
-    // Lấy tất cả các mục giới hạn hàng ngày
+//    lấy tất cả dữ liệu bảng daily_limits
     @Query("SELECT * FROM daily_limits")
-    List<DailyLimit> getAllDailyLimits();
+    LiveData<List<DailyLimit>> getAllDailyLimits();
 
-    // Lấy một mục giới hạn hàng ngày theo ID
-    @Query("SELECT * FROM daily_limits WHERE id = :id")
-    DailyLimit getDailyLimitById(int id);
 }

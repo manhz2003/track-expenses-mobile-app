@@ -1,5 +1,6 @@
 package com.eaut20210719.trackexpenses.database.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -26,7 +27,7 @@ public interface SettingDao {
 
     // Lấy tất cả các mục cài đặt
     @Query("SELECT * FROM settings")
-    List<Setting> getAllSettings();
+    LiveData<List<Setting>> getAllSettings();
 
     // Lấy một mục cài đặt theo ID
     @Query("SELECT * FROM settings WHERE id = :id")

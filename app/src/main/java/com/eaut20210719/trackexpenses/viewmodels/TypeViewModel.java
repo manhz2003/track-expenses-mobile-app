@@ -21,7 +21,7 @@ public class TypeViewModel extends AndroidViewModel {
         repository = new TypeRepository(application);
         allTypes = repository.getAllTypes();
         insertSampleData();
-        logAllTypes(); // Log all types when ViewModel is created
+        logAllTypes();
     }
 
     private void insertSampleData() {

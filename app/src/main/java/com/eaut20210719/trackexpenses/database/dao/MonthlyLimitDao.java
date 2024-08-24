@@ -1,5 +1,6 @@
 package com.eaut20210719.trackexpenses.database.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -12,23 +13,16 @@ import java.util.List;
 @Dao
 public interface MonthlyLimitDao {
 
-    // Thêm một mục giới hạn hàng tháng
     @Insert
-    void insert(MonthlyLimit monthlyLimit);
+    void insertMonthlyLimit(MonthlyLimit monthlyLimit);
 
-    // Cập nhật một mục giới hạn hàng tháng
     @Update
-    void update(MonthlyLimit monthlyLimit);
+    void updateMonthlyLimit(MonthlyLimit monthlyLimit);
 
-    // Xóa một mục giới hạn hàng tháng theo ID
-    @Query("DELETE FROM monthly_limits WHERE id = :id")
-    void deleteById(int id);
+    @Query("DELETE FROM monthly_limits")
+    void deleteAllMonthlyLimits();
 
-    // Lấy tất cả các mục giới hạn hàng tháng
+//    lấy tất cả dữ liệu bảng monthly_limits
     @Query("SELECT * FROM monthly_limits")
-    List<MonthlyLimit> getAllMonthlyLimits();
-
-    // Lấy một mục giới hạn hàng tháng theo ID
-    @Query("SELECT * FROM monthly_limits WHERE id = :id")
-    MonthlyLimit getMonthlyLimitById(int id);
+    LiveData<List<MonthlyLimit>> getAllMonthlyLimits();
 }

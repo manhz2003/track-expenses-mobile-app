@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.eaut20210719.trackexpenses.R;
+import com.eaut20210719.trackexpenses.database.entities.MonthlyLimit;
 import com.eaut20210719.trackexpenses.databinding.ActivityMainBinding;
 import com.eaut20210719.trackexpenses.ui.fragments.AddFragment;
 import com.eaut20210719.trackexpenses.ui.fragments.HistoryFragment;
@@ -20,6 +21,10 @@ import com.eaut20210719.trackexpenses.ui.fragments.HomeFragment;
 import com.eaut20210719.trackexpenses.ui.fragments.ReportFragment;
 import com.eaut20210719.trackexpenses.ui.fragments.SettingFragment;
 import com.eaut20210719.trackexpenses.viewmodels.CategoryViewModel;
+import com.eaut20210719.trackexpenses.viewmodels.ColorViewModel;
+import com.eaut20210719.trackexpenses.viewmodels.DailyLimitViewModel;
+import com.eaut20210719.trackexpenses.viewmodels.MonthlyLimitViewModel;
+import com.eaut20210719.trackexpenses.viewmodels.SettingViewModel;
 import com.eaut20210719.trackexpenses.viewmodels.TransactionViewModel;
 import com.eaut20210719.trackexpenses.viewmodels.TypeViewModel;
 
@@ -28,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private TransactionViewModel mTransactionViewModel;
     private TypeViewModel mTypeViewModel;
     private CategoryViewModel mCategoryViewModel;
+    private DailyLimitViewModel mDailyLimitViewModel;
+    private MonthlyLimitViewModel mMonthlyLimit;
+    private SettingViewModel mSettingViewModel;
+    private ColorViewModel mColorViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +56,22 @@ public class MainActivity extends AppCompatActivity {
 //        logcat data bảng categories
         mCategoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         mCategoryViewModel.logAllCategories();
+
+//        logcat data bảng daily_limits
+        mDailyLimitViewModel = new ViewModelProvider(this).get(DailyLimitViewModel.class);
+        mDailyLimitViewModel.logAllDailyLimits();
+
+//        logcat data bảng monthly_limits
+        mMonthlyLimit = new ViewModelProvider(this).get(MonthlyLimitViewModel.class);
+        mMonthlyLimit.logAllMonthlyLimits();
+
+//        logcat data bảng settings
+        mSettingViewModel = new ViewModelProvider(this).get(SettingViewModel.class);
+        mSettingViewModel.logAllSettings();
+
+//        logcat data bảng colors
+        mColorViewModel = new ViewModelProvider(this).get(ColorViewModel.class);
+        mColorViewModel.logAllColors();
 
         // Hiển thị HomeFragment mặc định
         HomeFragment homeFragment = new HomeFragment();
@@ -80,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
                 updateSelectedItem(binding.icMenuBottom.tvUpdate); // Cập nhật mục đã chọn
             }
         });
-
 
         binding.icMenuBottom.tvReport.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     onAddNewClicked();
-                     // Reset bold
                     binding.icMenuBottom.tvSetting.setTextColor(defaultColor);
                     binding.icMenuBottom.tvSetting.setTypeface(null, Typeface.NORMAL);
                 }

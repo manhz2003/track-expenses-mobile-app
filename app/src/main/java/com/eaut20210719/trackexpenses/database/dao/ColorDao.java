@@ -1,5 +1,6 @@
 package com.eaut20210719.trackexpenses.database.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -13,8 +14,8 @@ public interface ColorDao {
     @Insert
     void insert(Color color);
 
+//    lấy tất cả dữ liệu bảng colors
     @Query("SELECT * FROM colors")
-    List<Color> getAllColors();
+    LiveData<List<Color>> getAllColors();
 
-    // Thêm các phương thức truy vấn khác nếu cần
 }

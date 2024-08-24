@@ -29,10 +29,4 @@ public class CategoryRepository {
         AppDatabase.getDatabaseWriteExecutor().execute(() -> categoryDao.deleteCategoryByName(categoryName));
     }
 
-    // Phương thức để tìm ID của danh mục theo tên
-    public LiveData<Integer> getCategoryIdByName(String categoryName) {
-        return categoryDao.getCategoryIdByName(categoryName);
-    }
-
-
 }

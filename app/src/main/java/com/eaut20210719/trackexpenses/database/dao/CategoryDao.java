@@ -13,14 +13,11 @@ public interface CategoryDao {
     @Insert
     void insertCategory(Category category);
 
+//    lấy tất cả dữ liệu bảng categories
     @Query("SELECT * FROM categories")
     LiveData<List<Category>> getAllCategories();
 
     @Query("DELETE FROM categories WHERE name = :categoryName")
     void deleteCategoryByName(String categoryName);
-
-    @Query("SELECT id FROM categories WHERE name = :categoryName")
-    LiveData<Integer> getCategoryIdByName(String categoryName);
-
 
 }

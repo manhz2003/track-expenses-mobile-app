@@ -21,14 +21,11 @@ public class TransactionViewModel extends AndroidViewModel {
         super(application);
         mRepository = new TransactionRepository(application);
         mAllTransactions = mRepository.getAllTransactions();
+        logAllTransactionsOnce();
     }
 
     public void insert(Transaction transaction) {
         mRepository.insert(transaction);
-    }
-
-    public LiveData<List<Transaction>> getAllTransactions() {
-        return mAllTransactions;
     }
 
     // Phương thức lấy giao dịch cuối cùng
@@ -37,22 +34,24 @@ public class TransactionViewModel extends AndroidViewModel {
     }
 
     public void logAllTransactionsOnce() {
-        mAllTransactions.observeForever(new Observer<List<Transaction>>() {
-            @Override
-            public void onChanged(List<Transaction> transactions) {
-                if (transactions != null) {
-                    for (Transaction transaction : transactions) {
-                        Log.d("kết quả bảng Transaction: ", transaction.toString());
+        if (mAllTransactions != null) {
+            mAllTransactions.observeForever(new Observer<List<Transaction>>() {
+                @Override
+                public void onChanged(List<Transaction> transactions) {
+                    if (transactions != null) {
+                        for (Transaction transaction : transactions) {
+                            Log.d("kết quả bảng Transaction: ", transaction.toString());
+                        }
+                    } else {
+                        Log.d("TransactionLog", "không có dữ liệu");
                     }
-                } else {
-                    Log.d("TransactionLog", "không có dữ liệu");
+                    // Hủy quan sát sau khi log xong
+                    mAllTransactions.removeObserver(this);
                 }
-                // Hủy quan sát sau khi log xong
-                mAllTransactions.removeObserver(this);
-            }
-        });
+            });
+        } else {
+            Log.d("TransactionViewModel", "mAllTransactions là null");
+        }
     }
-
-
 
 }
