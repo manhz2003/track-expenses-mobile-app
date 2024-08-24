@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        logcat data bảng transactions
         mTransactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
-        mTransactionViewModel.logAllTransactionsOnce();
+        mTransactionViewModel.getLastTransaction();
 
 //        logcat data bảng types
         mTypeViewModel = new ViewModelProvider(this).get(TypeViewModel.class);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="dp16">16dp</dimen>
     <dimen name="dp32">32dp</dimen>
     <dimen name="dp2">2dp</dimen>
@@ -36,4 +36,5 @@
     <dimen name="popup_search_layout_height">-40dp</dimen>
     <dimen name="_180dp">180dp</dimen>
     <dimen name="_300dp">300dp</dimen>
+    <dimen name="dp150">10dp</dimen>
 </resources>

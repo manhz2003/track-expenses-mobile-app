@@ -10,11 +10,13 @@ import java.util.List;
 public class TransactionRepository {
     private TransactionDao mTransactionDao;
     private LiveData<List<Transaction>> mAllTransactions;
+    private LiveData<Double> mLastTotalBalance;
 
     public TransactionRepository(Application application) {
         AppDatabase db = AppDatabase.getInstance(application);
         mTransactionDao = db.transactionDao();
         mAllTransactions = mTransactionDao.getAllTransactions();
+        mLastTotalBalance = mTransactionDao.getLastTotalBalance();
     }
 
     public LiveData<List<Transaction>> getAllTransactions() {
@@ -30,4 +32,10 @@ public class TransactionRepository {
             mTransactionDao.insert(transaction);
         });
     }
+
+//    lấy tổng số dư cuối cùng
+    public LiveData<Double> getLastTotalBalance() {
+        return mLastTotalBalance;
+    }
+
 }
