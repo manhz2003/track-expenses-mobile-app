@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -103,8 +104,8 @@ public class PopupChooseMethodFragment extends DialogFragment {
                         transactionViewModel.deleteTransactionById(transactionId);
                         transactionViewModel.updateTotalAmount(newTotalAmount);
                         }
-                        Log.d("Thanh cong","Xoa thanh cong");
-
+                        // Hiển thị thông báo thành công
+                        Toast.makeText(getContext(), "Xóa thành công", Toast.LENGTH_SHORT).show();
                     }
             });
 

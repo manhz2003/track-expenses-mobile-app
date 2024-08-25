@@ -76,7 +76,6 @@ public class HistoryFragment extends Fragment {
             } else {
                 // Perform search when clicked again
                 performSearch();
-                isSearchMode = false; // Reset search mode after searching
             }
         });
 
@@ -138,6 +137,9 @@ public class HistoryFragment extends Fragment {
             rvParams.topMargin = getResources().getDimensionPixelSize(R.dimen.popup_search_layout_height);
             binding.rvHistory.setLayoutParams(rvParams);
         } else {
+            // Xóa thông tin trên TextView (EditText)
+            binding.etDate.setText("");
+
             binding.popupSearchLayout.setVisibility(View.GONE);
 
             ViewGroup.MarginLayoutParams historyParams = (ViewGroup.MarginLayoutParams) binding.history.getLayoutParams();
@@ -150,11 +152,22 @@ public class HistoryFragment extends Fragment {
         }
     }
 
+
     private void performSearch() {
         if (binding == null) return; // Ensure binding is not null
 
         String datePattern = binding.etDate.getText().toString();
         Log.d("HistoryFragment", "Searching for date: " + datePattern);
+
+        if (datePattern.isEmpty()) {
+            // Nếu người dùng không nhập dữ liệu vào, tự động ẩn thanh tìm kiếm
+            if (isSearchMode) {
+                togglePopupSearchLayout();
+                isSearchMode = false;
+            }
+            Toast.makeText(requireContext(), "Vui lòng nhập ngày để tìm kiếm.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if (isValidDate(datePattern)) {
             if (getViewLifecycleOwner() != null) {
@@ -164,6 +177,12 @@ public class HistoryFragment extends Fragment {
                     } else {
                         Toast.makeText(requireContext(), "Không tìm thấy giao dịch nào cho ngày này.", Toast.LENGTH_SHORT).show();
                     }
+
+                    // Hide the search layout after search
+                    if (isSearchMode) {
+                        togglePopupSearchLayout();
+                        isSearchMode = false;
+                    }
                 });
             }
         } else {
@@ -171,6 +190,8 @@ public class HistoryFragment extends Fragment {
             Log.d("HistoryFragment", "Invalid date format: " + datePattern);
         }
     }
+
+
 
     private boolean isValidDate(String dateStr) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
