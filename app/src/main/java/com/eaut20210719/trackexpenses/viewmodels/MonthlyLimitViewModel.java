@@ -31,7 +31,7 @@ public class MonthlyLimitViewModel extends AndroidViewModel {
                 System.out.println("Không có dữ liệu trong bảng monthly_limits");
             } else {
                 for (MonthlyLimit monthlyLimit : monthlyLimits) {
-                    System.out.println("data bảng monthly_limit: " + "Monthly Limit ID: " + monthlyLimit.getId() + ", Monthly Limit Amount: " + monthlyLimit.getMoney_month());
+                    System.out.println("data bảng monthly_limit: " + "Monthly Limit ID: " + monthlyLimit.getId() + ", Monthly Limit Amount: " + monthlyLimit.getMoney_month() + ", Monthly Limit Setting: " + monthlyLimit.getMoney_month_setting());
                 }
             }
         });

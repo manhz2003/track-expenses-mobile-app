@@ -10,6 +10,8 @@ public class MonthlyLimit {
 
     public double money_month;
 
+    public double money_month_setting;
+
     public MonthlyLimit(double money_month) {
         this.money_month = money_month;
     }
@@ -31,11 +33,19 @@ public class MonthlyLimit {
         this.money_month = money_month;
     }
 
+    public double getMoney_month_setting() {
+        return money_month_setting;
+    }
+
+    public void setMoney_month_setting(double money_month_setting) {
+        this.money_month_setting = money_month_setting;
+    }
+
     @Override
     public String toString() {
         return "MonthlyLimit{" +
                 "id=" + id +
                 ", money_month=" + money_month +
-                '}';
+                '}' + "money_month_setting=" + money_month_setting;
     }
 }

@@ -22,8 +22,23 @@ public interface DailyLimitDao {
     @Query("DELETE FROM daily_limits")
     void deleteAllDailyLimits();
 
-//    lấy tất cả dữ liệu bảng daily_limits
+    // Lấy tất cả dữ liệu bảng daily_limits
     @Query("SELECT * FROM daily_limits")
     LiveData<List<DailyLimit>> getAllDailyLimits();
 
+    // Đếm số bản ghi trong bảng daily_limits
+    @Query("SELECT COUNT(*) FROM daily_limits")
+    int getDailyLimitCount();  // Sử dụng int thay vì LiveData
+
+    // Lấy ID cuối cùng trong bảng daily_limits
+    @Query("SELECT MAX(id) FROM daily_limits")
+    Integer getLastDailyLimitId();  // Trả về Integer thay vì LiveData
+
+    // Lấy số tiền của bản ghi cuối cùng trong bảng daily_limits
+    @Query("SELECT money_day FROM daily_limits ORDER BY id DESC LIMIT 1")
+    LiveData<Double> getLastDailyLimitMoney();
+
+    // Phương thức để cập nhật money_day_setting
+    @Query("UPDATE daily_limits SET money_day_setting = :moneyDaySetting WHERE id = (SELECT MAX(id) FROM daily_limits)")
+    void updateMoneyDaySetting(double moneyDaySetting);
 }

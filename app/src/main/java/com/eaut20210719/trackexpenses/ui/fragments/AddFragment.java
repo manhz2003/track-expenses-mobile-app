@@ -199,6 +199,8 @@ public class AddFragment extends Fragment {
 
             // Logging dữ liệu sau khi lưu
             Log.d("SaveTransaction", "Đã lưu giao dịch thành công");
+            binding.editTextAmount.setText("");
+            binding.content.setText("");
 
             Toast.makeText(getContext(), "Dữ liệu đã được lưu", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
