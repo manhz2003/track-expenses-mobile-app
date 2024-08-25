@@ -315,11 +315,13 @@
                     android:id="@+id/sbExpenses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_16dp"
-                    android:progress="50"
+                    android:layout_marginTop="32dp"
+                    android:progress="0"
                     android:progressTint="@color/color_fd3665"
                     android:thumbTint="@color/color_fd3665"
-                    app:layout_constraintTop_toBottomOf="@+id/icsetting" />
+                    app:layout_constraintTop_toBottomOf="@+id/icsetting"
+                    tools:layout_editor_absoluteX="16dp" />
+
 
                 <LinearLayout
                     android:id="@+id/lnnhap_so_tien_thiet_lap"
@@ -332,12 +334,14 @@
                     app:layout_constraintTop_toBottomOf="@id/tvMoney">
 
                     <EditText
+                        android:id="@+id/etInputMoney"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/shape_thong_tin"
                         android:hint="Nhập số tiền thiết lập"
                         android:paddingVertical="@dimen/_16dp"
                         android:paddingStart="@dimen/_20dp"/>
+
                 </LinearLayout>
 
                 <TextView
@@ -345,7 +349,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_16dp"
-                    android:text="@string/_50_000"
+                    android:text="0 VND"
                     android:textColor="@color/color_fd3665"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/sbExpenses" />

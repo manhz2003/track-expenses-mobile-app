@@ -25,4 +25,37 @@ public class MonthlyLimitRepository {
         return allMonthlyLimits;
     }
 
+    public void insertOrUpdateMonthlyLimit(double moneyMonth) {
+        AppDatabase.getDatabaseWriteExecutor().execute(() -> {
+            int count = monthlyLimitDao.getMonthlyLimitCount();
+            MonthlyLimit monthlyLimit = new MonthlyLimit(moneyMonth);
+
+            if (count == 0) {
+                monthlyLimitDao.insertMonthlyLimit(monthlyLimit);
+            } else {
+                Integer lastId = monthlyLimitDao.getLastMonthlyLimitId();
+                if (lastId != null) {
+                    monthlyLimit.setId(lastId);
+                    monthlyLimitDao.updateMonthlyLimit(monthlyLimit);
+                }
+            }
+        });
+    }
+
+    public void updateMoneyMonthSetting(double moneyMonthSetting) {
+        AppDatabase.getDatabaseWriteExecutor().execute(() -> {
+            Integer lastId = monthlyLimitDao.getLastMonthlyLimitId();
+            if (lastId != null) {
+                monthlyLimitDao.updateMoneyMonthSetting(moneyMonthSetting);
+            }
+        });
+    }
+
+    public Integer getLastMonthlyLimitId() {
+        return monthlyLimitDao.getLastMonthlyLimitId();
+    }
+
+    public LiveData<Double> getLastMonthlyLimitMoney() {
+        return monthlyLimitDao.getLastMonthlyLimitMoney();
+    }
 }

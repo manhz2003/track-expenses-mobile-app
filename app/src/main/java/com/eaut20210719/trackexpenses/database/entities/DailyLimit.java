@@ -10,6 +10,8 @@ public class DailyLimit {
 
     public double money_day;
 
+    public double money_day_setting;
+
     public DailyLimit(double money_day) {
         this.money_day = money_day;
     }
@@ -30,12 +32,21 @@ public class DailyLimit {
         this.money_day = money_day;
     }
 
+    public double getMoney_day_setting() {
+        return money_day_setting;
+    }
+
+    public void setMoney_day_setting(double money_day_setting) {
+        this.money_day_setting = money_day_setting;
+    }
+
     @Override
     public String toString() {
         return "DailyLimit{" +
                 "id=" + id +
                 ", money_day=" + money_day +
-                '}';
+                '}'
+                + "money_day_setting=" + money_day_setting;
     }
 
 }

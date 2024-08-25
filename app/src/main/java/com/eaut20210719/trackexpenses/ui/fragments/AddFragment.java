@@ -215,6 +215,29 @@
             } catch (NumberFormatException e) {
                 return false;
             }
+        try {
+            Log.d("SaveTransaction", "Lưu giao dịch với số tiền: " + amount +
+                    ", typeId: " + typeId +
+                    ", content: " + content +
+                    ", date: " + date +
+                    ", categoryId: " + categoryId +
+                    ", totalBalance: " + totalBalance +
+                    ", idDailyLimit: " + idDailyLimit +
+                    ", idMonthlyLimit: " + idMonthlyLimit
+            );
+
+            Transaction transaction = new Transaction(amount, typeId, content, date, categoryId, totalBalance, null, null);
+            transactionViewModel.insert(transaction);
+
+            // Logging dữ liệu sau khi lưu
+            Log.d("SaveTransaction", "Đã lưu giao dịch thành công");
+            binding.editTextAmount.setText("");
+            binding.content.setText("");
+
+            Toast.makeText(getContext(), "Dữ liệu đã được lưu", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("SaveTransaction", "Error saving transaction", e);
+            Toast.makeText(getContext(), "Lỗi khi lưu dữ liệu. Vui lòng thử lại.", Toast.LENGTH_SHORT).show();
         }
 
     //    hàm formatCurrency để định dạng số tiền
