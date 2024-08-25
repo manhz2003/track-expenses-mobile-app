@@ -59,4 +59,9 @@ public interface TransactionDao {
             "WHERE t.id = :transactionId")
 
     LiveData<History> getTransactionById(int transactionId);
+
+    // Thêm phương thức lấy giao dịch theo tháng
+    @Query("SELECT * FROM transactions WHERE strftime('%m', date) = :month")
+    LiveData<List<Transaction>> getTransactionsByMonth(String month);
+
 }

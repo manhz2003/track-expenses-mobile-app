@@ -1,5 +1,4 @@
-package com.eaut20210719.trackexpenses.viewmodels;
-
+package com.eaut20210719.trackexpenses.viewmodels;// TransactionViewModel.java
 import android.app.Application;
 import android.util.Log;
 
@@ -21,7 +20,7 @@ public class TransactionViewModel extends AndroidViewModel {
         super(application);
         mRepository = new TransactionRepository(application);
         mAllTransactions = mRepository.getAllTransactions();
-        mTotalBalance = mRepository.getLastTotalBalance();
+        mTotalBalance = mRepository.getLastTotalBalance(); // Giả sử phương thức này cũng có trong repository
     }
 
     public void insert(Transaction transaction) {
@@ -33,10 +32,9 @@ public class TransactionViewModel extends AndroidViewModel {
     }
 
     public LiveData<Transaction> getLastTransaction() {
-        return mRepository.getLastTransaction();
+        return mRepository.getLastTransaction(); // Giả sử phương thức này cũng có trong repository
     }
 
-    // Phương thức lấy lịch sử
     private LiveData<List<History>> historyList;
     public LiveData<List<History>> getHistoryList() {
         if (historyList == null) {
@@ -56,37 +54,37 @@ public class TransactionViewModel extends AndroidViewModel {
                 } else {
                     Log.d("TransactionLog", "không có dữ liệu");
                 }
-                // Hủy quan sát sau khi log xong
                 mAllTransactions.removeObserver(this);
             }
         });
     }
 
-    // Tìm kiếm lịch sử
     public LiveData<List<History>> searchByDate(String datePattern) {
         Log.d("TransactionViewModel", "Searching for date: " + datePattern);
         LiveData<List<History>> result = mRepository.searchByDate(datePattern);
-        // Observe the result to log the fetched data
         result.observeForever(histories -> {
             Log.d("TransactionViewModel", "Search results: " + histories);
         });
         return result;
     }
 
-    // Thêm phương thức để xóa giao dịch
     public void deleteTransactionById(int transactionId) {
         mRepository.deleteTransactionById(transactionId);
     }
 
-    // Thêm phương thức để cập nhật tổng tiền
     public void updateTotalAmount(double newTotalAmount) {
         mRepository.updateTotalAmount(newTotalAmount);
     }
 
-    // Method to get a transaction by ID
     public LiveData<History> getTransactionById(int transactionId) {
-        LiveData<History> result = mRepository.getTransactionById(transactionId);
-        Log.d("result", result.toString());
-        return  result;
+        return mRepository.getTransactionById(transactionId);
+    }
+
+    public LiveData<List<Transaction>> getTransactionsByMonth(String month) {
+        return mRepository.getTransactionsByMonth(month);
+    }
+
+    public LiveData<List<Transaction>> getAllTransactions() {
+        return mRepository.getAllTransactions();
     }
 }

@@ -75,4 +75,8 @@ public class TransactionRepository {
         return  result;
     }
 
+    // Thêm phương thức lấy giao dịch theo tháng
+    public LiveData<List<Transaction>> getTransactionsByMonth(String month) {
+        return (LiveData<List<Transaction>>) mTransactionDao.getTransactionsByMonth(month);
+    }
 }

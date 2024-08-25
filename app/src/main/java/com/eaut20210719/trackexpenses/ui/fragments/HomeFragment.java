@@ -3,6 +3,7 @@ package com.eaut20210719.trackexpenses.ui.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +21,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.eaut20210719.trackexpenses.R;
+import com.eaut20210719.trackexpenses.database.entities.Transaction;
 import com.eaut20210719.trackexpenses.databinding.HomeFragmentBinding;
 import com.eaut20210719.trackexpenses.viewmodels.DailyLimitViewModel;
 import com.eaut20210719.trackexpenses.viewmodels.TransactionViewModel;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
@@ -107,12 +116,10 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // Xử lý sự kiện khi bắt đầu kéo thanh cuộn (tuỳ chọn)
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                // Xử lý sự kiện khi dừng kéo thanh cuộn (tuỳ chọn)
             }
         });
 
@@ -133,8 +140,94 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Tính toán tổng số tiền cho tháng hiện tại và cập nhật UI
+        calculateAndDisplayMonthlyTotal();
+
         return view;
     }
+
+//    Lấy tháng hiện tại
+    private int getCurrentMonth() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.MONTH) + 1;
+    }
+
+//    Lấy tháng từ chuỗi ngày
+    private int getMonthFromDateString(String dateString) {
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm a dd/MM/yyyy", Locale.getDefault());
+        dateString = dateString.replace("Chiều", "PM");
+        try {
+            Date date = format.parse(dateString);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            return calendar.get(Calendar.MONTH) + 1; // Tháng trong Calendar bắt đầu từ 0
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+//    Tính toán và hiển thị tổng số tiền hàng tháng
+private void calculateAndDisplayMonthlyTotal() {
+    transactionViewModel.getAllTransactions().observe(getViewLifecycleOwner(), transactions -> {
+        if (transactions != null) {
+            double totalIncome = sumAmountForCurrentMonth(transactions); // Tổng thu nhập
+            double totalExpense = sumAmountForCurrentMonthChiTieu(transactions); // Tổng chi tiêu
+
+            TextView tvMonthlyTotalIncome = binding.tv0d; // TextView cho thu nhập
+            TextView tvMonthlyTotalExpense = binding.tv0d1; // TextView cho chi tiêu
+
+            if (tvMonthlyTotalIncome != null) {
+                tvMonthlyTotalIncome.setText(String.format("%,.0fđ", totalIncome));
+            }
+
+            if (tvMonthlyTotalExpense != null) {
+                tvMonthlyTotalExpense.setText(String.format("%,.0fđ", totalExpense));
+            }
+        }
+    });
+}
+
+    //    Tính tổng số tiền cho tháng hiện tại
+    private double sumAmountForCurrentMonth(List<Transaction> transactions) {
+        int currentMonth = getCurrentMonth();
+        double totalAmount = 0.0;
+
+        for (Transaction transaction : transactions) {
+            // Lấy chuỗi ngày và tính toán tháng
+            String dateStr = transaction.getDate();
+            int recordMonth = getMonthFromDateString(dateStr);
+
+            // Log cho việc gỡ lỗi
+            Log.d("HomeFragment", "Transaction Date: " + dateStr + " | Record Month: " + recordMonth);
+
+            if (recordMonth == currentMonth && transaction.getTypeId() == 2) {
+                totalAmount += transaction.getAmount();
+            }
+        }
+
+        return totalAmount;
+    }
+
+    private double sumAmountForCurrentMonthChiTieu(List<Transaction> transactions) {
+        int currentMonth = getCurrentMonth();
+        double totalAmount = 0.0;
+
+        for (Transaction transaction : transactions) {
+            // Lấy chuỗi ngày và tính toán tháng
+            String dateStr = transaction.getDate();
+            int recordMonth = getMonthFromDateString(dateStr);
+
+            Log.d("HomeFragment", "Transaction Date: " + dateStr + " | Record Month: " + recordMonth);
+
+            if (recordMonth == currentMonth && (transaction.getTypeId() == 1 || transaction.getTypeId() == 3)) {
+                totalAmount += transaction.getAmount();
+            }
+        }
+
+        return totalAmount;
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
