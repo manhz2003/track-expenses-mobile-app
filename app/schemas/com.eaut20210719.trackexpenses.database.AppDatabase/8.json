@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 8,
-    "identityHash": "de037a75ff536ec595f7f0d1d850db2d",
+    "identityHash": "8dea7d79343b6c821a4a7278d756b4cf",
     "entities": [
       {
         "tableName": "categories",
@@ -90,7 +90,7 @@
       },
       {
         "tableName": "monthly_limits",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `money_month` REAL NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `money_month` REAL NOT NULL, `money_month_setting` REAL NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -101,6 +101,12 @@
           {
             "fieldPath": "money_month",
             "columnName": "money_month",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "money_month_setting",
+            "columnName": "money_month_setting",
             "affinity": "REAL",
             "notNull": true
           }
@@ -279,7 +285,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'de037a75ff536ec595f7f0d1d850db2d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8dea7d79343b6c821a4a7278d756b4cf')"
     ]
   }
 }

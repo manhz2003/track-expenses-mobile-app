@@ -36,16 +36,6 @@
             android:layout_marginTop="@dimen/dp16"
             android:background="@color/xam" />
 
-        <Button
-            android:id="@+id/btnEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:backgroundTint="@color/white"
-            android:text="@string/sua_thu_chi"
-            android:textColor="@color/color_009CDF"
-            android:textSize="@dimen/_16sp" />
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

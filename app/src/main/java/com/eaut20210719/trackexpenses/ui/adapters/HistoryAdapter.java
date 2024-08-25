@@ -6,14 +6,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.eaut20210719.trackexpenses.databinding.ItemHistoryBinding;
+import com.eaut20210719.trackexpenses.dto.History;
+
+import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    private final String[] items;
+    private List<History> items;
     private final OnThreeDotsClickListener threeDotsClickListener;
 
     // Constructor accepting the OnThreeDotsClickListener
-    public HistoryAdapter(String[] items, OnThreeDotsClickListener listener) {
+    public HistoryAdapter(List<History> items, OnThreeDotsClickListener listener) {
         this.items = items;
         this.threeDotsClickListener = listener;
     }
@@ -28,13 +31,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String item = items[position];
+        History item = items.get(position);
         holder.bind(item, position, threeDotsClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return items.length;
+        return items != null ? items.size() : 0; // Handle case when items is null
+    }
+
+    public void setItems(List<History> items) {
+        this.items = items;
+        notifyDataSetChanged(); // Thông báo adapter để làm mới giao diện
     }
 
     // Define the interface for the click listener
@@ -50,14 +58,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             this.binding = binding;
         }
 
-        public void bind(String item, int position, OnThreeDotsClickListener listener) {
+        public void bind(History item, int position, OnThreeDotsClickListener listener) {
             // Bind data to views
-            binding.tvHistoryBuy1.setText(item);
+            binding.tvHistoryBuyContent.setText(item.getNameCategory()); // Bind nameCategory
+            binding.tvHistoryBuy1.setText(item.getContent()); // Bind content
+            binding.tvTime.setText(item.getDate()); // Bind date
+            binding.tvspend.setText(item.getTypeName()); // Bind type_name
+            binding.tvAmount.setText(String.valueOf(item.getAmount())); // Bind amount
 
             // Set the click listener for tvThreedots
             binding.tvThreedots.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onThreeDotsClick(position);
+                    listener.onThreeDotsClick(item.getId()); // Pass the transaction ID
                 }
             });
         }
