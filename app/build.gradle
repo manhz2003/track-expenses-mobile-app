@@ -47,6 +47,7 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.room.common
     implementation libs.room.runtime
+    implementation libs.lifecycle.viewmodel.android
     annotationProcessor libs.room.compiler
 
     // Thư viện kiểm tra đơn vị

@@ -1,5 +1,6 @@
 package com.eaut20210719.trackexpenses.database.entities;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -8,6 +9,7 @@ public class Type {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
+    @ColumnInfo(name = "type_name")
     public String type_name;
     public Type(String type_name) {
         this.type_name = type_name;
