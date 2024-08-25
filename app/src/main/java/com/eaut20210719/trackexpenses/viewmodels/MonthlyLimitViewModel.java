@@ -1,6 +1,7 @@
 package com.eaut20210719.trackexpenses.viewmodels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -21,20 +22,50 @@ public class MonthlyLimitViewModel extends AndroidViewModel {
         super(application);
         repository = new MonthlyLimitRepository(application);
         allMonthlyLimits = repository.getAllMonthlyLimits();
-        logAllMonthlyLimits();
+        checkAndInsertInitialMonthlyLimit();
     }
 
-    // Phương thức mới để log toàn bộ dữ liệu bảng monthly_limits
     public void logAllMonthlyLimits() {
         allMonthlyLimits.observeForever(monthlyLimits -> {
             if (monthlyLimits == null || monthlyLimits.isEmpty()) {
-                System.out.println("Không có dữ liệu trong bảng monthly_limits");
+                Log.d(TAG, "Không có dữ liệu trong bảng monthly_limits");
             } else {
                 for (MonthlyLimit monthlyLimit : monthlyLimits) {
-                    System.out.println("data bảng monthly_limit: " + "Monthly Limit ID: " + monthlyLimit.getId() + ", Monthly Limit Amount: " + monthlyLimit.getMoney_month() + ", Monthly Limit Setting: " + monthlyLimit.getMoney_month_setting());
+                    Log.d(TAG, "Monthly Limit ID: " + monthlyLimit.getId() + ", Monthly Limit Amount: " + monthlyLimit.getMoney_month() + ", Monthly Limit Setting: " + monthlyLimit.getMoney_month_setting());
                 }
             }
         });
+    }
+
+    public void insertOrUpdateMonthlyLimit(double moneyMonth) {
+        repository.insertOrUpdateMonthlyLimit(moneyMonth);
+    }
+
+    public Integer getLastMonthlyLimitId() {
+        return repository.getLastMonthlyLimitId();
+    }
+
+    public LiveData<List<MonthlyLimit>> getAllMonthlyLimits() {
+        return allMonthlyLimits;
+    }
+
+    public LiveData<Double> getLastMonthlyLimitMoney() {
+        return repository.getLastMonthlyLimitMoney();
+    }
+
+    private void checkAndInsertInitialMonthlyLimit() {
+        allMonthlyLimits.observeForever(monthlyLimits -> {
+            if (monthlyLimits == null || monthlyLimits.isEmpty()) {
+                insertOrUpdateMonthlyLimit(0);
+                Log.d(TAG, "Bảng monthly_limits trống, đã chèn giá trị 0");
+            } else {
+                Log.d(TAG, "Bảng monthly_limits đã có dữ liệu");
+            }
+        });
+    }
+
+    public void updateMoneyMonthSetting(double moneyMonthSetting) {
+        repository.updateMoneyMonthSetting(moneyMonthSetting);
     }
 
 }

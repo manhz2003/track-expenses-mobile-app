@@ -28,7 +28,6 @@ public class MonthlyLimit {
         return money_month;
     }
 
-
     public void setMoney_month(double money_month) {
         this.money_month = money_month;
     }
