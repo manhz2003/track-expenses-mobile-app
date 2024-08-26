@@ -68,4 +68,8 @@ public class DailyLimitRepository {
         return dailyLimitDao.getLastDailyLimitID();
     }
 
+    public LiveData<Double> getLastDailyLimitMoneySync() {
+        return dailyLimitDao.getLastDailyLimitSetting();
+    }
+
 }

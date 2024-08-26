@@ -74,4 +74,9 @@ public class DailyLimitViewModel extends AndroidViewModel {
         return repository.getLastDailyLimitID();
     }
 
+    // Phương thức lấy giá trị mới nhất của money_day_setting
+    public LiveData<Double> getLastDailyLimitSetting() {
+        return repository.getLastDailyLimitMoneySync();
+    }
+
 }

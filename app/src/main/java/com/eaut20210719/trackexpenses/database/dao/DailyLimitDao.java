@@ -47,4 +47,7 @@ public interface DailyLimitDao {
     @Query("SELECT MAX(id) FROM daily_limits")
     LiveData<Integer> getLastDailyLimitID();
 
+    // Lấy giá trị mới nhất của money_day_setting
+    @Query("SELECT money_day_setting FROM daily_limits ORDER BY id DESC LIMIT 1")
+    LiveData<Double> getLastDailyLimitSetting();
 }
