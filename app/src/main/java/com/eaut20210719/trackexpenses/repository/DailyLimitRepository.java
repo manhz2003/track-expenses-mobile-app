@@ -47,6 +47,7 @@ public class DailyLimitRepository {
         });
     }
 
+//    lấy id của bản ghi cuối cùng
     public Integer getLastDailyLimitId() {
         return dailyLimitDao.getLastDailyLimitId();
     }
@@ -60,6 +61,11 @@ public class DailyLimitRepository {
         AppDatabase.getDatabaseWriteExecutor().execute(() -> {
             dailyLimitDao.updateMoneyDaySetting(moneyDaySetting);
         });
+    }
+
+    // Phương thức để lấy ID mới nhất
+    public LiveData<Integer> getLastDailyLimitID() {
+        return dailyLimitDao.getLastDailyLimitID();
     }
 
 }

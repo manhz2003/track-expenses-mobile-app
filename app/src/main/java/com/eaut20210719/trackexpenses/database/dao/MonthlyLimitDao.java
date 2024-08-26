@@ -41,4 +41,8 @@ public interface MonthlyLimitDao {
 //    xoá tất cả dữ liệu trong bảng monthly_limits
     @Query("DELETE FROM monthly_limits")
     void deleteAll();
+
+    //  lấy id cuối cùng
+    @Query("SELECT MAX(id) FROM monthly_limits")
+    LiveData<Integer> getLastMonthlyLimitID();
 }

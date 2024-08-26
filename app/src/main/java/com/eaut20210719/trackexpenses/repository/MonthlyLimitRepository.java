@@ -58,4 +58,10 @@ public class MonthlyLimitRepository {
     public LiveData<Double> getLastMonthlyLimitMoney() {
         return monthlyLimitDao.getLastMonthlyLimitMoney();
     }
+
+    // Phương thức để lấy ID mới nhất
+    public LiveData<Integer> getLastMonthlyLimitID() {
+        return monthlyLimitDao.getLastMonthlyLimitID();
+    }
+
 }

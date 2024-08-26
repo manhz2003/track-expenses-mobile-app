@@ -93,7 +93,6 @@ public class SettingFragment extends Fragment {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // Không cần xử lý gì ở đây
             }
 
             @Override
@@ -146,7 +145,6 @@ public class SettingFragment extends Fragment {
         // Xóa toàn bộ dữ liệu trong database
         AppDatabase.getDatabaseWriteExecutor().execute(() -> {
             appDatabase.categoryDao().deleteAll();
-            appDatabase.typeDao().deleteAll();
             appDatabase.dailyLimitDao().deleteAll();
             appDatabase.monthlyLimitDao().deleteAll();
             appDatabase.colorDao().deleteAll();

@@ -1,7 +1,9 @@
 package com.eaut20210719.trackexpenses.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,6 +26,8 @@ import com.eaut20210719.trackexpenses.database.entities.Transaction;
 import com.eaut20210719.trackexpenses.database.entities.Type;
 import com.eaut20210719.trackexpenses.databinding.AddFragmentBinding;
 import com.eaut20210719.trackexpenses.viewmodels.CategoryViewModel;
+import com.eaut20210719.trackexpenses.viewmodels.DailyLimitViewModel;
+import com.eaut20210719.trackexpenses.viewmodels.MonthlyLimitViewModel;
 import com.eaut20210719.trackexpenses.viewmodels.TransactionViewModel;
 import com.eaut20210719.trackexpenses.viewmodels.TypeViewModel;
 
@@ -39,6 +43,8 @@ public class AddFragment extends Fragment {
     private CategoryViewModel categoryViewModel;
     private TypeViewModel typeViewModel;
     private TransactionViewModel transactionViewModel;
+    private DailyLimitViewModel dailyLimitViewModel;
+    private MonthlyLimitViewModel monthlyLimitViewModel;
     private ArrayAdapter<String> spinnerCategoryAdapter;
     private ArrayAdapter<Type> spinnerTypeAdapter;
     private List<String> categoriesList = new ArrayList<>();
@@ -51,6 +57,7 @@ public class AddFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -58,6 +65,8 @@ public class AddFragment extends Fragment {
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         typeViewModel = new ViewModelProvider(this).get(TypeViewModel.class);
         transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
+        dailyLimitViewModel = new ViewModelProvider(this).get(DailyLimitViewModel.class);
+        monthlyLimitViewModel = new ViewModelProvider(this).get(MonthlyLimitViewModel.class);
 
         setupSpinners();
 
@@ -101,7 +110,7 @@ public class AddFragment extends Fragment {
             }
         });
 
-//        xử lý lưu dữ liệu cho màn hình add transaction
+//        xử lý lưu loại giao dịch
         binding.btnSave3.setOnClickListener(v -> {
             String amountText = binding.editTextAmount.getText().toString().trim();
             String cleanedAmountText = amountText.replaceAll("[^0-9]", "");
@@ -125,7 +134,15 @@ public class AddFragment extends Fragment {
                     if (categoryId != null) {
                         observeOnce(typeViewModel.getTypeIdByName(selectedType.getType_name()), getViewLifecycleOwner(), typeId -> {
                             if (typeId != null) {
-                                updateTotalBalanceAndSaveTransaction(amount, typeId, content, selectedTime, categoryId, 0, 0);
+                                observeOnce(dailyLimitViewModel.getLastDailyLimitId(), getViewLifecycleOwner(), idDailyLimit -> {
+                                    observeOnce(monthlyLimitViewModel.getLastMonthlyLimitId(), getViewLifecycleOwner(), idMonthyLimit -> {
+                                        int dailyLimitId = idDailyLimit != null ? idDailyLimit : 0;
+                                        int monthlyLimitId = idMonthyLimit != null ? idMonthyLimit : 0;
+
+                                        // Gọi phương thức để cập nhật số dư và lưu giao dịch
+                                        updateTotalBalanceAndSaveTransaction(amount, typeId, content, selectedTime, categoryId, dailyLimitId, monthlyLimitId);
+                                    });
+                                });
                             } else {
                                 Toast.makeText(getContext(), "Loại giao dịch không tồn tại.", Toast.LENGTH_SHORT).show();
                             }
@@ -198,10 +215,8 @@ public class AddFragment extends Fragment {
             transactionViewModel.insert(transaction);
 
             // Logging dữ liệu sau khi lưu
-            Log.d("SaveTransaction", "Đã lưu giao dịch thành công");
             binding.editTextAmount.setText("");
             binding.content.setText("");
-
             Toast.makeText(getContext(), "Dữ liệu đã được lưu", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e("SaveTransaction", "Error saving transaction", e);
