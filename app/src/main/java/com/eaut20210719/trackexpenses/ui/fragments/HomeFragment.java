@@ -211,88 +211,89 @@ public class HomeFragment extends Fragment {
 
     //    Tính toán và hiển thị tổng số tiền hàng tháng
     private void calculateAndDisplayMonthlyTotal() {
-    transactionViewModel.getAllTransactions().observe(getViewLifecycleOwner(), transactions -> {
-        if (transactions != null) {
-            double totalIncome = sumAmountForCurrentMonth(transactions); // Tổng thu nhập
-            double totalExpense = sumAmountForCurrentMonthChiTieu(transactions); // Tổng chi tiêu
+                transactionViewModel.getAllTransactions().observe(getViewLifecycleOwner(), transactions -> {
+                    if (transactions != null) {
+                        double totalIncome = sumAmountForCurrentMonth(transactions); // Tổng thu nhập
+                        double totalExpense = sumAmountForCurrentMonthChiTieu(transactions); // Tổng chi tiêu
 
-            TextView tvMonthlyTotalIncome = binding.tv0d; // TextView cho thu nhập
-            TextView tvMonthlyTotalExpense = binding.tv0d1; // TextView cho chi tiêu
+                        TextView tvMonthlyTotalIncome = binding.tv0d; // TextView cho thu nhập
+                        TextView tvMonthlyTotalExpense = binding.tv0d1; // TextView cho chi tiêu
 
-            if (tvMonthlyTotalIncome != null) {
-                tvMonthlyTotalIncome.setText(String.format("%,.0fđ", totalIncome));
+                        if (tvMonthlyTotalIncome != null) {
+                            tvMonthlyTotalIncome.setText(String.format("%,.0fđ", totalIncome));
+                        }
+
+                        if (tvMonthlyTotalExpense != null) {
+                            tvMonthlyTotalExpense.setText(String.format("%,.0fđ", totalExpense));
+                        }
+                    }
+                });
             }
 
-            if (tvMonthlyTotalExpense != null) {
-                tvMonthlyTotalExpense.setText(String.format("%,.0fđ", totalExpense));
+            //    Tính tổng số tiền thu cho tháng và năm hiện tại
+            private double sumAmountForCurrentMonth(List<Transaction> transactions) {
+                int currentMonth = getCurrentMonth();
+                int currentYear = getCurrentYear();
+                double totalAmount = 0.0;
+
+                for (Transaction transaction : transactions) {
+                    String dateStr = transaction.getDate();
+                    int recordMonth = getMonthFromDateString(dateStr);
+                    int recordYear = getYearFromDateString(dateStr);
+
+                    Log.d("HomeFragment", "Transaction Date: " + dateStr + " | Record Month: " + recordMonth + " | Record Year: " + recordYear);
+
+                    if (recordMonth == currentMonth && recordYear == currentYear && transaction.getTypeId() == 3) {
+                        totalAmount += transaction.getAmount();
+                    }
+                }
+
+                return totalAmount;
             }
-        }
-    });
-}
 
-    //    Tính tổng số tiền thu cho tháng và năm hiện tại
-    private double sumAmountForCurrentMonth(List<Transaction> transactions) {
-        int currentMonth = getCurrentMonth();
-        int currentYear = getCurrentYear();
-        double totalAmount = 0.0;
+            //    tính tổng số tiền chi cho tháng và năm hiện tại
+            private double sumAmountForCurrentMonthChiTieu(List<Transaction> transactions) {
+                int currentMonth = getCurrentMonth();
+                int currentYear = getCurrentYear();
+                double totalAmount = 0.0;
 
-        for (Transaction transaction : transactions) {
-            String dateStr = transaction.getDate();
-            int recordMonth = getMonthFromDateString(dateStr);
-            int recordYear = getYearFromDateString(dateStr);
+                for (Transaction transaction : transactions) {
+                    String dateStr = transaction.getDate();
+                    int recordMonth = getMonthFromDateString(dateStr);
+                    int recordYear = getYearFromDateString(dateStr);
 
-            Log.d("HomeFragment", "Transaction Date: " + dateStr + " | Record Month: " + recordMonth + " | Record Year: " + recordYear);
+                    Log.d("HomeFragment", "Transaction Date: " + dateStr + " | Record Month: " + recordMonth + " | Record Year: " + recordYear);
+                    Log.d("transaction.getTypeId()", "transaction.getTypeId(): "+transaction.getTypeId() + " | transaction.getAmount(): "+transaction.getAmount()+ " | transaction.getTypeId(): "+transaction.getTypeId());
 
-            if (recordMonth == currentMonth && recordYear == currentYear && transaction.getTypeId() == 3) {
-                totalAmount += transaction.getAmount();
+                    if ((recordMonth == currentMonth) && (recordYear == currentYear) && (transaction.getTypeId() == 1 || transaction.getTypeId() == 2)) {
+                        totalAmount += transaction.getAmount();
+                    }
+                }
+
+                Log.d("totalAmount", "totalAmount: "+ totalAmount);
+
+
+                return totalAmount;
             }
-        }
 
-        return totalAmount;
-    }
-
-    //    tính tổng số tiền chi cho tháng và năm hiện tại
-    private double sumAmountForCurrentMonthChiTieu(List<Transaction> transactions) {
-        int currentMonth = getCurrentMonth();
-        int currentYear = getCurrentYear();
-        double totalAmount = 0.0;
-
-        for (Transaction transaction : transactions) {
-            String dateStr = transaction.getDate();
-            int recordMonth = getMonthFromDateString(dateStr);
-            int recordYear = getYearFromDateString(dateStr);
-
-            Log.d("HomeFragment", "Transaction Date: " + dateStr + " | Record Month: " + recordMonth + " | Record Year: " + recordYear);
-            Log.d("transaction.getTypeId()", "transaction.getTypeId(): "+transaction.getTypeId() + " | transaction.getAmount(): "+transaction.getAmount()+ " | transaction.getTypeId(): "+transaction.getTypeId());
-
-            if ((recordMonth == currentMonth) && (recordYear == currentYear) && (transaction.getTypeId() == 1 || transaction.getTypeId() == 2)) {
-                totalAmount += transaction.getAmount();
+            @Override
+            public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+                super.onViewCreated(view, savedInstanceState);
+                binding.tvAdd.setOnClickListener(v -> {
+                    if (addClickListener != null) {
+                        addClickListener.onClick(v);
+                    }
+                });
             }
-        }
 
-        Log.d("totalAmount", "totalAmount: "+ totalAmount);
-
-
-        return totalAmount;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        binding.tvAdd.setOnClickListener(v -> {
-            if (addClickListener != null) {
-                addClickListener.onClick(v);
+            public void setAddClickListener(View.OnClickListener listener) {
+                this.addClickListener = listener;
             }
-        });
+
+            @Override
+            public void onDestroyView() {
+                super.onDestroyView();
+                binding = null;
+            }
     }
 
-    public void setAddClickListener(View.OnClickListener listener) {
-        this.addClickListener = listener;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-}

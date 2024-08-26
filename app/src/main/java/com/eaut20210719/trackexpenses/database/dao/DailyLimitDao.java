@@ -20,8 +20,8 @@ public interface DailyLimitDao {
     void updateDailyLimit(DailyLimit dailyLimit);
 
 //    lấy id cuối cùng
-    @Query("SELECT MAX(id) FROM daily_limits")
-    LiveData<Integer> getLastDailyLimitId();
+//    @Query("SELECT MAX(id) FROM daily_limits")
+//    LiveData<Integer> getLastDailyLimitId();
 
     // Lấy tất cả dữ liệu bảng daily_limits
     @Query("SELECT * FROM daily_limits")
@@ -32,8 +32,8 @@ public interface DailyLimitDao {
     int getDailyLimitCount();  // Sử dụng int thay vì LiveData
 
     // Lấy ID cuối cùng trong bảng daily_limits
-//    @Query("SELECT MAX(id) FROM daily_limits")
-//    int getLastDailyLimitId();
+    @Query("SELECT MAX(id) FROM daily_limits")
+    int getLastDailyLimitId();
 
     // Lấy số tiền của bản ghi cuối cùng trong bảng daily_limits
     @Query("SELECT money_day FROM daily_limits ORDER BY id DESC LIMIT 1")
@@ -46,4 +46,9 @@ public interface DailyLimitDao {
 //    xóa toàn bộ dữ liệu trong bảng daily_limits
     @Query("DELETE FROM daily_limits")
     void deleteAll();
+
+    //    lấy id cuối cùng
+    @Query("SELECT MAX(id) FROM daily_limits")
+    LiveData<Integer> getLastDailyLimitID();
+
 }

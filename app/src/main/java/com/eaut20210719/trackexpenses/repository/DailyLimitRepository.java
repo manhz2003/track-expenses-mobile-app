@@ -36,7 +36,7 @@ public class DailyLimitRepository {
                 dailyLimitDao.insertDailyLimit(dailyLimit);
                 Log.d("DailyLimitRepository", "Inserted new daily limit with money_day: " + moneyDay);
             } else {
-                Integer lastId = dailyLimitDao.getLastDailyLimitId().getValue();
+                Integer lastId = dailyLimitDao.getLastDailyLimitId();
                 if (lastId != null) {
                     DailyLimit dailyLimit = new DailyLimit(moneyDay);
                     dailyLimit.setId(lastId);
@@ -47,8 +47,8 @@ public class DailyLimitRepository {
         });
     }
 
-//    // Phương thức để lấy ID mới nhất
-    public LiveData<Integer> getLastDailyLimitId() {
+    //    lấy id của bản ghi cuối cùng
+    public Integer getLastDailyLimitId() {
         return dailyLimitDao.getLastDailyLimitId();
     }
 
@@ -61,6 +61,11 @@ public class DailyLimitRepository {
         AppDatabase.getDatabaseWriteExecutor().execute(() -> {
             dailyLimitDao.updateMoneyDaySetting(moneyDaySetting);
         });
+    }
+
+    // Phương thức để lấy ID mới nhất
+    public LiveData<Integer> getLastDailyLimitID() {
+        return dailyLimitDao.getLastDailyLimitID();
     }
 
 }

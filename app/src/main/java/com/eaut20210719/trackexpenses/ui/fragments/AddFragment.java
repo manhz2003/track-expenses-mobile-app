@@ -1,7 +1,9 @@
 package com.eaut20210719.trackexpenses.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -55,6 +57,7 @@ public class AddFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -108,6 +111,7 @@ public class AddFragment extends Fragment {
         });
 
 //        xử lý lưu loại giao dịch
+        //        xử lý lưu loại giao dịch
         binding.btnSave3.setOnClickListener(v -> {
             String amountText = binding.editTextAmount.getText().toString().trim();
             String cleanedAmountText = amountText.replaceAll("[^0-9]", "");
@@ -152,6 +156,7 @@ public class AddFragment extends Fragment {
                 Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
             }
         });
+
 
     }
 
@@ -212,10 +217,8 @@ public class AddFragment extends Fragment {
             transactionViewModel.insert(transaction);
 
             // Logging dữ liệu sau khi lưu
-            Log.d("SaveTransaction", "Đã lưu giao dịch thành công");
             binding.editTextAmount.setText("");
             binding.content.setText("");
-
             Toast.makeText(getContext(), "Dữ liệu đã được lưu", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e("SaveTransaction", "Error saving transaction", e);

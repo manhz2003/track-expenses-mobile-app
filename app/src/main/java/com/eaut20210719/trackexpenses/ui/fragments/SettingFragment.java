@@ -95,7 +95,6 @@ public class SettingFragment extends Fragment {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // Không cần xử lý gì ở đây
             }
 
             @Override
