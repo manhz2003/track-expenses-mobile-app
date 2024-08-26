@@ -36,4 +36,10 @@ public interface SettingDao {
     // Lấy cài đặt duy nhất (ví dụ: cài đặt hệ thống chỉ có một bản ghi)
     @Query("SELECT * FROM settings LIMIT 1")
     Setting getSingleSetting();
+
+//    xoá tất cả dữ liệu trong bảng
+    @Query("DELETE FROM settings")
+    void deleteAll();
+
+
 }

@@ -41,4 +41,8 @@ public interface DailyLimitDao {
     // Phương thức để cập nhật money_day_setting
     @Query("UPDATE daily_limits SET money_day_setting = :moneyDaySetting WHERE id = (SELECT MAX(id) FROM daily_limits)")
     void updateMoneyDaySetting(double moneyDaySetting);
+
+//    xóa toàn bộ dữ liệu trong bảng daily_limits
+    @Query("DELETE FROM daily_limits")
+    void deleteAll();
 }

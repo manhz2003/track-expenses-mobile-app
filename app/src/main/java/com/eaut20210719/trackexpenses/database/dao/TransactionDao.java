@@ -64,4 +64,7 @@ public interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE strftime('%m', date) = :month")
     LiveData<List<Transaction>> getTransactionsByMonth(String month);
 
+    // Thêm phương thức xóa toàn bộ giao dịch
+    @Query("DELETE FROM transactions")
+    void deleteAll();
 }

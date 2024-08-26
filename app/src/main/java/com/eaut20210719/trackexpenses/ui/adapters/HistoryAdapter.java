@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.eaut20210719.trackexpenses.databinding.ItemHistoryBinding;
 import com.eaut20210719.trackexpenses.dto.History;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
@@ -59,12 +60,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         }
 
         public void bind(History item, int position, OnThreeDotsClickListener listener) {
+            // Khởi tạo DecimalFormat với định dạng mong muốn
+            DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
+
             // Bind data to views
             binding.tvHistoryBuyContent.setText(item.getNameCategory()); // Bind nameCategory
             binding.tvHistoryBuy1.setText(item.getContent()); // Bind content
             binding.tvTime.setText(item.getDate()); // Bind date
             binding.tvspend.setText(item.getTypeName()); // Bind type_name
-            binding.tvAmount.setText(String.valueOf(item.getAmount())); // Bind amount
+            // Format số tiền và gán vào TextView
+            String amount = decimalFormat.format(item.getAmount());
+            binding.tvAmount.setText(String.valueOf(amount)); // Bind amount
 
             // Set the click listener for tvThreedots
             binding.tvThreedots.setOnClickListener(v -> {

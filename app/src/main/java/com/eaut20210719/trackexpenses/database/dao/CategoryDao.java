@@ -20,4 +20,7 @@ public interface CategoryDao {
     @Query("DELETE FROM categories WHERE name = :categoryName")
     void deleteCategoryByName(String categoryName);
 
+    // Xóa toàn bộ dữ liệu bảng categories
+    @Query("DELETE FROM categories")
+    void deleteAll();
 }

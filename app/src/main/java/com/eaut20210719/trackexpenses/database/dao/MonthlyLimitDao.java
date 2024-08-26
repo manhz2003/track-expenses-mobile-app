@@ -37,4 +37,8 @@ public interface MonthlyLimitDao {
     // Cập nhật giá trị money_month_setting
     @Query("UPDATE monthly_limits SET money_month_setting = :moneyMonthSetting WHERE id = (SELECT MAX(id) FROM monthly_limits)")
     void updateMoneyMonthSetting(double moneyMonthSetting);
+
+//    xoá tất cả dữ liệu trong bảng monthly_limits
+    @Query("DELETE FROM monthly_limits")
+    void deleteAll();
 }

@@ -1,23 +1,23 @@
 package com.eaut20210719.trackexpenses.ui.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.eaut20210719.trackexpenses.R;
+import com.eaut20210719.trackexpenses.database.AppDatabase;
 import com.eaut20210719.trackexpenses.databinding.SettingFragmentBinding;
 import com.eaut20210719.trackexpenses.viewmodels.MonthlyLimitViewModel;
 
@@ -28,50 +28,67 @@ public class SettingFragment extends Fragment {
 
     private SettingFragmentBinding binding;
     private MonthlyLimitViewModel monthlyLimitViewModel;
-    private EditText etInputMoney;
-    private SeekBar sbExpenses;
-    private TextView tvMoney;
-    private Button btnSave;
     private SharedPreferences sharedPreferences;
-
     private View.OnClickListener addClickListener;
+    private AppDatabase appDatabase;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = SettingFragmentBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
+        return binding.getRoot();
+    }
 
-        // Initialize ViewModel
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         monthlyLimitViewModel = new ViewModelProvider(this).get(MonthlyLimitViewModel.class);
+        sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        appDatabase = AppDatabase.getInstance(requireContext());
 
-        // Initialize UI components
-        etInputMoney = binding.edtMonthlySpending;
-        sbExpenses = binding.sbExpenses1;
-        tvMoney = binding.money;
-        btnSave = binding.btnSave4;
+        setupUI();
 
-        // Initialize SharedPreferences
-        sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-
-        // Cập nhật số tiền chi tiêu từ bản ghi cuối cùng
-        monthlyLimitViewModel.getLastMonthlyLimitMoney().observe(getViewLifecycleOwner(), lastMoneyDay -> {
-            if (lastMoneyDay != null) {
-                int maxAmount = (int) lastMoneyDay.doubleValue();
-                sbExpenses.setMax(maxAmount);
-
-                // Đọc giá trị từ SharedPreferences và cập nhật SeekBar và TextView
-                int savedProgress = sharedPreferences.getInt(KEY_EXPENSE_PROGRESS, 0);
-                sbExpenses.setProgress(savedProgress);
-                tvMoney.setText(String.format("%,d VND", savedProgress));
+        binding.tvAdd.setOnClickListener(v -> {
+            if (addClickListener != null) {
+                addClickListener.onClick(v);
             }
         });
 
-        // Đặt sự kiện thay đổi thanh cuộn
-        sbExpenses.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        // Xử lý sự kiện khi nhấn vào TextView gmailsupport
+        binding.gmailsupport.setOnClickListener(v -> openEmailSupport());
+    }
+
+    private void openEmailSupport() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("message/rfc822");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"hotro.quanlychitieu@gmail.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Yêu cầu hỗ trợ");
+
+        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            startActivity(Intent.createChooser(intent, "Chọn ứng dụng gửi email"));
+        } else {
+            Toast.makeText(getContext(), "Không tìm thấy ứng dụng email", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private void setupUI() {
+        monthlyLimitViewModel.getLastMonthlyLimitMoney().observe(getViewLifecycleOwner(), lastMoneyDay -> {
+            if (lastMoneyDay != null) {
+                int maxAmount = (int) lastMoneyDay.doubleValue();
+                binding.sbExpenses1.setMax(maxAmount);
+
+                int savedProgress = sharedPreferences.getInt(KEY_EXPENSE_PROGRESS, 0);
+                binding.sbExpenses1.setProgress(savedProgress);
+                binding.money.setText(String.format("%,d VND", savedProgress));
+            }
+        });
+
+        binding.sbExpenses1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tvMoney.setText(String.format("%,d VND", progress));
+                binding.money.setText(String.format("%,d VND", progress));
             }
 
             @Override
@@ -81,7 +98,6 @@ public class SettingFragment extends Fragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                // Cập nhật giá trị trong ViewModel và SharedPreferences
                 int progress = seekBar.getProgress();
                 monthlyLimitViewModel.updateMoneyMonthSetting(progress);
 
@@ -91,33 +107,64 @@ public class SettingFragment extends Fragment {
             }
         });
 
-        // Xử lý sự kiện nhấn nút Save
-        btnSave.setOnClickListener(v -> {
-            String inputMoneyStr = etInputMoney.getText().toString();
-            if (!inputMoneyStr.isEmpty()) {
-                try {
-                    double inputMoney = Double.parseDouble(inputMoneyStr);
-                    monthlyLimitViewModel.insertOrUpdateMonthlyLimit(inputMoney);
-                    etInputMoney.setText("");
-                    Toast.makeText(getContext(), "Thiết lập thành công", Toast.LENGTH_SHORT).show();
-                } catch (NumberFormatException e) {
-                    Toast.makeText(getContext(), "Vui lòng nhập số tiền hợp lệ", Toast.LENGTH_SHORT).show();
-                }
-            } else {
+        binding.btnSave4.setOnClickListener(v -> {
+            String inputMoneyStr = binding.edtMonthlySpending.getText().toString().trim();
+            if (inputMoneyStr.isEmpty()) {
                 Toast.makeText(getContext(), "Vui lòng nhập số tiền", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            try {
+                double inputMoney = Double.parseDouble(inputMoneyStr);
+                if (inputMoney <= 0) {
+                    Toast.makeText(getContext(), "Số tiền phải lớn hơn 0", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                monthlyLimitViewModel.insertOrUpdateMonthlyLimit(inputMoney);
+                binding.edtMonthlySpending.setText("");
+                Toast.makeText(getContext(), "Thiết lập thành công", Toast.LENGTH_SHORT).show();
+            } catch (NumberFormatException e) {
+                Toast.makeText(getContext(), "Vui lòng nhập số tiền hợp lệ", Toast.LENGTH_SHORT).show();
             }
         });
 
-        return view;
+        // Xử lý sự kiện nút xóa
+        binding.deletedata.setOnClickListener(v -> showDeleteConfirmationDialog());
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        binding.tvAdd.setOnClickListener(v -> {
-            if (addClickListener != null) {
-                addClickListener.onClick(v);
-            }
+    // Hiển thị hộp thoại xác nhận xóa
+    private void showDeleteConfirmationDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Xác nhận xóa")
+                .setMessage("Bạn có chắc chắn muốn xóa toàn bộ dữ liệu không?")
+                .setPositiveButton("Xóa", (dialog, which) -> clearAllData())
+                .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    // Xóa toàn bộ dữ liệu khỏi cơ sở dữ liệu và SharedPreferences
+    private void clearAllData() {
+        // Xóa toàn bộ dữ liệu trong database
+        AppDatabase.getDatabaseWriteExecutor().execute(() -> {
+            appDatabase.categoryDao().deleteAll();
+            appDatabase.typeDao().deleteAll();
+            appDatabase.dailyLimitDao().deleteAll();
+            appDatabase.monthlyLimitDao().deleteAll();
+            appDatabase.colorDao().deleteAll();
+            appDatabase.transactionDao().deleteAll();
+            appDatabase.settingDao().deleteAll();
+        });
+
+        // Xóa dữ liệu SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+
+        // Cập nhật giao diện sau khi xóa
+        requireActivity().runOnUiThread(() -> {
+            monthlyLimitViewModel.updateMoneyMonthSetting(0);
+            binding.sbExpenses1.setProgress(0);
+            binding.money.setText("0 VND");
+            Toast.makeText(getContext(), "Toàn bộ dữ liệu đã được xóa", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -128,6 +175,6 @@ public class SettingFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null; // tránh memory leak
+        binding = null; // Giải phóng binding để tránh memory leak
     }
 }

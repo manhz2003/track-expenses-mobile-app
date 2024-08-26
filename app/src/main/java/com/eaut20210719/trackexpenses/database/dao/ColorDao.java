@@ -18,4 +18,8 @@ public interface ColorDao {
     @Query("SELECT * FROM colors")
     LiveData<List<Color>> getAllColors();
 
+//    xóa tất cả dữ liệu bảng colors
+    @Query("DELETE FROM colors")
+    void deleteAll();
+
 }

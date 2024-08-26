@@ -21,4 +21,7 @@ public interface TypeDao {
     @Query("SELECT id FROM types WHERE type_name = :typeName")
     LiveData<Integer> getTypeIdByName(String typeName);
 
+    // Xóa toàn bộ dữ liệu trong bảng types
+    @Query("DELETE FROM types")
+    void deleteAll();
 }
