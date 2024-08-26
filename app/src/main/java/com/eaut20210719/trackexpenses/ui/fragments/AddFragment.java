@@ -49,6 +49,8 @@ public class AddFragment extends Fragment {
     private ArrayAdapter<Type> spinnerTypeAdapter;
     private List<String> categoriesList = new ArrayList<>();
     private List<Type> typesList = new ArrayList<>();
+    private DailyLimitViewModel dailyLimitViewModel;
+    private MonthlyLimitViewModel monthlyLimitViewModel;
 
     @Nullable
     @Override

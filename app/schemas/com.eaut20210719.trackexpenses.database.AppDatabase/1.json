@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "db4278c8a0e518be9d675cae90f2078c",
+    "identityHash": "8dea7d79343b6c821a4a7278d756b4cf",
     "entities": [
       {
         "tableName": "categories",
@@ -58,7 +58,7 @@
       },
       {
         "tableName": "daily_limits",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `money_day` REAL NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `money_day` REAL NOT NULL, `money_day_setting` REAL NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -69,6 +69,12 @@
           {
             "fieldPath": "money_day",
             "columnName": "money_day",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "money_day_setting",
+            "columnName": "money_day_setting",
             "affinity": "REAL",
             "notNull": true
           }
@@ -84,7 +90,7 @@
       },
       {
         "tableName": "monthly_limits",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `money_month` REAL NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `money_month` REAL NOT NULL, `money_month_setting` REAL NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -95,6 +101,12 @@
           {
             "fieldPath": "money_month",
             "columnName": "money_month",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "money_month_setting",
+            "columnName": "money_month_setting",
             "affinity": "REAL",
             "notNull": true
           }
@@ -136,7 +148,7 @@
       },
       {
         "tableName": "transactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `amount` REAL NOT NULL, `id_type` INTEGER NOT NULL, `content` TEXT, `date` TEXT, `id_category` INTEGER NOT NULL, `total_balance` REAL NOT NULL, `id_daily_limit` INTEGER NOT NULL, `id_monthly_limit` INTEGER NOT NULL, FOREIGN KEY(`id_type`) REFERENCES `types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_category`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_daily_limit`) REFERENCES `daily_limits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_monthly_limit`) REFERENCES `monthly_limits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `amount` REAL NOT NULL, `typeId` INTEGER NOT NULL, `content` TEXT, `date` TEXT, `categoryId` INTEGER NOT NULL, `totalBalance` REAL NOT NULL, `id_daily_limit` INTEGER, `id_monthly_limit` INTEGER, FOREIGN KEY(`id_daily_limit`) REFERENCES `daily_limits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_monthly_limit`) REFERENCES `monthly_limits`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -151,8 +163,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "id_type",
-            "columnName": "id_type",
+            "fieldPath": "typeId",
+            "columnName": "typeId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -169,28 +181,28 @@
             "notNull": false
           },
           {
-            "fieldPath": "id_category",
-            "columnName": "id_category",
+            "fieldPath": "categoryId",
+            "columnName": "categoryId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "total_balance",
-            "columnName": "total_balance",
+            "fieldPath": "totalBalance",
+            "columnName": "totalBalance",
             "affinity": "REAL",
             "notNull": true
           },
           {
-            "fieldPath": "id_daily_limit",
+            "fieldPath": "idDailyLimit",
             "columnName": "id_daily_limit",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
-            "fieldPath": "id_monthly_limit",
+            "fieldPath": "idMonthlyLimit",
             "columnName": "id_monthly_limit",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -201,28 +213,6 @@
         },
         "indices": [],
         "foreignKeys": [
-          {
-            "table": "types",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "id_type"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "categories",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "id_category"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
           {
             "table": "daily_limits",
             "onDelete": "CASCADE",
@@ -295,7 +285,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'db4278c8a0e518be9d675cae90f2078c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8dea7d79343b6c821a4a7278d756b4cf')"
     ]
   }
 }

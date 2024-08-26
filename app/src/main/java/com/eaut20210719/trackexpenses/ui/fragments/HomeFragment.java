@@ -215,6 +215,10 @@ public class HomeFragment extends Fragment {
             if (transactions != null) {
                 double totalIncome = sumAmountForCurrentMonth(transactions); // Tổng thu nhập
                 double totalExpense = sumAmountForCurrentMonthChiTieu(transactions); // Tổng chi tiêu
+    transactionViewModel.getAllTransactions().observe(getViewLifecycleOwner(), transactions -> {
+        if (transactions != null) {
+            double totalIncome = sumAmountForCurrentMonth(transactions); // Tổng thu nhập
+            double totalExpense = sumAmountForCurrentMonthChiTieu(transactions); // Tổng chi tiêu
 
                 TextView tvMonthlyTotalIncome = binding.tv0d; // TextView cho thu nhập
                 TextView tvMonthlyTotalExpense = binding.tv0d1; // TextView cho chi tiêu
@@ -241,6 +245,8 @@ public class HomeFragment extends Fragment {
             int recordMonth = getMonthFromDateString(dateStr);
             int recordYear = getYearFromDateString(dateStr);
 
+            Log.d("HomeFragment", "Transaction Date: " + dateStr + " | Record Month: " + recordMonth + " | Record Year: " + recordYear);
+
             if (recordMonth == currentMonth && recordYear == currentYear && transaction.getTypeId() == 3) {
                 totalAmount += transaction.getAmount();
             }
@@ -260,10 +266,16 @@ public class HomeFragment extends Fragment {
             int recordMonth = getMonthFromDateString(dateStr);
             int recordYear = getYearFromDateString(dateStr);
 
+            Log.d("HomeFragment", "Transaction Date: " + dateStr + " | Record Month: " + recordMonth + " | Record Year: " + recordYear);
+            Log.d("transaction.getTypeId()", "transaction.getTypeId(): "+transaction.getTypeId() + " | transaction.getAmount(): "+transaction.getAmount()+ " | transaction.getTypeId(): "+transaction.getTypeId());
+
             if ((recordMonth == currentMonth) && (recordYear == currentYear) && (transaction.getTypeId() == 1 || transaction.getTypeId() == 2)) {
                 totalAmount += transaction.getAmount();
             }
         }
+
+        Log.d("totalAmount", "totalAmount: "+ totalAmount);
+
 
         return totalAmount;
     }

@@ -43,6 +43,11 @@ public class DailyLimitViewModel extends AndroidViewModel {
         repository.insertOrUpdateDailyLimit(moneyDay);
     }
 
+    // Phương thức lấy ID mới nhất
+    public LiveData<Integer> getLastDailyLimitId() {
+        return repository.getLastDailyLimitId();
+    }
+
     // Phương thức lấy tất cả dữ liệu daily_limits
     public LiveData<List<DailyLimit>> getAllDailyLimits() {
         return allDailyLimits;
