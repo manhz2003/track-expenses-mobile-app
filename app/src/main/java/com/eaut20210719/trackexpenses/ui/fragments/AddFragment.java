@@ -110,7 +110,6 @@ public class AddFragment extends Fragment {
             }
         });
 
-//        xử lý lưu loại giao dịch
         //        xử lý lưu loại giao dịch
         binding.btnSave3.setOnClickListener(v -> {
             String amountText = binding.editTextAmount.getText().toString().trim();

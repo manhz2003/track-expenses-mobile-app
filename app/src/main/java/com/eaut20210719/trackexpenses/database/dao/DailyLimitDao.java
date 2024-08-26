@@ -19,10 +19,6 @@ public interface DailyLimitDao {
     @Update
     void updateDailyLimit(DailyLimit dailyLimit);
 
-//    lấy id cuối cùng
-//    @Query("SELECT MAX(id) FROM daily_limits")
-//    LiveData<Integer> getLastDailyLimitId();
-
     // Lấy tất cả dữ liệu bảng daily_limits
     @Query("SELECT * FROM daily_limits")
     LiveData<List<DailyLimit>> getAllDailyLimits();
@@ -43,7 +39,7 @@ public interface DailyLimitDao {
     @Query("UPDATE daily_limits SET money_day_setting = :moneyDaySetting WHERE id = (SELECT MAX(id) FROM daily_limits)")
     void updateMoneyDaySetting(double moneyDaySetting);
 
-//    xóa toàn bộ dữ liệu trong bảng daily_limits
+    //    xóa toàn bộ dữ liệu trong bảng daily_limits
     @Query("DELETE FROM daily_limits")
     void deleteAll();
 

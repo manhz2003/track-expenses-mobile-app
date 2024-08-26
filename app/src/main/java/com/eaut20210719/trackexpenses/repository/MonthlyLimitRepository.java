@@ -33,7 +33,7 @@ public class MonthlyLimitRepository {
             if (count == 0) {
                 monthlyLimitDao.insertMonthlyLimit(monthlyLimit);
             } else {
-                Integer lastId = monthlyLimitDao.getLastMonthlyLimitId().getValue();
+                Integer lastId = monthlyLimitDao.getLastMonthlyLimitId();
                 if (lastId != null) {
                     monthlyLimit.setId(lastId);
                     monthlyLimitDao.updateMonthlyLimit(monthlyLimit);
@@ -44,18 +44,16 @@ public class MonthlyLimitRepository {
 
     public void updateMoneyMonthSetting(double moneyMonthSetting) {
         AppDatabase.getDatabaseWriteExecutor().execute(() -> {
-            Integer lastId = monthlyLimitDao.getLastMonthlyLimitId().getValue();
+            Integer lastId = monthlyLimitDao.getLastMonthlyLimitId();
             if (lastId != null) {
                 monthlyLimitDao.updateMoneyMonthSetting(moneyMonthSetting);
             }
         });
     }
 
-    // Phương thức để lấy ID mới nhất
-    public LiveData<Integer> getLastMonthlyLimitId() {
+    public Integer getLastMonthlyLimitId() {
         return monthlyLimitDao.getLastMonthlyLimitId();
     }
-
 
     public LiveData<Double> getLastMonthlyLimitMoney() {
         return monthlyLimitDao.getLastMonthlyLimitMoney();
@@ -65,5 +63,4 @@ public class MonthlyLimitRepository {
     public LiveData<Integer> getLastMonthlyLimitID() {
         return monthlyLimitDao.getLastMonthlyLimitID();
     }
-
 }

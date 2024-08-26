@@ -20,7 +20,7 @@ public interface MonthlyLimitDao {
     void updateMonthlyLimit(MonthlyLimit monthlyLimit);
 
     @Query("DELETE FROM monthly_limits")
-    void deleteAllMonthlyLimits();
+    void deleteAll();
 
     @Query("SELECT * FROM monthly_limits")
     LiveData<List<MonthlyLimit>> getAllMonthlyLimits();
@@ -28,9 +28,8 @@ public interface MonthlyLimitDao {
     @Query("SELECT COUNT(*) FROM monthly_limits")
     int getMonthlyLimitCount();
 
-    //  lấy id cuối cùng
     @Query("SELECT MAX(id) FROM monthly_limits")
-    LiveData<Integer> getLastMonthlyLimitId();
+    Integer getLastMonthlyLimitId();
 
     @Query("SELECT money_month FROM monthly_limits ORDER BY id DESC LIMIT 1")
     LiveData<Double> getLastMonthlyLimitMoney();
@@ -38,10 +37,6 @@ public interface MonthlyLimitDao {
     // Cập nhật giá trị money_month_setting
     @Query("UPDATE monthly_limits SET money_month_setting = :moneyMonthSetting WHERE id = (SELECT MAX(id) FROM monthly_limits)")
     void updateMoneyMonthSetting(double moneyMonthSetting);
-
-//    xoá tất cả dữ liệu trong bảng monthly_limits
-    @Query("DELETE FROM monthly_limits")
-    void deleteAll();
 
     //  lấy id cuối cùng
     @Query("SELECT MAX(id) FROM monthly_limits")
