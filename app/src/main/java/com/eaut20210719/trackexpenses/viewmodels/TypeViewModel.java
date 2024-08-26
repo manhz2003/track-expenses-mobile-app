@@ -26,8 +26,8 @@ public class TypeViewModel extends AndroidViewModel {
 
     private void insertSampleData() {
         insertTypeIfNotExists(new Type("Tiền chi"));
-        insertTypeIfNotExists(new Type("Thu nhập"));
         insertTypeIfNotExists(new Type("Cho vay"));
+        insertTypeIfNotExists(new Type("Thu nhập"));
     }
 
     private void insertTypeIfNotExists(Type type) {

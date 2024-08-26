@@ -44,7 +44,7 @@ public class DailyLimitViewModel extends AndroidViewModel {
     }
 
     // Phương thức lấy ID mới nhất
-    public Integer getLastDailyLimitId() {
+    public LiveData<Integer> getLastDailyLimitId() {
         return repository.getLastDailyLimitId();
     }
 

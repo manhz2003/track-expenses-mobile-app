@@ -28,8 +28,9 @@ public interface MonthlyLimitDao {
     @Query("SELECT COUNT(*) FROM monthly_limits")
     int getMonthlyLimitCount();
 
+    //  lấy id cuối cùng
     @Query("SELECT MAX(id) FROM monthly_limits")
-    Integer getLastMonthlyLimitId();
+    LiveData<Integer> getLastMonthlyLimitId();
 
     @Query("SELECT money_month FROM monthly_limits ORDER BY id DESC LIMIT 1")
     LiveData<Double> getLastMonthlyLimitMoney();

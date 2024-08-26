@@ -16,10 +16,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.room.Room;
 
 import com.eaut20210719.trackexpenses.database.AppDatabase;
 import com.eaut20210719.trackexpenses.databinding.SettingFragmentBinding;
 import com.eaut20210719.trackexpenses.viewmodels.MonthlyLimitViewModel;
+
+import java.util.Random;
 
 public class SettingFragment extends Fragment {
 
@@ -71,7 +74,6 @@ public class SettingFragment extends Fragment {
             Toast.makeText(getContext(), "Không tìm thấy ứng dụng email", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private void setupUI() {
         monthlyLimitViewModel.getLastMonthlyLimitMoney().observe(getViewLifecycleOwner(), lastMoneyDay -> {
@@ -141,12 +143,11 @@ public class SettingFragment extends Fragment {
                 .show();
     }
 
-    // Xóa toàn bộ dữ liệu khỏi cơ sở dữ liệu và SharedPreferences
+//    // Xóa toàn bộ dữ liệu khỏi cơ sở dữ liệu và SharedPreferences
     private void clearAllData() {
         // Xóa toàn bộ dữ liệu trong database
         AppDatabase.getDatabaseWriteExecutor().execute(() -> {
             appDatabase.categoryDao().deleteAll();
-            appDatabase.typeDao().deleteAll();
             appDatabase.dailyLimitDao().deleteAll();
             appDatabase.monthlyLimitDao().deleteAll();
             appDatabase.colorDao().deleteAll();

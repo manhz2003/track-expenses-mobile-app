@@ -24,6 +24,8 @@ import com.eaut20210719.trackexpenses.database.entities.Transaction;
 import com.eaut20210719.trackexpenses.database.entities.Type;
 import com.eaut20210719.trackexpenses.databinding.AddFragmentBinding;
 import com.eaut20210719.trackexpenses.viewmodels.CategoryViewModel;
+import com.eaut20210719.trackexpenses.viewmodels.DailyLimitViewModel;
+import com.eaut20210719.trackexpenses.viewmodels.MonthlyLimitViewModel;
 import com.eaut20210719.trackexpenses.viewmodels.TransactionViewModel;
 import com.eaut20210719.trackexpenses.viewmodels.TypeViewModel;
 
@@ -43,6 +45,8 @@ public class AddFragment extends Fragment {
     private ArrayAdapter<Type> spinnerTypeAdapter;
     private List<String> categoriesList = new ArrayList<>();
     private List<Type> typesList = new ArrayList<>();
+    private DailyLimitViewModel dailyLimitViewModel;
+    private MonthlyLimitViewModel monthlyLimitViewModel;
 
     @Nullable
     @Override
@@ -58,6 +62,8 @@ public class AddFragment extends Fragment {
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         typeViewModel = new ViewModelProvider(this).get(TypeViewModel.class);
         transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
+        dailyLimitViewModel = new ViewModelProvider(this).get(DailyLimitViewModel.class);
+        monthlyLimitViewModel = new ViewModelProvider(this).get(MonthlyLimitViewModel.class);
 
         setupSpinners();
 
@@ -101,7 +107,7 @@ public class AddFragment extends Fragment {
             }
         });
 
-//        xử lý lưu dữ liệu cho màn hình add transaction
+//        xử lý lưu loại giao dịch
         binding.btnSave3.setOnClickListener(v -> {
             String amountText = binding.editTextAmount.getText().toString().trim();
             String cleanedAmountText = amountText.replaceAll("[^0-9]", "");
@@ -125,7 +131,15 @@ public class AddFragment extends Fragment {
                     if (categoryId != null) {
                         observeOnce(typeViewModel.getTypeIdByName(selectedType.getType_name()), getViewLifecycleOwner(), typeId -> {
                             if (typeId != null) {
-                                updateTotalBalanceAndSaveTransaction(amount, typeId, content, selectedTime, categoryId, 0, 0);
+                                observeOnce(dailyLimitViewModel.getLastDailyLimitId(), getViewLifecycleOwner(), idDailyLimit -> {
+                                    observeOnce(monthlyLimitViewModel.getLastMonthlyLimitId(), getViewLifecycleOwner(), idMonthyLimit -> {
+                                        int dailyLimitId = idDailyLimit != null ? idDailyLimit : 0;
+                                        int monthlyLimitId = idMonthyLimit != null ? idMonthyLimit : 0;
+
+                                        // Gọi phương thức để cập nhật số dư và lưu giao dịch
+                                        updateTotalBalanceAndSaveTransaction(amount, typeId, content, selectedTime, categoryId, dailyLimitId, monthlyLimitId);
+                                    });
+                                });
                             } else {
                                 Toast.makeText(getContext(), "Loại giao dịch không tồn tại.", Toast.LENGTH_SHORT).show();
                             }

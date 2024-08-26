@@ -41,7 +41,7 @@ public class MonthlyLimitViewModel extends AndroidViewModel {
         repository.insertOrUpdateMonthlyLimit(moneyMonth);
     }
 
-    public Integer getLastMonthlyLimitId() {
+    public LiveData<Integer> getLastMonthlyLimitId() {
         return repository.getLastMonthlyLimitId();
     }
 
