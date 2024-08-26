@@ -232,6 +232,7 @@
                     android:layout_marginTop="@dimen/_16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@drawable/khungbaocanhbao"
                     android:clipToPadding="false"
                     android:elevation="@dimen/_2dp">
 
