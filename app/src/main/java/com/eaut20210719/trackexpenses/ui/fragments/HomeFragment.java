@@ -164,120 +164,147 @@ public class HomeFragment extends Fragment {
         return calendar.get(Calendar.DAY_OF_MONTH);
     }
 
-    // Lấy năm từ chuỗi ngày
-    private int getYearFromDateString(String dateString) {
-        SimpleDateFormat format = new SimpleDateFormat("hh:mm a dd/MM/yyyy", Locale.getDefault());
-        dateString = dateString.replace("Chiều", "PM");
-        try {
-            Date date = format.parse(dateString);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            return calendar.get(Calendar.YEAR);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
-
-    //    Lấy tháng từ chuỗi ngày
-    private int getMonthFromDateString(String dateString) {
-        SimpleDateFormat format = new SimpleDateFormat("hh:mm a dd/MM/yyyy", Locale.getDefault());
-        dateString = dateString.replace("Chiều", "PM");
-        try {
-            Date date = format.parse(dateString);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            return calendar.get(Calendar.MONTH) + 1; // Tháng trong Calendar bắt đầu từ 0
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
-
-    //    lấy ngày từ chuỗi ngày
-    private int getDayFromDateString(String dateString) {
-        SimpleDateFormat format = new SimpleDateFormat("hh:mm a dd/MM/yyyy", Locale.getDefault());
-        dateString = dateString.replace("Chiều", "PM");
-        try {
-            Date date = format.parse(dateString);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            return calendar.get(Calendar.DAY_OF_MONTH);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
-
     //    Tính toán và hiển thị tổng số tiền hàng tháng
     private void calculateAndDisplayMonthlyTotal() {
-                transactionViewModel.getAllTransactions().observe(getViewLifecycleOwner(), transactions -> {
-                    if (transactions != null) {
-                        double totalIncome = sumAmountForCurrentMonth(transactions); // Tổng thu nhập
-                        double totalExpense = sumAmountForCurrentMonthChiTieu(transactions); // Tổng chi tiêu
+        transactionViewModel.getAllTransactions().observe(getViewLifecycleOwner(), transactions -> {
+            if (transactions != null) {
+                double totalIncome = sumAmountForCurrentMonth(transactions); // Tổng thu nhập
+                double totalExpense = sumAmountForCurrentMonthChiTieu(transactions); // Tổng chi tiêu
+                double totalExpenseToday = sumAmountForToday(transactions);
 
-                        TextView tvMonthlyTotalIncome = binding.tv0d; // TextView cho thu nhập
-                        TextView tvMonthlyTotalExpense = binding.tv0d1; // TextView cho chi tiêu
+                Log.d("totalExpenseToday", "totalExpenseToday: "+totalExpenseToday);
 
-                        if (tvMonthlyTotalIncome != null) {
+                TextView tvMonthlyTotalIncome = binding.tv0d; // TextView cho thu nhập
+                TextView tvMonthlyTotalExpense = binding.tv0d1; // TextView cho chi tiêu
+                TextView tvTodayTotalExpense = binding.tien; // TextView cho chi tiêu hôm nay
+
+                    if (tvMonthlyTotalIncome != null) {
                             tvMonthlyTotalIncome.setText(String.format("%,.0fđ", totalIncome));
                         }
 
-                        if (tvMonthlyTotalExpense != null) {
+                    if (tvMonthlyTotalExpense != null) {
                             tvMonthlyTotalExpense.setText(String.format("%,.0fđ", totalExpense));
                         }
-                    }
+
+                    if (tvTodayTotalExpense != null) {
+                            tvTodayTotalExpense.setText(String.format("%,.0fđ", totalExpenseToday));}
+
+                        }
                 });
             }
 
-            //    Tính tổng số tiền thu cho tháng và năm hiện tại
-            private double sumAmountForCurrentMonth(List<Transaction> transactions) {
-                int currentMonth = getCurrentMonth();
-                int currentYear = getCurrentYear();
-                double totalAmount = 0.0;
+    private String cleanDateString(String dateStr) {
+        // Loại bỏ các phần không cần thiết (ví dụ: "Chiều", "Sáng")
+        return dateStr.replace("Chiều", "").replace("Sáng", "").trim();
+    }
 
-                for (Transaction transaction : transactions) {
-                    String dateStr = transaction.getDate();
-                    int recordMonth = getMonthFromDateString(dateStr);
-                    int recordYear = getYearFromDateString(dateStr);
+    // Cập nhật phương thức `sumAmountForToday` để sử dụng định dạng 24 giờ
+    private double sumAmountForToday(List<Transaction> transactions) {
+        int currentDay = getCurrentDay();
+        int currentMonth = getCurrentMonth();
+        int currentYear = getCurrentYear();
+        double totalAmount = 0.0;
 
-                    Log.d("HomeFragment", "Transaction Date: " + dateStr + " | Record Month: " + recordMonth + " | Record Year: " + recordYear);
+        // Định dạng ngày giờ cho các chuỗi có định dạng kiểu 24 giờ
+        SimpleDateFormat format24 = new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault());
 
-                    if (recordMonth == currentMonth && recordYear == currentYear && transaction.getTypeId() == 3) {
-                        totalAmount += transaction.getAmount();
-                    }
-                }
+        for (Transaction transaction : transactions) {
+            String dateStr = cleanDateString(transaction.getDate());
+            Date date = null;
 
-                return totalAmount;
+            try {
+                // Phân tích ngày giờ theo định dạng 24 giờ
+                date = format24.parse(dateStr);
+            } catch (ParseException e) {
+                Log.e("HomeFragment", "Error parsing date: " + dateStr, e);
             }
 
-            //    tính tổng số tiền chi cho tháng và năm hiện tại
-            private double sumAmountForCurrentMonthChiTieu(List<Transaction> transactions) {
-                int currentMonth = getCurrentMonth();
-                int currentYear = getCurrentYear();
-                double totalAmount = 0.0;
+            if (date != null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
 
-                for (Transaction transaction : transactions) {
-                    String dateStr = transaction.getDate();
-                    int recordMonth = getMonthFromDateString(dateStr);
-                    int recordYear = getYearFromDateString(dateStr);
+                int recordDay = calendar.get(Calendar.DAY_OF_MONTH);
+                int recordMonth = calendar.get(Calendar.MONTH) + 1; // Tháng bắt đầu từ 0
+                int recordYear = calendar.get(Calendar.YEAR);
 
-                    Log.d("HomeFragment", "Transaction Date: " + dateStr + " | Record Month: " + recordMonth + " | Record Year: " + recordYear);
-                    Log.d("transaction.getTypeId()", "transaction.getTypeId(): "+transaction.getTypeId() + " | transaction.getAmount(): "+transaction.getAmount()+ " | transaction.getTypeId(): "+transaction.getTypeId());
-
-                    if ((recordMonth == currentMonth) && (recordYear == currentYear) && (transaction.getTypeId() == 1 || transaction.getTypeId() == 2)) {
-                        totalAmount += transaction.getAmount();
-                    }
+                if (recordDay == currentDay && recordMonth == currentMonth && recordYear == currentYear && transaction.getTypeId() == 1 || transaction.getTypeId() == 2) {
+                    totalAmount += transaction.getAmount();
                 }
+            }
+        }
 
-                Log.d("totalAmount", "totalAmount: "+ totalAmount);
+        return totalAmount;
+    }
 
+    // Cập nhật phương thức `sumAmountForCurrentMonth` và `sumAmountForCurrentMonthChiTieu` tương tự
+    private double sumAmountForCurrentMonth(List<Transaction> transactions) {
+        int currentMonth = getCurrentMonth();
+        int currentYear = getCurrentYear();
+        double totalAmount = 0.0;
 
-                return totalAmount;
+        SimpleDateFormat format24 = new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault());
+
+        for (Transaction transaction : transactions) {
+            String dateStr = cleanDateString(transaction.getDate());
+            Date date = null;
+
+            try {
+                date = format24.parse(dateStr);
+            } catch (ParseException e) {
+                Log.e("HomeFragment", "Error parsing date: " + dateStr, e);
             }
 
-            @Override
-            public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            if (date != null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+
+                int recordMonth = calendar.get(Calendar.MONTH) + 1; // Tháng bắt đầu từ 0
+                int recordYear = calendar.get(Calendar.YEAR);
+
+                if (recordMonth == currentMonth && recordYear == currentYear && transaction.getTypeId() == 3) {
+                    totalAmount += transaction.getAmount();
+                }
+            }
+        }
+
+        return totalAmount;
+    }
+
+    private double sumAmountForCurrentMonthChiTieu(List<Transaction> transactions) {
+        int currentMonth = getCurrentMonth();
+        int currentYear = getCurrentYear();
+        double totalAmount = 0.0;
+
+        SimpleDateFormat format24 = new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault());
+
+        for (Transaction transaction : transactions) {
+            String dateStr = cleanDateString(transaction.getDate());
+            Date date = null;
+
+            try {
+                date = format24.parse(dateStr);
+            } catch (ParseException e) {
+                Log.e("HomeFragment", "Error parsing date: " + dateStr, e);
+            }
+
+            if (date != null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+
+                int recordMonth = calendar.get(Calendar.MONTH) + 1; // Tháng bắt đầu từ 0
+                int recordYear = calendar.get(Calendar.YEAR);
+
+                if (recordMonth == currentMonth && recordYear == currentYear && (transaction.getTypeId() == 1 || transaction.getTypeId() == 2)) {
+                    totalAmount += transaction.getAmount();
+                }
+            }
+        }
+
+        return totalAmount;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
                 super.onViewCreated(view, savedInstanceState);
                 binding.tvAdd.setOnClickListener(v -> {
                     if (addClickListener != null) {
@@ -286,12 +313,12 @@ public class HomeFragment extends Fragment {
                 });
             }
 
-            public void setAddClickListener(View.OnClickListener listener) {
+    public void setAddClickListener(View.OnClickListener listener) {
                 this.addClickListener = listener;
             }
 
-            @Override
-            public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
                 super.onDestroyView();
                 binding = null;
             }
