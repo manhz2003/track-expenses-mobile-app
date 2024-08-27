@@ -89,4 +89,10 @@ public class TransactionViewModel extends AndroidViewModel {
         Log.d("result", result.toString());
         return  result;
     }
+
+    // Trung
+    public LiveData<List<Transaction>> getTransactionsByDate(String date) {
+        return mRepository.getTransactionsByDate(date);
+    }
+
 }

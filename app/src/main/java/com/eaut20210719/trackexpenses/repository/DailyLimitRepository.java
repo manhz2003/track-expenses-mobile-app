@@ -62,4 +62,10 @@ public class DailyLimitRepository {
         });
     }
 
+    // Phương thức để lấy ID mới nhất
+    public LiveData<Integer> getLastDailyLimitID() {
+        return dailyLimitDao.getLastDailyLimitID();
+    }
+
+
 }

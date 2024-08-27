@@ -36,7 +36,7 @@
     <string name="chi_tien">Chi tiền</string>
     <string name="_10_000">10.000đ</string>
     <string name="so_tien_da_chi">Số tiền đã chi:</string>
-    <string name="_100_000">100.000đ</string>
+    <string name="_100_000">0đ</string>
     <string name="tong_chi">Tổng chi:</string>
     <string name="tong_thu">Tổng thu:</string>
     <string name="bao_cao_hom_nay">Báo cáo hôm nay (15/08/2024)</string>

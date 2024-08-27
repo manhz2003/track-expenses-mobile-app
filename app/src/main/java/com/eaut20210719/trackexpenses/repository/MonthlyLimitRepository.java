@@ -55,7 +55,13 @@ public class MonthlyLimitRepository {
         return monthlyLimitDao.getLastMonthlyLimitId();
     }
 
+    // Lấy giá trị bản ghi cuối cùng
     public LiveData<Double> getLastMonthlyLimitMoney() {
         return monthlyLimitDao.getLastMonthlyLimitMoney();
+    }
+
+    // Phương thức để lấy ID mới nhất
+    public LiveData<Integer> getLastMonthlyLimitID() {
+        return monthlyLimitDao.getLastMonthlyLimitID();
     }
 }

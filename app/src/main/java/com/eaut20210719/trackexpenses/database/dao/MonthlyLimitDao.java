@@ -31,10 +31,15 @@ public interface MonthlyLimitDao {
     @Query("SELECT MAX(id) FROM monthly_limits")
     Integer getLastMonthlyLimitId();
 
+    // Lấy số tiền của bản ghi cuối cùng trong bảng monthly_limits
     @Query("SELECT money_month FROM monthly_limits ORDER BY id DESC LIMIT 1")
     LiveData<Double> getLastMonthlyLimitMoney();
 
     // Cập nhật giá trị money_month_setting
     @Query("UPDATE monthly_limits SET money_month_setting = :moneyMonthSetting WHERE id = (SELECT MAX(id) FROM monthly_limits)")
     void updateMoneyMonthSetting(double moneyMonthSetting);
+
+    //  lấy id cuối cùng
+    @Query("SELECT MAX(id) FROM monthly_limits")
+    LiveData<Integer> getLastMonthlyLimitID();
 }

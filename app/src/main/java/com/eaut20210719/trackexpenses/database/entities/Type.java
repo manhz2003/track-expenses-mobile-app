@@ -5,11 +5,12 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "types")
 public class Type {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     public int id;
 
     public String type_name;
-    public Type(String type_name) {
+    public Type(int id,String type_name) {
+        this.id = id;
         this.type_name = type_name;
     }
     public int getId() {

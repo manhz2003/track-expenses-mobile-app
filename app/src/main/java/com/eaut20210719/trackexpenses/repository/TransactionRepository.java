@@ -75,4 +75,9 @@ public class TransactionRepository {
         return  result;
     }
 
+    // Trung
+    public LiveData<List<Transaction>> getTransactionsByDate(String date) {
+        return mTransactionDao.getTransactionsByDate(date);
+    }
+
 }

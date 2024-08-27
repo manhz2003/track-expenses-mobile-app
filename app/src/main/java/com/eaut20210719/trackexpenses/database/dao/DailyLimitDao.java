@@ -41,4 +41,12 @@ public interface DailyLimitDao {
     // Phương thức để cập nhật money_day_setting
     @Query("UPDATE daily_limits SET money_day_setting = :moneyDaySetting WHERE id = (SELECT MAX(id) FROM daily_limits)")
     void updateMoneyDaySetting(double moneyDaySetting);
+
+    //    lấy id cuối cùng
+    @Query("SELECT MAX(id) FROM daily_limits")
+    LiveData<Integer> getLastDailyLimitID();
+
+    @Query("SELECT money_day_setting FROM daily_limits WHERE id = :id")
+    LiveData<Double> getMoneyDaySettingById(int id);
+
 }

@@ -59,4 +59,13 @@ public interface TransactionDao {
             "WHERE t.id = :transactionId")
 
     LiveData<History> getTransactionById(int transactionId);
+
+    // Trung
+    // Thêm phương thức lấy giao dịch theo ngày/tháng/năm và tháng năm
+    @Query("SELECT * FROM transactions WHERE date LIKE '%' || :date || '%'")
+    LiveData<List<Transaction>> getTransactionsByDate(String date);
+
+
+
+
 }
