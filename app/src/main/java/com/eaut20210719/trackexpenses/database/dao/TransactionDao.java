@@ -67,4 +67,8 @@ public interface TransactionDao {
     // Thêm phương thức xóa toàn bộ giao dịch
     @Query("DELETE FROM transactions")
     void deleteAll();
+
+    // Thêm phương thức lấy giao dịch theo ngày/tháng/năm và tháng năm
+    @Query("SELECT * FROM transactions WHERE date LIKE '%' || :date || '%'")
+    LiveData<List<Transaction>> getTransactionsByDate(String date);
 }

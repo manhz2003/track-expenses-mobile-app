@@ -79,4 +79,8 @@ public class TransactionRepository {
     public LiveData<List<Transaction>> getTransactionsByMonth(String month) {
         return (LiveData<List<Transaction>>) mTransactionDao.getTransactionsByMonth(month);
     }
+
+    public LiveData<List<Transaction>> getTransactionsByDate(String date) {
+        return mTransactionDao.getTransactionsByDate(date);
+    }
 }

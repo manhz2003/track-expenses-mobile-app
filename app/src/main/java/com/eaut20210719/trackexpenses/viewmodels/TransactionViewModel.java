@@ -87,4 +87,8 @@ public class TransactionViewModel extends AndroidViewModel {
     public LiveData<List<Transaction>> getAllTransactions() {
         return mRepository.getAllTransactions();
     }
+
+    public LiveData<List<Transaction>> getTransactionsByDate(String date) {
+        return mRepository.getTransactionsByDate(date);
+    }
 }
