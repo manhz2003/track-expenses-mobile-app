@@ -24,7 +24,7 @@ import com.eaut20210719.trackexpenses.database.entities.Type;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Category.class, Type.class, DailyLimit.class, MonthlyLimit.class, Color.class, Transaction.class, Setting.class}, version = 7)
+@Database(entities = {Category.class, Type.class, DailyLimit.class, MonthlyLimit.class, Color.class, Transaction.class, Setting.class}, version = 8)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
     private static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(4);
