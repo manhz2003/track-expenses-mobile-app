@@ -28,6 +28,7 @@ import java.util.concurrent.Executors;
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
     private static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(4);
+
     public abstract CategoryDao categoryDao();
     public abstract TypeDao typeDao();
     public abstract DailyLimitDao dailyLimitDao();
