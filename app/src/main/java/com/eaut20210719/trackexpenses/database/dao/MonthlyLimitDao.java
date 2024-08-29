@@ -41,4 +41,8 @@ public interface MonthlyLimitDao {
     //  lấy id cuối cùng
     @Query("SELECT MAX(id) FROM monthly_limits")
     LiveData<Integer> getLastMonthlyLimitID();
+
+    // Lấy giá trị mới nhất của money_month_setting
+    @Query("SELECT money_month_setting FROM monthly_limits ORDER BY id DESC LIMIT 1")
+    LiveData<Double> getLastMonthLimitSetting();
 }

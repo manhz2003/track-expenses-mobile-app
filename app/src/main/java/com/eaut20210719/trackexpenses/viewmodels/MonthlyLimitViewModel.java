@@ -68,4 +68,7 @@ public class MonthlyLimitViewModel extends AndroidViewModel {
         return repository.getLastMonthlyLimitID();
     }
 
+    public LiveData<Double> getLastMonthLimitSetting() {
+        return repository.getLastMonthLimitSetting();
+    }
 }

@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private SettingViewModel mSettingViewModel;
     private ColorViewModel mColorViewModel;
     private View.OnClickListener addClickListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
