@@ -22,11 +22,16 @@ public class CategoryRepository {
     }
 
     public void insert(Category category) {
+        if (category == null) {
+            throw new IllegalArgumentException("Category must not be null");
+        }
         AppDatabase.getDatabaseWriteExecutor().execute(() -> categoryDao.insertCategory(category));
     }
 
     public void deleteCategoryByName(String categoryName) {
+        if (categoryName == null || categoryName.isEmpty()) {
+            throw new IllegalArgumentException("Category name must not be null or empty");
+        }
         AppDatabase.getDatabaseWriteExecutor().execute(() -> categoryDao.deleteCategoryByName(categoryName));
     }
-
 }

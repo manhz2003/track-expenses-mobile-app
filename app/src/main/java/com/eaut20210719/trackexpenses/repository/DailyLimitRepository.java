@@ -37,24 +37,34 @@ public class DailyLimitRepository {
                 Log.d("DailyLimitRepository", "Inserted new daily limit with money_day: " + moneyDay);
             } else {
                 Integer lastId = dailyLimitDao.getLastDailyLimitId();
-                if (lastId != null) {
+                if (lastId != null) {  // Kiểm tra null cho lastId
                     DailyLimit dailyLimit = new DailyLimit(moneyDay);
                     dailyLimit.setId(lastId);
                     dailyLimitDao.updateDailyLimit(dailyLimit);
                     Log.d("DailyLimitRepository", "Updated daily limit with ID: " + lastId + " to money_day: " + moneyDay);
+                } else {
+                    Log.d("DailyLimitRepository", "Failed to update: lastId is null");
                 }
             }
         });
     }
 
-    //    lấy id của bản ghi cuối cùng
+    // Lấy id của bản ghi cuối cùng
     public Integer getLastDailyLimitId() {
-        return dailyLimitDao.getLastDailyLimitId();
+        Integer lastId = dailyLimitDao.getLastDailyLimitId();
+        if (lastId == null) {
+            Log.d("DailyLimitRepository", "getLastDailyLimitId: No records found");
+        }
+        return lastId;
     }
 
     // Phương thức để lấy số tiền của bản ghi cuối cùng
     public LiveData<Double> getLastDailyLimitMoney() {
-        return dailyLimitDao.getLastDailyLimitMoney();
+        LiveData<Double> lastMoney = dailyLimitDao.getLastDailyLimitMoney();
+        if (lastMoney == null) {
+            Log.d("DailyLimitRepository", "getLastDailyLimitMoney: No data available");
+        }
+        return lastMoney;
     }
 
     public void updateMoneyDaySetting(double moneyDaySetting) {
@@ -65,11 +75,20 @@ public class DailyLimitRepository {
 
     // Phương thức để lấy ID mới nhất
     public LiveData<Integer> getLastDailyLimitID() {
-        return dailyLimitDao.getLastDailyLimitID();
+        LiveData<Integer> lastIdLiveData = dailyLimitDao.getLastDailyLimitID();
+        if (lastIdLiveData == null) {
+            Log.d("DailyLimitRepository", "getLastDailyLimitID: No LiveData found");
+        }
+        return lastIdLiveData;
     }
 
+    // Phương thức để lấy giá trị mới nhất của money_day_setting
     public LiveData<Double> getLastDailyLimitMoneySync() {
-        return dailyLimitDao.getLastDailyLimitSetting();
+        LiveData<Double> lastSetting = dailyLimitDao.getLastDailyLimitSetting();
+        if (lastSetting == null) {
+            Log.d("DailyLimitRepository", "getLastDailyLimitMoneySync: No data available");
+        }
+        return lastSetting;
     }
 
 }

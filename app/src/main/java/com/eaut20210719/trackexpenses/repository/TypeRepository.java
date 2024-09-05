@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 import com.eaut20210719.trackexpenses.database.AppDatabase;
 import com.eaut20210719.trackexpenses.database.dao.TypeDao;
 import com.eaut20210719.trackexpenses.database.entities.Type;
+
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -19,15 +20,26 @@ public class TypeRepository {
     }
 
     public LiveData<List<Type>> getAllTypes() {
-        return typeDao.getAllTypes();
+        LiveData<List<Type>> allTypes = typeDao.getAllTypes();
+        if (allTypes == null) {
+            System.err.println("TypeRepository: No types data available");
+        }
+        return allTypes;
     }
 
     public boolean isTypeExists(String typeName) {
-        return typeDao.isTypeExists(typeName);
+        if (typeName != null && !typeName.trim().isEmpty()) {
+            return typeDao.isTypeExists(typeName);
+        } else {
+            throw new IllegalArgumentException("Type name must not be null or empty");
+        }
     }
 
     public void insert(Type type) {
-        executorService.execute(() -> typeDao.insertType(type));
+        if (type != null) {
+            executorService.execute(() -> typeDao.insertType(type));
+        } else {
+            throw new IllegalArgumentException("Type must not be null");
+        }
     }
-
 }

@@ -3,7 +3,6 @@ package com.eaut20210719.trackexpenses.ui.fragments;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -50,7 +49,6 @@ public class AddFragment extends Fragment {
     private DailyLimitViewModel dailyLimitViewModel;
     private MonthlyLimitViewModel monthlyLimitViewModel;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -63,34 +61,42 @@ public class AddFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Khởi tạo ViewModel và kiểm tra null
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         typeViewModel = new ViewModelProvider(this).get(TypeViewModel.class);
         transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
         dailyLimitViewModel = new ViewModelProvider(this).get(DailyLimitViewModel.class);
         monthlyLimitViewModel = new ViewModelProvider(this).get(MonthlyLimitViewModel.class);
 
-
         setupSpinners();
 
         categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), categories -> {
-            categoriesList.clear();
-            for (Category category : categories) {
-                categoriesList.add(category.getName());
+            if (categories != null) {
+                categoriesList.clear();
+                for (Category category : categories) {
+                    categoriesList.add(category.getName());
+                }
+                spinnerCategoryAdapter.notifyDataSetChanged();
+            } else {
+                Log.e("AddFragment", "categories is null");
             }
-            spinnerCategoryAdapter.notifyDataSetChanged();
         });
 
         typeViewModel.getAllTypes().observe(getViewLifecycleOwner(), types -> {
-            typesList.clear();
-            typesList.addAll(types);
-            spinnerTypeAdapter.notifyDataSetChanged();
+            if (types != null) {
+                typesList.clear();
+                typesList.addAll(types);
+                spinnerTypeAdapter.notifyDataSetChanged();
+            } else {
+                Log.e("AddFragment", "types is null");
+            }
         });
+
         setupDateTimePicker();
 
-//        xử lý lưu danh mục
+        // Xử lý lưu danh mục
         binding.btnSave2.setOnClickListener(v -> {
             String categoryName = binding.editTextCategoryName.getText().toString().trim();
-
             if (!categoryName.isEmpty()) {
                 Category category = new Category(categoryName);
                 categoryViewModel.insert(category);
@@ -101,18 +107,23 @@ public class AddFragment extends Fragment {
             }
         });
 
-//        xử lý xóa danh mục
+        // Xử lý xóa danh mục
         binding.btnDeleteCategory.setOnClickListener(v -> {
-            String categoryNameToDelete = binding.spinnerCatalog.getSelectedItem().toString();
-            if (!categoryNameToDelete.isEmpty()) {
-                categoryViewModel.deleteCategoryByName(categoryNameToDelete);
-                Toast.makeText(getContext(), "Danh mục đã được xóa", Toast.LENGTH_SHORT).show();
+            if (binding.spinnerCatalog.getSelectedItem() != null) {
+                String categoryNameToDelete = binding.spinnerCatalog.getSelectedItem().toString();
+                if (!categoryNameToDelete.isEmpty()) {
+                    categoryViewModel.deleteCategoryByName(categoryNameToDelete);
+                    Toast.makeText(getContext(), "Danh mục đã được xóa", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Vui lòng chọn danh mục để xóa", Toast.LENGTH_SHORT).show();
+                }
             } else {
+                Log.e("AddFragment", "spinnerCatalog is null");
                 Toast.makeText(getContext(), "Vui lòng chọn danh mục để xóa", Toast.LENGTH_SHORT).show();
             }
         });
 
-        //        xử lý lưu loại giao dịch
+        // Xử lý lưu loại giao dịch
         binding.btnSave3.setOnClickListener(v -> {
             String amountText = binding.editTextAmount.getText().toString().trim();
             String cleanedAmountText = amountText.replaceAll("[^0-9]", "");
@@ -126,7 +137,10 @@ public class AddFragment extends Fragment {
             String formattedAmount = formatCurrency(amount);
             binding.editTextAmount.setText(formattedAmount);
 
-            String selectedCategory = binding.spinnerCatalog.getSelectedItem() != null ? binding.spinnerCatalog.getSelectedItem().toString() : "";
+            String selectedCategory = binding.spinnerCatalog.getSelectedItem() != null
+                    ? binding.spinnerCatalog.getSelectedItem().toString()
+                    : "Unknown";
+
             Type selectedType = (Type) binding.spinnerType.getSelectedItem();
             String selectedTime = binding.tvTime1.getText().toString().trim();
             String content = binding.content.getText().toString().trim();
@@ -165,27 +179,29 @@ public class AddFragment extends Fragment {
                 Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
-//    hàm observeOnce để quan sát LiveData một lần
+    // Hàm observeOnce để quan sát LiveData một lần
     public static <T> void observeOnce(LiveData<T> liveData, LifecycleOwner owner, Observer<T> observer) {
-        liveData.observe(owner, new Observer<T>() {
-            @Override
-            public void onChanged(T t) {
-                observer.onChanged(t);
-                liveData.removeObserver(this);
-            }
-        });
+        if (liveData != null) {
+            liveData.observe(owner, new Observer<T>() {
+                @Override
+                public void onChanged(T t) {
+                    observer.onChanged(t);
+                    liveData.removeObserver(this);
+                }
+            });
+        } else {
+            Log.e("AddFragment", "LiveData is null in observeOnce");
+        }
     }
 
-//    hàm updateTotalBalanceAndSaveTransaction để cập nhật số dư và lưu giao dịch
+    // Hàm updateTotalBalanceAndSaveTransaction để cập nhật số dư và lưu giao dịch
     private void updateTotalBalanceAndSaveTransaction(double amount, int typeId, String content, String date, int categoryId, int idDailyLimit, int idMonthlyLimit) {
         observeOnce(transactionViewModel.getLastTransaction(), getViewLifecycleOwner(), lastTransaction -> {
             double totalBalance = lastTransaction != null ? lastTransaction.getTotalBalance() : 0;
 
-            Log.d("UpdateTotalBalance", "tổng tiền hiện tại: " + totalBalance);
+            Log.d("UpdateTotalBalance", "Tổng tiền hiện tại: " + totalBalance);
 
             Type selectedType = (Type) binding.spinnerType.getSelectedItem();
             if (selectedType != null) {
@@ -197,14 +213,14 @@ public class AddFragment extends Fragment {
 
                 Log.d("UpdateTotalBalance", "Cập nhật tổng tiền: " + totalBalance);
             } else {
-                Log.e("UpdateTotalBalance", "type bị null");
+                Log.e("UpdateTotalBalance", "selectedType bị null");
             }
 
             saveTransaction(amount, typeId, content, date, categoryId, totalBalance, idDailyLimit, idMonthlyLimit);
         });
     }
 
-//    hàm saveTransaction để lưu giao dịch
+    // Hàm saveTransaction để lưu giao dịch
     private void saveTransaction(double amount, int typeId, String content, String date, int categoryId, double totalBalance, int idDailyLimit, int idMonthlyLimit) {
         if (typeId <= 0 || categoryId <= 0) {
             Toast.makeText(getContext(), "Danh mục hoặc loại giao dịch không hợp lệ", Toast.LENGTH_SHORT).show();
@@ -225,17 +241,17 @@ public class AddFragment extends Fragment {
             Transaction transaction = new Transaction(amount, typeId, content, date, categoryId, totalBalance, null, null);
             transactionViewModel.insert(transaction);
 
-            // Logging dữ liệu sau khi lưu
+            // Dọn dẹp trường nhập liệu sau khi lưu
             binding.editTextAmount.setText("");
             binding.content.setText("");
             Toast.makeText(getContext(), "Dữ liệu đã được lưu", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Log.e("SaveTransaction", "Error saving transaction", e);
+            Log.e("SaveTransaction", "Lỗi khi lưu giao dịch", e);
             Toast.makeText(getContext(), "Lỗi khi lưu dữ liệu. Vui lòng thử lại.", Toast.LENGTH_SHORT).show();
         }
     }
 
-//    hàm isValidDecimal để kiểm tra số tiền nhập vào có hợp lệ không
+    // Hàm kiểm tra số tiền nhập vào có hợp lệ không
     private boolean isValidDecimal(String amountText) {
         try {
             Double.parseDouble(amountText);
@@ -245,7 +261,7 @@ public class AddFragment extends Fragment {
         }
     }
 
-//    hàm formatCurrency để định dạng số tiền
+    // Hàm định dạng số tiền
     private String formatCurrency(double amount) {
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.getDefault());
         formatter.setGroupingUsed(true);
@@ -253,14 +269,33 @@ public class AddFragment extends Fragment {
     }
 
     private void setupSpinners() {
-        spinnerCategoryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categoriesList);
-        spinnerCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinnerCatalog.setAdapter(spinnerCategoryAdapter);
+        if (getContext() != null) {
+            if (binding != null) {
+                // Setup spinner for categories
+                if (categoriesList != null) {
+                    spinnerCategoryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categoriesList);
+                    spinnerCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    binding.spinnerCatalog.setAdapter(spinnerCategoryAdapter);
+                } else {
+                    Log.e("AddFragment", "categoriesList is null, cannot setup spinnerCategoryAdapter");
+                }
 
-        spinnerTypeAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, typesList);
-        spinnerTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinnerType.setAdapter(spinnerTypeAdapter);
+                // Setup spinner for types
+                if (typesList != null) {
+                    spinnerTypeAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, typesList);
+                    spinnerTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    binding.spinnerType.setAdapter(spinnerTypeAdapter);
+                } else {
+                    Log.e("AddFragment", "typesList is null, cannot setup spinnerTypeAdapter");
+                }
+            } else {
+                Log.e("AddFragment", "Binding is null, cannot setup spinners");
+            }
+        } else {
+            Log.e("AddFragment", "Context is null, cannot setup spinners");
+        }
     }
+
 
     private void setupDateTimePicker() {
         if (binding.tvTime1 != null) {

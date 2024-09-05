@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.eaut20210719.trackexpenses.R;
-import com.eaut20210719.trackexpenses.database.entities.MonthlyLimit;
 import com.eaut20210719.trackexpenses.databinding.ActivityMainBinding;
 import com.eaut20210719.trackexpenses.ui.fragments.AddFragment;
 import com.eaut20210719.trackexpenses.ui.fragments.HistoryFragment;
@@ -37,176 +36,197 @@ public class MainActivity extends AppCompatActivity {
     private MonthlyLimitViewModel mMonthlyLimit;
     private SettingViewModel mSettingViewModel;
     private ColorViewModel mColorViewModel;
-    private View.OnClickListener addClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
 
-//        logcat data bảng transactions
+        // Check if binding is not null before setting the content view
+        if (binding != null) {
+            setContentView(binding.getRoot());
+        }
+
+        // Initialize ViewModels with null checks
         mTransactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
-        mTransactionViewModel.getLastTransaction();
+        if (mTransactionViewModel != null) {
+            mTransactionViewModel.getLastTransaction();
+        }
 
-//        logcat data bảng types
         mTypeViewModel = new ViewModelProvider(this).get(TypeViewModel.class);
-        mTypeViewModel.logAllTypes();
+        if (mTypeViewModel != null) {
+            mTypeViewModel.logAllTypes();
+        }
 
-//        logcat data bảng categories
         mCategoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        mCategoryViewModel.logAllCategories();
+        if (mCategoryViewModel != null) {
+            mCategoryViewModel.logAllCategories();
+        }
 
-//        logcat data bảng daily_limits
         mDailyLimitViewModel = new ViewModelProvider(this).get(DailyLimitViewModel.class);
-        mDailyLimitViewModel.logAllDailyLimits();
+        if (mDailyLimitViewModel != null) {
+            mDailyLimitViewModel.logAllDailyLimits();
+        }
 
-//        logcat data bảng monthly_limits
         mMonthlyLimit = new ViewModelProvider(this).get(MonthlyLimitViewModel.class);
-        mMonthlyLimit.logAllMonthlyLimits();
+        if (mMonthlyLimit != null) {
+            mMonthlyLimit.logAllMonthlyLimits();
+        }
 
-//        logcat data bảng settings
         mSettingViewModel = new ViewModelProvider(this).get(SettingViewModel.class);
-        mSettingViewModel.logAllSettings();
+        if (mSettingViewModel != null) {
+            mSettingViewModel.logAllSettings();
+        }
 
-//        logcat data bảng colors
         mColorViewModel = new ViewModelProvider(this).get(ColorViewModel.class);
-        mColorViewModel.logAllColors();
+        if (mColorViewModel != null) {
+            mColorViewModel.logAllColors();
+        }
 
-        // Hiển thị HomeFragment mặc định
+        // Display default HomeFragment
         HomeFragment homeFragment = new HomeFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, homeFragment).commit();
-        setUpFragmentListener(homeFragment);
+        if (homeFragment != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, homeFragment).commit();
+            setUpFragmentListener(homeFragment);
+        }
 
-        binding.icMenuBottom.tvHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HomeFragment homeFragment = new HomeFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, homeFragment).commit();
-                setUpFragmentListener(homeFragment);
-                updateSelectedItem(binding.icMenuBottom.tvHome);
-            }
-        });
+        // Menu click listeners with null checks
+        if (binding != null) {
+            if (binding.icMenuBottom != null) {
+                binding.icMenuBottom.tvHome.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        HomeFragment homeFragment = new HomeFragment();
+                        if (homeFragment != null) {
+                            getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, homeFragment).commit();
+                            setUpFragmentListener(homeFragment);
+                            updateSelectedItem(binding.icMenuBottom.tvHome);
+                        }
+                    }
+                });
 
-        binding.icMenuBottom.tvHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HistoryFragment historyFragment = new HistoryFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, historyFragment).commit();
-                setUpFragmentListener(historyFragment);
-                updateSelectedItem(binding.icMenuBottom.tvHistory);
-            }
-        });
+                binding.icMenuBottom.tvHistory.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        HistoryFragment historyFragment = new HistoryFragment();
+                        if (historyFragment != null) {
+                            getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, historyFragment).commit();
+                            setUpFragmentListener(historyFragment);
+                            updateSelectedItem(binding.icMenuBottom.tvHistory);
+                        }
+                    }
+                });
 
-        binding.icMenuBottom.tvUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, new AddFragment()).commit();
-                updateSelectedItem(binding.icMenuBottom.tvUpdate); // Cập nhật mục đã chọn
-            }
-        });
+                binding.icMenuBottom.tvUpdate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, new AddFragment()).commit();
+                        updateSelectedItem(binding.icMenuBottom.tvUpdate);
+                    }
+                });
 
-        binding.icMenuBottom.tvReport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ReportFragment reportFragment = new ReportFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, reportFragment).commit();
-                setUpFragmentListener(reportFragment);
-                updateSelectedItem(binding.icMenuBottom.tvReport);
-            }
-        });
+                binding.icMenuBottom.tvReport.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReportFragment reportFragment = new ReportFragment();
+                        if (reportFragment != null) {
+                            getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, reportFragment).commit();
+                            setUpFragmentListener(reportFragment);
+                            updateSelectedItem(binding.icMenuBottom.tvReport);
+                        }
+                    }
+                });
 
-        binding.icMenuBottom.tvSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SettingFragment settingFragment = new SettingFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, settingFragment).commit();
-                setUpFragmentListener(settingFragment);
-                updateSelectedItem(binding.icMenuBottom.tvSetting);
+                binding.icMenuBottom.tvSetting.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SettingFragment settingFragment = new SettingFragment();
+                        if (settingFragment != null) {
+                            getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, settingFragment).commit();
+                            setUpFragmentListener(settingFragment);
+                            updateSelectedItem(binding.icMenuBottom.tvSetting);
+                        }
+                    }
+                });
             }
-        });
+        }
     }
 
-    // Phương thức để xử lý sự kiện nhấn vào TextView "Thêm mới"
     public void onAddNewClicked() {
-        // Mở AddFragment khi nhấn vào "Thêm mới"
         getSupportFragmentManager().beginTransaction().replace(R.id.flHomeContainer, new AddFragment()).commit();
     }
 
     private void setUpFragmentListener(Fragment fragment) {
-        int defaultColor = getResources().getColor(R.color.black);
-        if (fragment instanceof HomeFragment) {
-            ((HomeFragment) fragment).setAddClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onAddNewClicked();
-                    binding.icMenuBottom.tvHome.setTextColor(defaultColor);
-                    binding.icMenuBottom.tvHome.setTypeface(null, Typeface.NORMAL); // Reset bold
+        if (fragment != null) {
+            int defaultColor = getResources().getColor(R.color.black);
 
-                }
-            });
-        } else if (fragment instanceof HistoryFragment) {
-            ((HistoryFragment) fragment).setAddClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onAddNewClicked();
-                    binding.icMenuBottom.tvHistory.setTextColor(defaultColor);
-                    binding.icMenuBottom.tvHistory.setTypeface(null, Typeface.NORMAL); // Reset bold
-                }
-            });
-        } else if (fragment instanceof SettingFragment) {
-            ((SettingFragment) fragment).setAddClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onAddNewClicked();
-                    binding.icMenuBottom.tvSetting.setTextColor(defaultColor);
-                    binding.icMenuBottom.tvSetting.setTypeface(null, Typeface.NORMAL);
-                }
-            });
-        } else if (fragment instanceof ReportFragment) {
-            ((ReportFragment) fragment).setAddClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onAddNewClicked();
-                    binding.icMenuBottom.tvReport.setTextColor(defaultColor);
-                    binding.icMenuBottom.tvReport.setTypeface(null, Typeface.NORMAL);
-                }
-            });
+            if (fragment instanceof HomeFragment) {
+                ((HomeFragment) fragment).setAddClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onAddNewClicked();
+                        if (binding != null && binding.icMenuBottom != null) {
+                            binding.icMenuBottom.tvHome.setTextColor(defaultColor);
+                            binding.icMenuBottom.tvHome.setTypeface(null, Typeface.NORMAL);
+                        }
+                    }
+                });
+            } else if (fragment instanceof HistoryFragment) {
+                ((HistoryFragment) fragment).setAddClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onAddNewClicked();
+                        if (binding != null && binding.icMenuBottom != null) {
+                            binding.icMenuBottom.tvHistory.setTextColor(defaultColor);
+                            binding.icMenuBottom.tvHistory.setTypeface(null, Typeface.NORMAL);
+                        }
+                    }
+                });
+            } else if (fragment instanceof SettingFragment) {
+                ((SettingFragment) fragment).setAddClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onAddNewClicked();
+                        if (binding != null && binding.icMenuBottom != null) {
+                            binding.icMenuBottom.tvSetting.setTextColor(defaultColor);
+                            binding.icMenuBottom.tvSetting.setTypeface(null, Typeface.NORMAL);
+                        }
+                    }
+                });
+            }
         }
     }
 
     private void updateSelectedItem(View selectedView) {
-        // Define colors
-        int defaultColor = getResources().getColor(R.color.black); // Màu chữ mặc định
-        int selectedColor = getResources().getColor(R.color.color_fd3665); // Màu chữ khi chọn
-        int selectedBackgroundColor = getResources().getColor(R.color.white); // Màu nền khi chọn
+        if (binding != null && binding.icMenuBottom != null) {
+            int defaultColor = getResources().getColor(R.color.black);
+            int selectedColor = getResources().getColor(R.color.color_fd3665);
+            int selectedBackgroundColor = getResources().getColor(R.color.white);
 
-        // Reset all items to default color and font weight
-        binding.icMenuBottom.tvHome.setTextColor(defaultColor);
-        binding.icMenuBottom.tvHome.setTypeface(null, Typeface.NORMAL); // Reset bold
-        binding.icMenuBottom.tvHistory.setTextColor(defaultColor);
-        binding.icMenuBottom.tvHistory.setTypeface(null, Typeface.NORMAL); // Reset bold
-        binding.icMenuBottom.tvUpdate.setBackgroundColor(defaultColor);
-        binding.icMenuBottom.tvReport.setTextColor(defaultColor);
-        binding.icMenuBottom.tvReport.setTypeface(null, Typeface.NORMAL); // Reset bold
-        binding.icMenuBottom.tvSetting.setTextColor(defaultColor);
-        binding.icMenuBottom.tvSetting.setTypeface(null, Typeface.NORMAL); // Reset bold
+            binding.icMenuBottom.tvHome.setTextColor(defaultColor);
+            binding.icMenuBottom.tvHome.setTypeface(null, Typeface.NORMAL);
+            binding.icMenuBottom.tvHistory.setTextColor(defaultColor);
+            binding.icMenuBottom.tvHistory.setTypeface(null, Typeface.NORMAL);
+            binding.icMenuBottom.tvUpdate.setBackgroundColor(defaultColor);
+            binding.icMenuBottom.tvReport.setTextColor(defaultColor);
+            binding.icMenuBottom.tvReport.setTypeface(null, Typeface.NORMAL);
+            binding.icMenuBottom.tvSetting.setTextColor(defaultColor);
+            binding.icMenuBottom.tvSetting.setTypeface(null, Typeface.NORMAL);
 
-        // Reset background color of all items
-        binding.icMenuBottom.tvHome.setBackgroundColor(Color.TRANSPARENT);
-        binding.icMenuBottom.tvHistory.setBackgroundColor(Color.TRANSPARENT);
-        binding.icMenuBottom.tvUpdate.setBackgroundColor(Color.TRANSPARENT);
-        binding.icMenuBottom.tvReport.setBackgroundColor(Color.TRANSPARENT);
-        binding.icMenuBottom.tvSetting.setBackgroundColor(Color.TRANSPARENT);
+            binding.icMenuBottom.tvHome.setBackgroundColor(Color.TRANSPARENT);
+            binding.icMenuBottom.tvHistory.setBackgroundColor(Color.TRANSPARENT);
+            binding.icMenuBottom.tvUpdate.setBackgroundColor(Color.TRANSPARENT);
+            binding.icMenuBottom.tvReport.setBackgroundColor(Color.TRANSPARENT);
+            binding.icMenuBottom.tvSetting.setBackgroundColor(Color.TRANSPARENT);
 
-        if (selectedView instanceof TextView) {
-            TextView selectedTextView = (TextView) selectedView;
-            selectedTextView.setTextColor(selectedColor);
-            selectedTextView.setTypeface(null, Typeface.BOLD); // Set bold
-        } else if (selectedView instanceof ImageView) {
-            selectedView.setBackgroundColor(selectedBackgroundColor);
+            if (selectedView instanceof TextView) {
+                TextView selectedTextView = (TextView) selectedView;
+                selectedTextView.setTextColor(selectedColor);
+                selectedTextView.setTypeface(null, Typeface.BOLD);
+            } else if (selectedView instanceof ImageView) {
+                selectedView.setBackgroundColor(selectedBackgroundColor);
+            }
         }
     }
-
 }

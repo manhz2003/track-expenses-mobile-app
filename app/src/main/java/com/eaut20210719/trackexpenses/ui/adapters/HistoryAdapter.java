@@ -33,7 +33,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         History item = items.get(position);
-        holder.bind(item, position, threeDotsClickListener);
+        if (item != null) {
+            holder.bind(item, position, threeDotsClickListener); // Ensure item is not null
+        }
     }
 
     @Override
@@ -63,21 +65,20 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             // Khởi tạo DecimalFormat với định dạng mong muốn
             DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
 
-            // Bind data to views
-            binding.tvHistoryBuyContent.setText(item.getNameCategory()); // Bind nameCategory
-            binding.tvHistoryBuy1.setText(item.getContent()); // Bind content
-            binding.tvTime.setText(item.getDate()); // Bind date
-            binding.tvspend.setText(item.getTypeName()); // Bind type_name
+            // Bind data to views with null checks
+            binding.tvHistoryBuyContent.setText(item.getNameCategory() != null ? item.getNameCategory() : "N/A"); // Handle null for nameCategory
+            binding.tvHistoryBuy1.setText(item.getContent() != null ? item.getContent() : "No content"); // Handle null for content
+            binding.tvTime.setText(item.getDate() != null ? item.getDate() : "No date"); // Handle null for date
+            binding.tvspend.setText(item.getTypeName() != null ? item.getTypeName() : "Unknown type"); // Handle null for type_name
+
             // Format số tiền và gán vào TextView
             String amount = decimalFormat.format(item.getAmount());
-            binding.tvAmount.setText(String.valueOf(amount)); // Bind amount
+            binding.tvAmount.setText(amount != null ? amount : "0.00"); // Bind amount, handle null case
 
-            // Set the click listener for tvThreedots
-            binding.tvThreedots.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onThreeDotsClick(item.getId()); // Pass the transaction ID
-                }
-            });
+            // Set the click listener for tvThreedots, check if listener is not null
+            if (listener != null) {
+                binding.tvThreedots.setOnClickListener(v -> listener.onThreeDotsClick(item.getId())); // Pass the transaction ID
+            }
         }
     }
 }

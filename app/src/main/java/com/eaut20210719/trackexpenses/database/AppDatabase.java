@@ -26,7 +26,7 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {Category.class, Type.class, DailyLimit.class, MonthlyLimit.class, Color.class, Transaction.class, Setting.class}, version = 8)
 public abstract class AppDatabase extends RoomDatabase {
-    private static AppDatabase instance;
+    private static volatile AppDatabase instance; // Đảm bảo tính đồng bộ
     private static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(4);
 
     public abstract CategoryDao categoryDao();
@@ -37,12 +37,20 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract TransactionDao transactionDao();
     public abstract SettingDao settingDao();
 
-    public static synchronized AppDatabase getInstance(Context context) {
+    public static AppDatabase getInstance(Context context) {
+        if (context == null) {
+            throw new IllegalArgumentException("Context must not be null.");
+        }
+
         if (instance == null) {
-            instance = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, "app_database")
-                    .fallbackToDestructiveMigration()
-                    .build();
+            synchronized (AppDatabase.class) {
+                if (instance == null) { // Double-checked locking
+                    instance = Room.databaseBuilder(context.getApplicationContext(),
+                                    AppDatabase.class, "app_database")
+                            .fallbackToDestructiveMigration()
+                            .build();
+                }
+            }
         }
         return instance;
     }

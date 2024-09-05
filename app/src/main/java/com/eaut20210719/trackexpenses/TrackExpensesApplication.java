@@ -14,6 +14,9 @@ public class TrackExpensesApplication extends Application {
     }
 
     public static AppDatabase getDatabase() {
+        if (database == null) {
+            throw new IllegalStateException("Database has not been initialized yet.");
+        }
         return database;
     }
 }

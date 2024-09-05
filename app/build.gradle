@@ -10,7 +10,7 @@ android {
         applicationId "com.eaut20210719.trackexpenses"
         minSdk 24
         targetSdk 34
-        versionCode 1
+        versionCode 9
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -24,8 +24,16 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            // Kích hoạt R8/Proguard để tối ưu mã nguồn và giảm kích thước ứng dụng
+            minifyEnabled true
+            shrinkResources true
+
+            // Sử dụng tệp cấu hình Proguard mặc định và tệp proguard-rules.pro để định nghĩa các quy tắc bổ sung
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
         }
     }
 

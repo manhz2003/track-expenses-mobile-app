@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,12 +40,16 @@ public class SettingFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = SettingFragmentBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        return binding != null ? binding.getRoot() : null; // Kiểm tra binding null
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (binding == null) {
+            return; // Đảm bảo binding không null trước khi tiếp tục
+        }
 
         monthlyLimitViewModel = new ViewModelProvider(this).get(MonthlyLimitViewModel.class);
         sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -76,6 +81,7 @@ public class SettingFragment extends Fragment {
     }
 
     private void setupUI() {
+        // Kiểm tra và thiết lập dữ liệu từ ViewModel
         monthlyLimitViewModel.getLastMonthlyLimitMoney().observe(getViewLifecycleOwner(), lastMoneyDay -> {
             if (lastMoneyDay != null) {
                 int maxAmount = (int) lastMoneyDay.doubleValue();
@@ -84,6 +90,10 @@ public class SettingFragment extends Fragment {
                 int savedProgress = sharedPreferences.getInt(KEY_EXPENSE_PROGRESS, 0);
                 binding.sbExpenses1.setProgress(savedProgress);
                 binding.money.setText(String.format("%,d VND", savedProgress));
+            } else {
+                binding.sbExpenses1.setMax(0); // Set max khi không có dữ liệu
+                binding.sbExpenses1.setProgress(0);
+                binding.money.setText("0 VND");
             }
         });
 
@@ -102,6 +112,7 @@ public class SettingFragment extends Fragment {
                 int progress = seekBar.getProgress();
                 monthlyLimitViewModel.updateMoneyMonthSetting(progress);
 
+                // Lưu trạng thái của SeekBar vào SharedPreferences
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt(KEY_EXPENSE_PROGRESS, progress);
                 editor.apply();
@@ -142,8 +153,13 @@ public class SettingFragment extends Fragment {
                 .show();
     }
 
-//    // Xóa toàn bộ dữ liệu khỏi cơ sở dữ liệu và SharedPreferences
+    // Xóa toàn bộ dữ liệu khỏi cơ sở dữ liệu và SharedPreferences
     private void clearAllData() {
+        if (appDatabase == null) {
+            Log.e("SettingFragment", "AppDatabase is null. Cannot delete data.");
+            return;
+        }
+
         // Xóa toàn bộ dữ liệu trong database
         AppDatabase.getDatabaseWriteExecutor().execute(() -> {
             appDatabase.categoryDao().deleteAll();

@@ -90,18 +90,26 @@ public class HistoryFragment extends Fragment {
 
     private void setupRecyclerView() {
         HistoryAdapter adapter = new HistoryAdapter(null, this::showPopupMethod);
-        binding.rvHistory.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.rvHistory.setAdapter(adapter);
+        if (requireContext() != null) {
+            binding.rvHistory.setLayoutManager(new LinearLayoutManager(requireContext()));
+            binding.rvHistory.setAdapter(adapter);
+        } else {
+            Log.e("HistoryFragment", "Context is null, cannot setup RecyclerView");
+        }
     }
 
     private void updateHistoryList(List<History> historyList) {
-        Log.d("HistoryFragment", "Updating history list with " + historyList.size() + " items");
+        if (historyList != null) {
+            Log.d("HistoryFragment", "Updating history list with " + historyList.size() + " items");
 
-        HistoryAdapter adapter = (HistoryAdapter) binding.rvHistory.getAdapter();
-        if (adapter != null) {
-            adapter.setItems(historyList);
+            HistoryAdapter adapter = (HistoryAdapter) binding.rvHistory.getAdapter();
+            if (adapter != null) {
+                adapter.setItems(historyList);
+            } else {
+                Log.e("HistoryFragment", "Adapter is null, cannot update history list");
+            }
         } else {
-            Log.d("HistoryFragment", "Adapter is null");
+            Log.e("HistoryFragment", "History list is null");
         }
     }
 
@@ -110,7 +118,11 @@ public class HistoryFragment extends Fragment {
         dialogFragment.setCancelable(true);
         dialogFragment.setTransactionId(transactionId);
 
-        dialogFragment.show(getChildFragmentManager(), "PopupChooseMethodFragment");
+        if (getChildFragmentManager() != null) {
+            dialogFragment.show(getChildFragmentManager(), "PopupChooseMethodFragment");
+        } else {
+            Log.e("HistoryFragment", "Child FragmentManager is null");
+        }
     }
 
     public void setAddClickListener(View.OnClickListener listener) {
@@ -137,7 +149,7 @@ public class HistoryFragment extends Fragment {
             rvParams.topMargin = getResources().getDimensionPixelSize(R.dimen.popup_search_layout_height);
             binding.rvHistory.setLayoutParams(rvParams);
         } else {
-            // Xóa thông tin trên TextView (EditText)
+            // Clear the input in the search field
             binding.etDate.setText("");
 
             binding.popupSearchLayout.setVisibility(View.GONE);
@@ -152,7 +164,6 @@ public class HistoryFragment extends Fragment {
         }
     }
 
-
     private void performSearch() {
         if (binding == null) return; // Ensure binding is not null
 
@@ -160,7 +171,7 @@ public class HistoryFragment extends Fragment {
         Log.d("HistoryFragment", "Searching for date: " + datePattern);
 
         if (datePattern.isEmpty()) {
-            // Nếu người dùng không nhập dữ liệu vào, tự động ẩn thanh tìm kiếm
+            // If no input is provided, hide the search bar
             if (isSearchMode) {
                 togglePopupSearchLayout();
                 isSearchMode = false;
@@ -184,14 +195,14 @@ public class HistoryFragment extends Fragment {
                         isSearchMode = false;
                     }
                 });
+            } else {
+                Log.e("HistoryFragment", "getViewLifecycleOwner is null, cannot observe search results");
             }
         } else {
             Toast.makeText(requireContext(), "Ngày tháng năm không hợp lệ. Vui lòng nhập theo định dạng DD/MM/YYYY.", Toast.LENGTH_SHORT).show();
             Log.d("HistoryFragment", "Invalid date format: " + datePattern);
         }
     }
-
-
 
     private boolean isValidDate(String dateStr) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());

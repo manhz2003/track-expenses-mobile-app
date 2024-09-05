@@ -1,94 +1,163 @@
-package com.eaut20210719.trackexpenses.viewmodels;// TransactionViewModel.java
+package com.eaut20210719.trackexpenses.viewmodels;
+
 import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+
 import com.eaut20210719.trackexpenses.database.entities.Transaction;
 import com.eaut20210719.trackexpenses.dto.History;
 import com.eaut20210719.trackexpenses.repository.TransactionRepository;
+
 import java.util.List;
 
 public class TransactionViewModel extends AndroidViewModel {
-    private TransactionRepository mRepository;
-    private LiveData<List<Transaction>> mAllTransactions;
-    private LiveData<Double> mTotalBalance;
+    private final TransactionRepository mRepository;
+    private final LiveData<List<Transaction>> mAllTransactions;
+    private final LiveData<Double> mTotalBalance;
+    private LiveData<List<History>> historyList;
+    private static final String TAG = "TransactionViewModel";
 
     public TransactionViewModel(@NonNull Application application) {
         super(application);
+
+        // Khởi tạo repository và kiểm tra null
         mRepository = new TransactionRepository(application);
-        mAllTransactions = mRepository.getAllTransactions();
-        mTotalBalance = mRepository.getLastTotalBalance(); // Giả sử phương thức này cũng có trong repository
+        if (mRepository != null) {
+            mAllTransactions = mRepository.getAllTransactions();
+            mTotalBalance = mRepository.getLastTotalBalance(); // Giả sử phương thức này có trong repository
+        } else {
+            Log.e(TAG, "Repository is null");
+            mAllTransactions = new MutableLiveData<>(); // Tạo một MutableLiveData rỗng nếu repository bị null
+            mTotalBalance = new MutableLiveData<>();
+        }
     }
 
+    // Phương thức chèn giao dịch, kiểm tra null
     public void insert(Transaction transaction) {
-        mRepository.insert(transaction);
+        if (mRepository != null) {
+            mRepository.insert(transaction);
+        } else {
+            Log.e(TAG, "Repository is null, cannot insert transaction");
+        }
     }
 
+    // Phương thức lấy tổng số dư
     public LiveData<Double> getTotalBalance() {
         return mTotalBalance;
     }
 
+    // Lấy giao dịch cuối cùng, kiểm tra null
     public LiveData<Transaction> getLastTransaction() {
-        return mRepository.getLastTransaction(); // Giả sử phương thức này cũng có trong repository
+        if (mRepository != null) {
+            return mRepository.getLastTransaction(); // Giả sử phương thức này có trong repository
+        } else {
+            Log.e(TAG, "Repository is null, cannot get last transaction");
+            return new MutableLiveData<>(); // Trả về LiveData rỗng nếu repository null
+        }
     }
 
-    private LiveData<List<History>> historyList;
+    // Lấy danh sách lịch sử, kiểm tra null
     public LiveData<List<History>> getHistoryList() {
-        if (historyList == null) {
-            historyList = mRepository.getHistory(); // Gọi từ repository
+        if (historyList == null && mRepository != null) {
+            historyList = mRepository.getHistory();
+        } else if (mRepository == null) {
+            Log.e(TAG, "Repository is null, cannot get history list");
+            historyList = new MutableLiveData<>(); // Trả về LiveData rỗng nếu repository null
         }
         return historyList;
     }
 
+    // Phương thức log toàn bộ dữ liệu bảng transactions
     public void logAllTransactionsOnce() {
-        mAllTransactions.observeForever(new Observer<List<Transaction>>() {
-            @Override
-            public void onChanged(List<Transaction> transactions) {
-                if (transactions != null) {
-                    for (Transaction transaction : transactions) {
-                        Log.d("kết quả bảng Transaction: ", transaction.toString());
+        if (mAllTransactions != null) {
+            mAllTransactions.observeForever(new Observer<List<Transaction>>() {
+                @Override
+                public void onChanged(List<Transaction> transactions) {
+                    if (transactions != null && !transactions.isEmpty()) {
+                        for (Transaction transaction : transactions) {
+                            Log.d("kết quả bảng Transaction: ", transaction.toString());
+                        }
+                    } else {
+                        Log.d("TransactionLog", "không có dữ liệu");
                     }
-                } else {
-                    Log.d("TransactionLog", "không có dữ liệu");
+                    mAllTransactions.removeObserver(this);
                 }
-                mAllTransactions.removeObserver(this);
-            }
-        });
+            });
+        } else {
+            Log.e(TAG, "mAllTransactions is null");
+        }
     }
 
+    // Phương thức tìm kiếm theo ngày, kiểm tra null
     public LiveData<List<History>> searchByDate(String datePattern) {
-        Log.d("TransactionViewModel", "Searching for date: " + datePattern);
-        LiveData<List<History>> result = mRepository.searchByDate(datePattern);
-        result.observeForever(histories -> {
-            Log.d("TransactionViewModel", "Search results: " + histories);
-        });
-        return result;
+        if (mRepository != null) {
+            Log.d(TAG, "Searching for date: " + datePattern);
+            LiveData<List<History>> result = mRepository.searchByDate(datePattern);
+            result.observeForever(histories -> {
+                Log.d(TAG, "Search results: " + histories);
+            });
+            return result;
+        } else {
+            Log.e(TAG, "Repository is null, cannot search by date");
+            return new MutableLiveData<>(); // Trả về LiveData rỗng nếu repository null
+        }
     }
 
+    // Xóa giao dịch theo ID, kiểm tra null
     public void deleteTransactionById(int transactionId) {
-        mRepository.deleteTransactionById(transactionId);
+        if (mRepository != null) {
+            mRepository.deleteTransactionById(transactionId);
+        } else {
+            Log.e(TAG, "Repository is null, cannot delete transaction");
+        }
     }
 
+    // Cập nhật tổng số tiền, kiểm tra null
     public void updateTotalAmount(double newTotalAmount) {
-        mRepository.updateTotalAmount(newTotalAmount);
+        if (mRepository != null) {
+            mRepository.updateTotalAmount(newTotalAmount);
+        } else {
+            Log.e(TAG, "Repository is null, cannot update total amount");
+        }
     }
 
+    // Lấy lịch sử giao dịch theo ID, kiểm tra null
     public LiveData<History> getTransactionById(int transactionId) {
-        return mRepository.getTransactionById(transactionId);
+        if (mRepository != null) {
+            return mRepository.getTransactionById(transactionId);
+        } else {
+            Log.e(TAG, "Repository is null, cannot get transaction by ID");
+            return new MutableLiveData<>(); // Trả về LiveData rỗng nếu repository null
+        }
     }
 
+    // Lấy danh sách giao dịch theo tháng, kiểm tra null
     public LiveData<List<Transaction>> getTransactionsByMonth(String month) {
-        return mRepository.getTransactionsByMonth(month);
+        if (mRepository != null) {
+            return mRepository.getTransactionsByMonth(month);
+        } else {
+            Log.e(TAG, "Repository is null, cannot get transactions by month");
+            return new MutableLiveData<>(); // Trả về LiveData rỗng nếu repository null
+        }
     }
 
+    // Lấy tất cả giao dịch
     public LiveData<List<Transaction>> getAllTransactions() {
-        return mRepository.getAllTransactions();
+        return mAllTransactions;
     }
 
+    // Lấy danh sách giao dịch theo ngày, kiểm tra null
     public LiveData<List<Transaction>> getTransactionsByDate(String date) {
-        return mRepository.getTransactionsByDate(date);
+        if (mRepository != null) {
+            return mRepository.getTransactionsByDate(date);
+        } else {
+            Log.e(TAG, "Repository is null, cannot get transactions by date");
+            return new MutableLiveData<>(); // Trả về LiveData rỗng nếu repository null
+        }
     }
 }

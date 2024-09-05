@@ -22,7 +22,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.eaut20210719.trackexpenses.R;
-import com.eaut20210719.trackexpenses.database.entities.MonthlyLimit;
 import com.eaut20210719.trackexpenses.database.entities.Transaction;
 import com.eaut20210719.trackexpenses.databinding.HomeFragmentBinding;
 import com.eaut20210719.trackexpenses.viewmodels.DailyLimitViewModel;
@@ -57,7 +56,17 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = HomeFragmentBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
+        return binding != null ? binding.getRoot() : null; // Kiểm tra binding null
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (binding == null) {
+            Log.e("HomeFragment", "Binding is null in onViewCreated");
+            return;
+        }
 
         // Initialize ViewModel
         transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
@@ -73,16 +82,18 @@ public class HomeFragment extends Fragment {
         TextView tvBalance = binding.tvBalance;
 
         imEye.setOnClickListener(v -> {
-            if (isBalanceVisible) {
-                tvBalance.setText("*** *** *** VND");
-                imEye.setImageResource(R.drawable.eye);
-            } else {
+            if (!isBalanceVisible) {
                 transactionViewModel.getTotalBalance().observe(getViewLifecycleOwner(), totalBalance -> {
                     if (totalBalance != null) {
                         tvBalance.setText(String.format("%,.0f VND", totalBalance));
+                    } else {
+                        Log.e("HomeFragment", "Total balance is null");
                     }
                 });
                 imEye.setImageResource(R.drawable.icon_eye_24);
+            } else {
+                tvBalance.setText("*** *** *** VND");
+                imEye.setImageResource(R.drawable.eye);
             }
             isBalanceVisible = !isBalanceVisible;
         });
@@ -91,45 +102,51 @@ public class HomeFragment extends Fragment {
         AppCompatSeekBar sbExpenses = binding.sbExpenses;
         TextView tvExpenseValue = binding.tvMoney;
 
-        // Đọc trạng thái của thanh cuộn từ SharedPreferences
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        int savedProgress = sharedPreferences.getInt(KEY_EXPENSE_PROGRESS, 0);
+        if (getActivity() != null) {
+            // Đọc trạng thái của thanh cuộn từ SharedPreferences
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            int savedProgress = sharedPreferences.getInt(KEY_EXPENSE_PROGRESS, 0);
 
-        // Cập nhật số tiền chi tiêu từ bản ghi cuối cùng
-        dailyLimitViewModel.getLastDailyLimitMoney().observe(getViewLifecycleOwner(), lastMoneyDay -> {
-            if (lastMoneyDay != null) {
-                int maxAmount = (int) lastMoneyDay.doubleValue();
-                sbExpenses.setMax(maxAmount);
+            // Cập nhật số tiền chi tiêu từ bản ghi cuối cùng
+            dailyLimitViewModel.getLastDailyLimitMoney().observe(getViewLifecycleOwner(), lastMoneyDay -> {
+                if (lastMoneyDay != null) {
+                    int maxAmount = (int) lastMoneyDay.doubleValue();
+                    sbExpenses.setMax(maxAmount);
 
-                // Đặt giá trị của SeekBar từ SharedPreferences chỉ khi chưa được thiết lập
-                if (sbExpenses.getProgress() == 0) {
-                    sbExpenses.setProgress(savedProgress);
+                    // Đặt giá trị của SeekBar từ SharedPreferences chỉ khi chưa được thiết lập
+                    if (sbExpenses.getProgress() == 0) {
+                        sbExpenses.setProgress(savedProgress);
+                    }
+
+                    tvExpenseValue.setText(String.format("%,d VND", sbExpenses.getProgress()));
+                } else {
+                    Log.e("HomeFragment", "Last daily limit is null");
+                }
+            });
+
+            sbExpenses.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    tvExpenseValue.setText(String.format("%,d VND", progress));
+                    dailyLimitViewModel.updateMoneyDaySetting(progress);
+
+                    // Lưu trạng thái của thanh cuộn vào SharedPreferences
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt(KEY_EXPENSE_PROGRESS, progress);
+                    editor.apply();
                 }
 
-                tvExpenseValue.setText(String.format("%,d VND", sbExpenses.getProgress()));
-            }
-        });
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-        sbExpenses.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tvExpenseValue.setText(String.format("%,d VND", progress));
-                dailyLimitViewModel.updateMoneyDaySetting(progress);
-
-                // Lưu trạng thái của thanh cuộn vào SharedPreferences
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(KEY_EXPENSE_PROGRESS, progress);
-                editor.apply();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+        } else {
+            Log.e("HomeFragment", "Activity is null, cannot access SharedPreferences");
+        }
 
         // Handle Save button click
         btnSave.setOnClickListener(v -> {
@@ -151,13 +168,6 @@ public class HomeFragment extends Fragment {
         // Tính toán tổng số tiền cho tháng hiện tại và cập nhật UI
         calculateAndDisplayMonthlyTotal();
 
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
         // Gọi hàm cảnh báo khi vượt quá ngân sách
         warningMoney();
 
@@ -176,7 +186,7 @@ public class HomeFragment extends Fragment {
 
         if (!dayWarningShown) {
             dailyLimitViewModel.getLastDailyLimitSetting().observe(getViewLifecycleOwner(), lastDailyLimit -> {
-                if (lastDailyLimit != null && !dayWarningShown) {
+                if (lastDailyLimit != null) {
                     double moneyDaySetting = lastDailyLimit;
                     double sumAmountForToday = totalExpenseToday;
                     if (sumAmountForToday > moneyDaySetting) {
@@ -186,22 +196,24 @@ public class HomeFragment extends Fragment {
                         // Show Toast
                         Toast toast = Toast.makeText(getContext(), "Bạn đã vượt quá ngân sách ngày: " + formattedWarningMoney + " VND", Toast.LENGTH_SHORT);
                         View toastView = toast.getView();
-                        if (toastView != null) { // Check if the toast's view is not null
+                        if (toastView != null) {
                             TextView toastMessage = toastView.findViewById(android.R.id.message);
-                            if (toastMessage != null) { // Check if the TextView exists
+                            if (toastMessage != null) {
                                 toastMessage.setTextColor(Color.RED);
                             }
                         }
                         toast.show();
-                        dayWarningShown = true; // Đặt cờ để cảnh báo không lặp lại trong cùng một phiên truy cập
+                        dayWarningShown = true;
                     }
+                } else {
+                    Log.e("HomeFragment", "Last daily limit setting is null");
                 }
             });
         }
 
         if (!monthWarningShown) {
             monthlyLimitViewModel.getLastMonthLimitSetting().observe(getViewLifecycleOwner(), lastMonthLimitSetting -> {
-                if (lastMonthLimitSetting != null && !monthWarningShown) {
+                if (lastMonthLimitSetting != null) {
                     double moneyMonthSetting = lastMonthLimitSetting;
                     double sumAmountForCurrentMonth = totalExpense;
 
@@ -212,21 +224,23 @@ public class HomeFragment extends Fragment {
                         // Show Toast
                         Toast toast = Toast.makeText(getContext(), "Bạn đã vượt quá ngân sách tháng: " + formattedWarningMoney + " VND", Toast.LENGTH_SHORT);
                         View toastView = toast.getView();
-                        if (toastView != null) { // Check if the toast's view is not null
+                        if (toastView != null) {
                             TextView toastMessage = toastView.findViewById(android.R.id.message);
-                            if (toastMessage != null) { // Check if the TextView exists
+                            if (toastMessage != null) {
                                 toastMessage.setTextColor(Color.RED);
                             }
                         }
                         toast.show();
-                        monthWarningShown = true; // Đặt cờ để cảnh báo không lặp lại trong cùng một phiên truy cập
+                        monthWarningShown = true;
                     }
+                } else {
+                    Log.e("HomeFragment", "Last monthly limit setting is null");
                 }
             });
         }
     }
 
-    //    Lấy tháng hiện tại
+    // Lấy tháng hiện tại
     private int getCurrentMonth() {
         Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.MONTH) + 1;
@@ -244,48 +258,41 @@ public class HomeFragment extends Fragment {
         return calendar.get(Calendar.DAY_OF_MONTH);
     }
 
-    //    Tính toán và hiển thị tổng số tiền hàng tháng
+    // Tính toán và hiển thị tổng số tiền hàng tháng
     private void calculateAndDisplayMonthlyTotal() {
         transactionViewModel.getAllTransactions().observe(getViewLifecycleOwner(), transactions -> {
             if (transactions != null) {
-                double totalIncome = sumAmountForCurrentMonth(transactions); // Tổng thu nhập
-                totalExpense = sumAmountForCurrentMonthChiTieu(transactions); // Tổng chi tiêu
+                double totalIncome = sumAmountForCurrentMonth(transactions);
+                totalExpense = sumAmountForCurrentMonthChiTieu(transactions);
                 totalExpenseToday = sumAmountForToday(transactions);
 
                 Log.d("totalExpenseToday", "totalExpenseToday: " + totalExpenseToday);
 
-                TextView tvMonthlyTotalIncome = binding.tv0d; // TextView cho thu nhập
-                TextView tvMonthlyTotalExpense = binding.tv0d1; // TextView cho chi tiêu
-                TextView tvTodayTotalExpense = binding.tien; // TextView cho chi tiêu hôm nay
-
-                if (tvMonthlyTotalIncome != null) {
-                    tvMonthlyTotalIncome.setText(String.format("%,.0f VND", totalIncome));
+                if (binding.tv0d != null) {
+                    binding.tv0d.setText(String.format("%,.0f VND", totalIncome));
                 }
-
-                if (tvMonthlyTotalExpense != null) {
-                    tvMonthlyTotalExpense.setText(String.format("%,.0f VND", totalExpense));
+                if (binding.tv0d1 != null) {
+                    binding.tv0d1.setText(String.format("%,.0f VND", totalExpense));
                 }
-
-                if (tvTodayTotalExpense != null) {
-                    tvTodayTotalExpense.setText(String.format("%,.0f VND", totalExpenseToday));
+                if (binding.tien != null) {
+                    binding.tien.setText(String.format("%,.0f VND", totalExpenseToday));
                 }
+            } else {
+                Log.e("HomeFragment", "Transactions list is null");
             }
         });
     }
 
     private String cleanDateString(String dateStr) {
-        // Loại bỏ các phần không cần thiết (ví dụ: "Chiều", "Sáng")
-        return dateStr.replace("Chiều", "").replace("Sáng", "").trim();
+        return dateStr != null ? dateStr.replace("Chiều", "").replace("Sáng", "").trim() : "";
     }
 
-    // Cập nhật phương thức `sumAmountForToday` để sử dụng định dạng 24 giờ
     private double sumAmountForToday(List<Transaction> transactions) {
         int currentDay = getCurrentDay();
         int currentMonth = getCurrentMonth();
         int currentYear = getCurrentYear();
         double totalAmount = 0.0;
 
-        // Định dạng ngày giờ cho các chuỗi có định dạng kiểu 24 giờ
         SimpleDateFormat format24 = new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault());
 
         for (Transaction transaction : transactions) {
@@ -293,7 +300,6 @@ public class HomeFragment extends Fragment {
             Date date = null;
 
             try {
-                // Phân tích ngày giờ theo định dạng 24 giờ
                 date = format24.parse(dateStr);
             } catch (ParseException e) {
                 Log.e("HomeFragment", "Error parsing date: " + dateStr, e);
@@ -304,10 +310,11 @@ public class HomeFragment extends Fragment {
                 calendar.setTime(date);
 
                 int recordDay = calendar.get(Calendar.DAY_OF_MONTH);
-                int recordMonth = calendar.get(Calendar.MONTH) + 1; // Tháng bắt đầu từ 0
+                int recordMonth = calendar.get(Calendar.MONTH) + 1;
                 int recordYear = calendar.get(Calendar.YEAR);
 
-                if (recordDay == currentDay && recordMonth == currentMonth && recordYear == currentYear && (transaction.getTypeId() == 1 || transaction.getTypeId() == 2)) {
+                if (recordDay == currentDay && recordMonth == currentMonth && recordYear == currentYear &&
+                        (transaction.getTypeId() == 1 || transaction.getTypeId() == 2)) {
                     totalAmount += transaction.getAmount();
                 }
             }
@@ -316,7 +323,6 @@ public class HomeFragment extends Fragment {
         return totalAmount;
     }
 
-    // Cập nhật phương thức `sumAmountForCurrentMonth` và `sumAmountForCurrentMonthChiTieu` tương tự
     private double sumAmountForCurrentMonth(List<Transaction> transactions) {
         int currentMonth = getCurrentMonth();
         int currentYear = getCurrentYear();
@@ -338,7 +344,7 @@ public class HomeFragment extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
 
-                int recordMonth = calendar.get(Calendar.MONTH) + 1; // Tháng bắt đầu từ 0
+                int recordMonth = calendar.get(Calendar.MONTH) + 1;
                 int recordYear = calendar.get(Calendar.YEAR);
 
                 if (recordMonth == currentMonth && recordYear == currentYear && transaction.getTypeId() == 3) {
@@ -371,10 +377,11 @@ public class HomeFragment extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
 
-                int recordMonth = calendar.get(Calendar.MONTH) + 1; // Tháng bắt đầu từ 0
+                int recordMonth = calendar.get(Calendar.MONTH) + 1;
                 int recordYear = calendar.get(Calendar.YEAR);
 
-                if (recordMonth == currentMonth && recordYear == currentYear && (transaction.getTypeId() == 1 || transaction.getTypeId() == 2)) {
+                if (recordMonth == currentMonth && recordYear == currentYear &&
+                        (transaction.getTypeId() == 1 || transaction.getTypeId() == 2)) {
                     totalAmount += transaction.getAmount();
                 }
             }
@@ -383,7 +390,6 @@ public class HomeFragment extends Fragment {
         return totalAmount;
     }
 
-    // Thêm phương thức để thiết lập sự kiện click từ Activity
     public void setAddClickListener(View.OnClickListener listener) {
         this.addClickListener = listener;
     }
@@ -394,5 +400,3 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
 }
-
-

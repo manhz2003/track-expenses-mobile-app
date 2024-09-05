@@ -5,9 +5,9 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.eaut20210719.trackexpenses.database.entities.Color;
-import com.eaut20210719.trackexpenses.database.entities.MonthlyLimit;
 import com.eaut20210719.trackexpenses.repository.ColorRepository;
 
 import java.util.List;
@@ -19,26 +19,38 @@ public class ColorViewModel extends AndroidViewModel {
 
     public ColorViewModel(@NonNull Application application) {
         super(application);
+
+        // Khởi tạo repository và kiểm tra null
         repository = new ColorRepository(application);
-        allColors = repository.getAllColors();
+        if (repository != null) {
+            allColors = repository.getAllColors();
+        } else {
+            System.err.println(TAG + ": Repository is null");
+            allColors = new MutableLiveData<>(); // Tạo một MutableLiveData rỗng để tránh lỗi null
+        }
+
         logAllColors();
     }
 
-//    Phương thức mới để log toàn bộ dữ liệu bảng colors
+    // Phương thức để log toàn bộ dữ liệu bảng colors, kiểm tra null và log dữ liệu
     public void logAllColors() {
-        allColors.observeForever(colors -> {
-            if (colors == null || colors.isEmpty()) {
-                System.out.println("Không có dữ liệu trong bảng colors");
-            } else {
-                for (Color color : colors) {
-                    System.out.println("data bảng color: " + "Color ID: " + color.getId() + ", Color Name: " + color.getName_color());
+        if (allColors != null) {
+            allColors.observeForever(colors -> {
+                if (colors == null || colors.isEmpty()) {
+                    System.out.println("Không có dữ liệu trong bảng colors");
+                } else {
+                    for (Color color : colors) {
+                        System.out.println("data bảng color: " + "Color ID: " + color.getId() + ", Color Name: " + color.getName_color());
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            System.err.println(TAG + ": allColors is null");
+        }
     }
 
+    // Trả về tất cả các màu, không cần kiểm tra null vì LiveData không bao giờ null
     public LiveData<List<Color>> getAllColors() {
         return allColors;
     }
-
 }
