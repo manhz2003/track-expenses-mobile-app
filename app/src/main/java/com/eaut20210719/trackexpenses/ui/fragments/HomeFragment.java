@@ -107,56 +107,86 @@ public class HomeFragment extends Fragment {
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
             int savedProgress = sharedPreferences.getInt(KEY_EXPENSE_PROGRESS, 0);
 
-            // Cập nhật số tiền chi tiêu từ bản ghi cuối cùng
-            dailyLimitViewModel.getLastDailyLimitMoney().observe(getViewLifecycleOwner(), lastMoneyDay -> {
-                if (lastMoneyDay != null) {
-                    int maxAmount = (int) lastMoneyDay.doubleValue();
-                    sbExpenses.setMax(maxAmount);
+            // Lấy giá trị money_month_setting từ MonthlyLimit
+            monthlyLimitViewModel.getLastMonthLimitSetting().observe(getViewLifecycleOwner(), moneyMonthSetting -> {
+                if (moneyMonthSetting != null) {
+                    int maxMonthSetting = (int) Math.round(moneyMonthSetting);  // Chuyển đổi money_month_setting từ Double sang int
 
-                    // Đặt giá trị của SeekBar từ SharedPreferences chỉ khi chưa được thiết lập
-                    if (sbExpenses.getProgress() == 0) {
-                        sbExpenses.setProgress(savedProgress);
-                    }
+                    // Cập nhật số tiền chi tiêu từ bản ghi cuối cùng (money_day_setting)
+                    dailyLimitViewModel.getLastDailyLimitMoney().observe(getViewLifecycleOwner(), lastMoneyDay -> {
+                        if (lastMoneyDay != null) {
+                            int maxAmount = (int) lastMoneyDay.doubleValue();
+                            sbExpenses.setMax(maxAmount);
 
-                    tvExpenseValue.setText(String.format("%,d VND", sbExpenses.getProgress()));
+                            // Đặt giá trị của SeekBar từ SharedPreferences chỉ khi chưa được thiết lập
+                            if (sbExpenses.getProgress() == 0) {
+                                sbExpenses.setProgress(savedProgress);
+                            }
+
+                            tvExpenseValue.setText(String.format("%,d VND", sbExpenses.getProgress()));
+                        } else {
+                            Log.e("HomeFragment", "Last daily limit is null");
+                        }
+                    });
+
+                    sbExpenses.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                            tvExpenseValue.setText(String.format("%,d VND", progress));
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+                            int progress = seekBar.getProgress();
+
+                            // So sánh giá trị của money_day_setting (progress) với money_month_setting
+                            if (progress >= maxMonthSetting) {
+                                Toast.makeText(getContext(), "Thiết lập ngày phải nhỏ hơn thiết lập tháng", Toast.LENGTH_SHORT).show();
+                                seekBar.setProgress(maxMonthSetting - 1);  // Đặt lại SeekBar về giá trị hợp lệ
+                            } else {
+                                // Cập nhật nếu điều kiện hợp lệ
+                                dailyLimitViewModel.updateMoneyDaySetting(progress);
+
+                                // Lưu trạng thái của thanh cuộn vào SharedPreferences
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putInt(KEY_EXPENSE_PROGRESS, progress);
+                                editor.apply();
+                            }
+                        }
+                    });
                 } else {
-                    Log.e("HomeFragment", "Last daily limit is null");
-                }
-            });
-
-            sbExpenses.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    tvExpenseValue.setText(String.format("%,d VND", progress));
-                    dailyLimitViewModel.updateMoneyDaySetting(progress);
-
-                    // Lưu trạng thái của thanh cuộn vào SharedPreferences
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt(KEY_EXPENSE_PROGRESS, progress);
-                    editor.apply();
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
+                    Log.e("HomeFragment", "Last monthly limit setting is null");
                 }
             });
         } else {
             Log.e("HomeFragment", "Activity is null, cannot access SharedPreferences");
         }
 
-        // Handle Save button click
+
         btnSave.setOnClickListener(v -> {
             String inputMoneyStr = etInputMoney.getText().toString();
             if (!inputMoneyStr.isEmpty()) {
                 try {
                     double inputMoney = Double.parseDouble(inputMoneyStr);
-                    dailyLimitViewModel.insertOrUpdateDailyLimit(inputMoney);
-                    etInputMoney.setText("");
-                    Toast.makeText(getContext(), "Thiết lập thành công", Toast.LENGTH_SHORT).show();
+
+                    // Lấy giá trị money_month_setting từ ViewModel để so sánh
+                    monthlyLimitViewModel.getLastMonthLimitSetting().observe(getViewLifecycleOwner(), moneyMonthSetting -> {
+                        if (moneyMonthSetting != null) {
+                            if (inputMoney >= moneyMonthSetting) {
+                                Toast.makeText(getContext(), "Thiết lập ngày phải nhỏ hơn thiết lập tháng", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // Chèn hoặc cập nhật giá trị nếu hợp lệ
+                                dailyLimitViewModel.insertOrUpdateDailyLimit(inputMoney);
+                                etInputMoney.setText("");
+                                Toast.makeText(getContext(), "Thiết lập thành công", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Log.e("HomeFragment", "Last monthly limit setting is null");
+                        }
+                    });
                 } catch (NumberFormatException e) {
                     Toast.makeText(getContext(), "Vui lòng nhập số tiền hợp lệ", Toast.LENGTH_SHORT).show();
                 }
@@ -165,7 +195,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Tính toán tổng số tiền cho tháng hiện tại và cập nhật UI
+
         calculateAndDisplayMonthlyTotal();
 
         // Gọi hàm cảnh báo khi vượt quá ngân sách

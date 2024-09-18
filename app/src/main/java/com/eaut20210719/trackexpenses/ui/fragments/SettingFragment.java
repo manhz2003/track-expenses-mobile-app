@@ -21,6 +21,7 @@ import androidx.room.Room;
 
 import com.eaut20210719.trackexpenses.database.AppDatabase;
 import com.eaut20210719.trackexpenses.databinding.SettingFragmentBinding;
+import com.eaut20210719.trackexpenses.viewmodels.DailyLimitViewModel;
 import com.eaut20210719.trackexpenses.viewmodels.MonthlyLimitViewModel;
 
 import java.util.Random;
@@ -32,6 +33,7 @@ public class SettingFragment extends Fragment {
 
     private SettingFragmentBinding binding;
     private MonthlyLimitViewModel monthlyLimitViewModel;
+    private DailyLimitViewModel dailyLimitViewModel;
     private SharedPreferences sharedPreferences;
     private View.OnClickListener addClickListener;
     private AppDatabase appDatabase;
@@ -52,6 +54,7 @@ public class SettingFragment extends Fragment {
         }
 
         monthlyLimitViewModel = new ViewModelProvider(this).get(MonthlyLimitViewModel.class);
+        dailyLimitViewModel = new  ViewModelProvider(this).get(DailyLimitViewModel.class);
         sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         appDatabase = AppDatabase.getInstance(requireContext());
 
@@ -97,6 +100,7 @@ public class SettingFragment extends Fragment {
             }
         });
 
+        // Sự kiện SeekBar - Kiểm tra trước khi cập nhật tiền tháng
         binding.sbExpenses1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -110,13 +114,29 @@ public class SettingFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int progress = seekBar.getProgress();
-                monthlyLimitViewModel.updateMoneyMonthSetting(progress);
 
-                // Lưu trạng thái của SeekBar vào SharedPreferences
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(KEY_EXPENSE_PROGRESS, progress);
-                editor.apply();
+                // Lấy giá trị money_day_setting từ DailyLimit
+                dailyLimitViewModel.getLastDailyLimitSetting().observe(getViewLifecycleOwner(), moneyDaySetting -> {
+                    if (moneyDaySetting != null) {
+                        // Chuyển đổi Double thành int để so sánh
+                        int moneyDaySettingInt = (int) Math.round(moneyDaySetting);
+
+                        if (progress < moneyDaySettingInt) {
+                            Toast.makeText(getContext(), "Thiết lập tháng phải lớn hơn thiết lập ngày", Toast.LENGTH_SHORT).show();
+                            seekBar.setProgress(moneyDaySettingInt);  // Đặt lại SeekBar
+                        } else {
+                            // Cập nhật nếu điều kiện hợp lệ
+                            monthlyLimitViewModel.updateMoneyMonthSetting(progress);
+
+                            // Lưu trạng thái của SeekBar vào SharedPreferences
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putInt(KEY_EXPENSE_PROGRESS, progress);
+                            editor.apply();
+                        }
+                    }
+                });
             }
+
         });
 
         binding.btnSave4.setOnClickListener(v -> {
@@ -131,15 +151,23 @@ public class SettingFragment extends Fragment {
                     Toast.makeText(getContext(), "Số tiền phải lớn hơn 0", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                monthlyLimitViewModel.insertOrUpdateMonthlyLimit(inputMoney);
-                binding.edtMonthlySpending.setText("");
-                Toast.makeText(getContext(), "Thiết lập thành công", Toast.LENGTH_SHORT).show();
+
+                // Lấy giá trị money_day_setting từ DailyLimit
+                dailyLimitViewModel.getLastDailyLimitSetting().observe(getViewLifecycleOwner(), moneyDaySetting -> {
+                    if (moneyDaySetting != null && inputMoney < moneyDaySetting) {
+                        Toast.makeText(getContext(), "Thiết lập tháng phải lớn hơn thiết lập ngày", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Chèn hoặc cập nhật nếu điều kiện hợp lệ
+                        monthlyLimitViewModel.insertOrUpdateMonthlyLimit(inputMoney);
+                        binding.edtMonthlySpending.setText("");
+                        Toast.makeText(getContext(), "Thiết lập thành công", Toast.LENGTH_SHORT).show();
+                    }
+                });
             } catch (NumberFormatException e) {
                 Toast.makeText(getContext(), "Vui lòng nhập số tiền hợp lệ", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Xử lý sự kiện nút xóa
         binding.deletedata.setOnClickListener(v -> showDeleteConfirmationDialog());
     }
 
