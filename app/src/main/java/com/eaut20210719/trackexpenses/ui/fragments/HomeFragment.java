@@ -1,8 +1,13 @@
 package com.eaut20210719.trackexpenses.ui.fragments;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,12 +23,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSeekBar;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.eaut20210719.trackexpenses.R;
 import com.eaut20210719.trackexpenses.database.entities.Transaction;
 import com.eaut20210719.trackexpenses.databinding.HomeFragmentBinding;
+import com.eaut20210719.trackexpenses.ui.activities.MainActivity;
 import com.eaut20210719.trackexpenses.viewmodels.DailyLimitViewModel;
 import com.eaut20210719.trackexpenses.viewmodels.MonthlyLimitViewModel;
 import com.eaut20210719.trackexpenses.viewmodels.TransactionViewModel;
@@ -208,11 +215,27 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    // update đẩy thông báo ra ngoài
     double totalExpenseToday = 0.0;
     double totalExpense = 0.0;
 
+//    cảnh báo khi số tiền chi tiêu vượt quá
+//    thông báo ra toast và đẩy thông báo ra ngoài app
     private void warningMoney() {
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        String channelId = "2";
+        String channelName = "Track Expenses";
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    channelName,
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("This is your channel description");
+            notificationManager.createNotificationChannel(channel);
+        }
 
         if (!dayWarningShown) {
             dailyLimitViewModel.getLastDailyLimitSetting().observe(getViewLifecycleOwner(), lastDailyLimit -> {
@@ -223,7 +246,40 @@ public class HomeFragment extends Fragment {
                         double warningMoney = sumAmountForToday - moneyDaySetting;
                         String formattedWarningMoney = decimalFormat.format(warningMoney);
 
-                        // Show Toast
+                        // Tạo một Intent để mở MainActivity
+                        Intent intent = new Intent(getContext(), MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                        PendingIntent pendingIntent;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            // Đối với Android 12 (API 31) hoặc cao hơn
+                            pendingIntent = PendingIntent.getActivity(
+                                    getContext(),
+                                    0,
+                                    intent,
+                                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE // Sử dụng FLAG_IMMUTABLE
+                            );
+                        } else {
+                            // Đối với các phiên bản Android thấp hơn
+                            pendingIntent = PendingIntent.getActivity(
+                                    getContext(),
+                                    0,
+                                    intent,
+                                    PendingIntent.FLAG_UPDATE_CURRENT // Không sử dụng FLAG_IMMUTABLE cho Android dưới API 31
+                            );
+                        }
+
+                        // Tạo thông báo
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), channelId)
+                                .setSmallIcon(R.drawable.icon_animal)
+                                .setContentTitle("Ngân sách ngày")
+                                .setContentText("Bạn đã vượt quá ngân sách ngày: " + formattedWarningMoney + " VND")
+                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                .setAutoCancel(true)
+                                .setContentIntent(pendingIntent);
+
+                        notificationManager.notify(1, builder.build());
+                        dayWarningShown = true;
                         Toast toast = Toast.makeText(getContext(), "Bạn đã vượt quá ngân sách ngày: " + formattedWarningMoney + " VND", Toast.LENGTH_SHORT);
                         View toastView = toast.getView();
                         if (toastView != null) {
@@ -233,7 +289,6 @@ public class HomeFragment extends Fragment {
                             }
                         }
                         toast.show();
-                        dayWarningShown = true;
                     }
                 } else {
                     Log.e("HomeFragment", "Last daily limit setting is null");
@@ -251,7 +306,27 @@ public class HomeFragment extends Fragment {
                         double warningMoney = sumAmountForCurrentMonth - moneyMonthSetting;
                         String formattedWarningMoney = decimalFormat.format(warningMoney);
 
-                        // Show Toast
+                        // Tạo một Intent để mở MainActivity
+                        Intent intent = new Intent(getContext(), MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(
+                                getContext(),
+                                0,
+                                intent,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        );
+
+                        // Tạo thông báo
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), channelId)
+                                .setSmallIcon(R.drawable.icon_animal)
+                                .setContentTitle("Ngân sách tháng")
+                                .setContentText("Bạn đã vượt quá ngân sách tháng: " + formattedWarningMoney + " VND")
+                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                .setAutoCancel(true)
+                                .setContentIntent(pendingIntent);
+
+                        notificationManager.notify(2, builder.build());
+                        monthWarningShown = true;
                         Toast toast = Toast.makeText(getContext(), "Bạn đã vượt quá ngân sách tháng: " + formattedWarningMoney + " VND", Toast.LENGTH_SHORT);
                         View toastView = toast.getView();
                         if (toastView != null) {
@@ -261,7 +336,6 @@ public class HomeFragment extends Fragment {
                             }
                         }
                         toast.show();
-                        monthWarningShown = true;
                     }
                 } else {
                     Log.e("HomeFragment", "Last monthly limit setting is null");
