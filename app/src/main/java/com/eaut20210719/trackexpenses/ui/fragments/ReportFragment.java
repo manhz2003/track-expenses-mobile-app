@@ -1,3 +1,4 @@
+
 package com.eaut20210719.trackexpenses.ui.fragments;
 
 import android.graphics.Color;
@@ -74,7 +75,7 @@ public class ReportFragment extends Fragment {
         transactionViewModel.getTransactionsByDate(todayDate).observe(getViewLifecycleOwner(), transactions -> {
             if (transactions != null && !transactions.isEmpty()) {
                 updateTodayReport(transactions);
-                dailyLimitViewModel.getLastDailyLimitMoney().observe(getViewLifecycleOwner(), moneyDay -> {
+                dailyLimitViewModel.getLastDailyLimitSetting().observe(getViewLifecycleOwner(), moneyDay -> {
                     if (moneyDay != null) {
                         setupPieChart(transactions, moneyDay);
                     } else {
@@ -82,7 +83,7 @@ public class ReportFragment extends Fragment {
                     }
                 });
             } else {
-                Log.e("ReportFragment", "No transactions found for today");
+                setupPieChart(transactions, 0.0);
             }
         });
 
@@ -92,7 +93,7 @@ public class ReportFragment extends Fragment {
         transactionViewModel.getTransactionsByDate(monthYear).observe(getViewLifecycleOwner(), transactions -> {
             if (transactions != null && !transactions.isEmpty()) {
                 updateThisMonthReport(transactions);
-                monthlyLimitViewModel.getLastMonthlyLimitMoney().observe(getViewLifecycleOwner(), moneyMonth -> {
+                monthlyLimitViewModel.getLastMonthLimitSetting().observe(getViewLifecycleOwner(), moneyMonth -> {
                     if (moneyMonth != null) {
                         setupPieChartThisday(transactions, moneyMonth);
                     } else {
@@ -100,18 +101,13 @@ public class ReportFragment extends Fragment {
                     }
                 });
             } else {
-                Log.e("ReportFragment", "No transactions found for this month");
+                setupPieChartThisday(transactions, 0.0);
             }
         });
     }
 
     // Thống kê ngày
     private void setupPieChart(List<Transaction> transactions, Double moneyDay) {
-        if (transactions == null || transactions.isEmpty()) {
-            Log.e("ReportFragment", "No transactions available for pie chart");
-            return;
-        }
-
         Pair<Double, Double> totalAmountForToday = calculateTotalAmountForToday(transactions);
 
         double amountSpentToday = totalAmountForToday.first;
@@ -142,11 +138,21 @@ public class ReportFragment extends Fragment {
         pieChart.setCenterText("Chi tiêu ngày");
         pieChart.setCenterTextSize(16f);
         pieChart.setCenterTextColor(Color.BLACK);
-
-        // Add data to PieChart
         ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(monthlySpendingRatio, "Số tiền đã chi"));
-        entries.add(new PieEntry(monthlyBalanceRatio, "Số tiền còn lại"));
+        if(monthlySpendingRatio > 100){
+            // Add data to PieChart
+            entries.add(new PieEntry(100, "Số tiền đã chi"));
+            entries.add(new PieEntry(0, "Số tiền còn lại"));
+        }else if(monthlySpendingRatio < 100 && monthlySpendingRatio > 0){
+            // Add data to PieChart
+            entries.add(new PieEntry(monthlySpendingRatio, "Số tiền đã chi"));
+            entries.add(new PieEntry(monthlyBalanceRatio, "Số tiền còn lại"));
+        }else{
+            // Add data to PieChart
+            entries.add(new PieEntry(0, "Số tiền đã chi"));
+            entries.add(new PieEntry(100, "Số tiền còn lại"));
+        }
+
 
         PieDataSet dataSet = new PieDataSet(entries, "");
         int[] colors = {Color.parseColor("#FA3D6A"), Color.parseColor("#FE862F")};
@@ -179,11 +185,6 @@ public class ReportFragment extends Fragment {
 
     // Thống kê tháng
     private void setupPieChartThisday(List<Transaction> transactions, Double moneyMonth) {
-        if (transactions == null || transactions.isEmpty()) {
-            Log.e("ReportFragment", "No transactions available for pie chart this month");
-            return;
-        }
-
         Pair<Double, Double> totalAmountForToday = calculateTotalAmountForToday(transactions);
 
         double amountSpentToday = totalAmountForToday.first;
@@ -217,8 +218,19 @@ public class ReportFragment extends Fragment {
 
         // Add data to PieChart
         ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(monthlySpendingRatio, "Số tiền đã chi"));
-        entries.add(new PieEntry(monthlyBalanceRatio, "Số tiền còn lại"));
+        if(monthlySpendingRatio > 100){
+            // Add data to PieChart
+            entries.add(new PieEntry(100, "Số tiền đã chi"));
+            entries.add(new PieEntry(0, "Số tiền còn lại"));
+        }else if(monthlySpendingRatio < 100 && monthlySpendingRatio > 0){
+            // Add data to PieChart
+            entries.add(new PieEntry(monthlySpendingRatio, "Số tiền đã chi"));
+            entries.add(new PieEntry(monthlyBalanceRatio, "Số tiền còn lại"));
+        }else{
+            // Add data to PieChart
+            entries.add(new PieEntry(0, "Số tiền đã chi"));
+            entries.add(new PieEntry(100, "Số tiền còn lại"));
+        }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
         int[] colors = {Color.parseColor("#FA3D6A"), Color.parseColor("#FE862F")};
